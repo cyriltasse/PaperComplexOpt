@@ -1,0 +1,51 @@
+\section{Iterative direction-dependent solver}
+
+\subsection{Linear system for calibration}
+
+If we write the
+direction dependent gain vector as $\vec{g}$, which $i^{th}$ component
+$i=d+a.n_d$ if the gain of antenna $a$ in direction $d$, then we find
+the remarquable property that around the solution, Eq. \ref{eq:ME}
+behaves like a linear system. Specifically, from Eq. \ref{eq:Jpq} and
+\ref{eq:J}, it is easy to check that:
+
+\begin{alignat}{2}
+\label{eq:Lin}
+\mathbf{v}=\left(\JV\big|_{\vec{g}}\right).\vec{g}
+\end{alignat}
+
+\noindent where $\JV\big|_{\vec{g}}$ mean that the Jacobian is
+evaluated at $\vec{g}$.
+
+Assuming a linear operator satisfying
+Eq. \ref{eq:Lin} is given, we can build an iterative scheme to
+derive an estimate $\widehat{\vec{g}}$ of $\vec{g}$. The linear operator
+$\JV\big|_{\widehat{\vec{g}_i}}$ is build from the estimate
+$\widehat{\vec{g}_i}$ at step $i$. Then Eq. \ref{eq:Lin} is solved
+using the least-squares solution given by computing pseudo-inverse as follows:
+
+\def\A{\textbf{A}}
+
+\begin{alignat}{2}
+\label{eq:Solve}
+\widehat{\vec{g}_{i+1}}=&\left[\A^H\textbf{C}^{-1}\A\right]^{-1}\A^H\textbf{C}^{-1}\mathbf{v}\\
+\label{eq:SolveA}
+\text{with } \A=&\JV\big|_{\widehat{\vec{g}_i}}
+\end{alignat}
+
+\noindent where \textbf{C} is the covariance matrix of $\mathbf{v}$.
+
+
+\subsection{Convergence and averaging}
+
+As shown in Fig. ... the convergence of this algorithm is slow, and
+following Stef-the-great, instead of estimating $\JV$ at
+$\widehat{\vec{g}_i}$, we build it at a modified location constructed
+from previous iterations, and Eq. \ref{eq:SolveA} becomes:
+
+\begin{alignat}{2}
+\A=&\JV\big|_{\widetilde{\vec{g}_i}}\\
+\text{with } \widetilde{\vec{g}_i}=&(\widehat{\vec{g}_{i-1}}+\widehat{\vec{g}_{i}})/2
+\end{alignat}
+
+
