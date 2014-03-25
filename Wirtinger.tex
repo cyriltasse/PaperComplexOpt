@@ -1,83 +1,186 @@
-\section{Complex derivative}
-
-\newcommand{\conj}[1]{{#1}^*}
-\newcommand{\conjp}[1]{{\left(#1\right)}^*}
-\def\Jacob{\bm{\mathcal{J}}}
+\section{Complex optimisation}
+\label{sec:Wirtinger}
 
 In this section we try to describe the shape and structure of the
 Jacobian over the complex scalar field, instead of what is usually done, by
-considering the real and imaginary separatly. Discarding the
-polarisation effects, the scalar Radio Interferometry Measurement
-Equation (RIME), we can write the visibility measured on baseline
+considering the real and imaginary separatly. 
+
+
+\subsection{RIME formalism}
+
+Using the Radio Interferometry Measurement
+Equation (RIME) formalism, we can write the 4-polarisation visibility
+vector $\vbl$ measured on baseline
 $(pq)$, at time $t$ and frequency $\nu$ as:
 
-\def\u{u}
-\def\v{v}
-\def\w{w}
-\def\l{l}
-\def\m{m}
-\def\n{n}
 
 \begin{alignat}{2}
 \label{eq:ME}
-\mathrm{v}_{(pq)t\nu}=&\displaystyle\sum\limits_{d} g^{d}_{pt\nu}
-.\conjp{g^{d}_{qt\nu}}.k^{d}_{(pq)t\nu}.\mathrm{s}_{d}\\
+\vbl=&\text{Vec}\left(\Vbl\right)&\\
+=&\displaystyle\sum\limits_{d} \left(\conj{\JMat^{d}_{qt\nu}}\Kron \JMat^{d}_{pt\nu}\right)
+\text{Vec}\left(\Skyd\right) k^{d}_{(pq)t\nu}\\
 \text{with}\ k^{d}_{(pq)t\nu}=&\exp{\left(-2 i\pi
   \left(\u\l+\v\m+\w\left(\text{n}-1\right)\right)\right)}\\
-\text{and}\ \n=&\sqrt{1-\l^2-\m^2}\\
+\text{and}\ \n=&\sqrt{1-\l^2-\m^2}
 \end{alignat}
 
 \noindent with $[\u,\v,\w]^T$ is the baseline vector between antennas
 $p$ and $q$ in wavelength units, and
 $\vec{s}_d=[\l,\m,\n=\sqrt{1-\l^2-\m^2}]^T$ is a sky direction later
-labeled as $d$. In order to compute a Jacobian, we need to choose a
-derivative definition for complex numbers. If we write a complex number as $z=x+iy$, then the
+labeled as $d$. 
+
+From Eq. \ref{eq:ME}, we
+can write the $i^{th}$ polarisation component of $\vbl$ as:
+
+\begin{alignat}{2}
+\mathrm{v}^i_{pqt\nu}=&
+\displaystyle\sum\limits_{d}
+\displaystyle\sum\limits_{j=0}^3 \left(g^{d}_{pt\nu,\textbf{A}_{ij}}.\conj{g^{d}_{qt\nu,\textbf{B}_{ij}}}\right).k^{d}_{pqt\nu}.\text{s}_{d,j}
+\end{alignat}
+
+\noindent where 
+
+\begin{equation}
+\textbf{A}=
+\begin{bmatrix}
+0 & 2 & 0 & 2 \\ 
+1 & 3 & 1 & 3 \\ 
+0 & 2 & 0 & 2 \\
+1 & 3 & 1 & 3 
+\end{bmatrix}
+\text{ and }
+\textbf{B}=
+\begin{bmatrix}
+0 & 0 & 2 & 2 \\ 
+0 & 0 & 2 & 2 \\ 
+1 & 1 & 3 & 3 \\
+1 & 1 & 3 & 3 
+\end{bmatrix}
+\end{equation}
+
+
+\subsection{Complex derivative}
+\label{sec:Cderiv}
+
+In order to compute a Jacobian, we need to choose a
+derivative definition for complex numbers. In this section, instead of
+differentiating against real and imaginary parts independently, we
+adopt a Wirtinger differentiation point of view and consider the
+complex and their conjugate as being indepedent. We will see in
+Sec. \ref{sec:Connection} that choosing this type of differentiation
+turns out to be rather powerful to solve problems of the form of
+Eq. \ref{eq:ME}. If we write a complex number as $z=x+iy$, then the
 Wirtinger complex derivative operator writes as:
 
 
 \begin{alignat}{3}
-\frac{\partial }{\partial z}&=&\frac{\partial }{\partial x}-i\frac{\partial }{\partial y}\\
+\frac{\partial }{\partial z}&=&\frac{1}{2}\left(\frac{\partial }{\partial x}-i\frac{\partial }{\partial y}\right)\\
+\text{and }\frac{\partial }{\partial \conj{z}}&=&\frac{1}{2}\left(\frac{\partial }{\partial x}+i\frac{\partial }{\partial y}\right)
 \end{alignat}
 
 \noindent where $x$ and $y$ are the real and imaginary parts
-respectively. The Wirtinger has a trivial but remarquable property
-that a scalar and its complex conjugate can be viewed as independent
-variables, and in particular: 
+respectively. The
+Wirtinger has a trivial but remarquable property that a scalar and its
+complex conjugate can be viewed as independent variables, and in
+particular:
 
-\begin{alignat}{3}
+%% \begin{alignat}{3}
+%% \label{eq:propConj}
+%% \frac{\partial \conj{z}}{\partial z}&=&0
+%% \end{alignat}
+
+\begin{equation}
 \label{eq:propConj}
-\frac{\partial \conj{z}}{\partial z}&=&0
-\end{alignat}
+\frac{\partial \conj{z}}{\partial z}=0
+\text{ and }
+\frac{\partial z}{\partial \conj{z}}=0
+\end{equation}
 
 
 Considering the sky, gain, and geometry relation given in
 Eq. \ref{eq:ME}, according to the property of Wirtinger derivative of complex
 conjugate (Eq. \ref{eq:propConj}), we can see that:
 
-\begin{alignat}{2}
-\frac{\partial \mathrm{v}_{(pq)t\nu}}{\partial g^{d}_{pt\nu}}=&
-\conjp{g^{d}_{qt\nu}}.k^{d}_{(pq)t\nu}.\mathrm{s}_{d}\\
-\text{and}\ \frac{\partial \mathrm{v}_{(pq)t\nu}}{\partial g^{d}_{qt\nu}}=&0\\
+\begin{alignat}{3}
+\label{eq:Deriv_gp}
+\frac{\partial \mathrm{v}^i_{pqt\nu}}{\partial g^{d}_{pt\nu,\textbf{A}_{ij}}}=&
+\left(\conj{g^{d}_{qt\nu,\textbf{B}_{ij}}}\text{s}_{d,j}\right).k^{d}_{pqt\nu}\\
+\label{eq:Deriv_gq}
+\text{and}\ 
+\frac{\partial \mathrm{v}^i_{pqt\nu}}{\partial g^{d}_{qt\nu,\textbf{B}_{ij}}}=&0
 \end{alignat}
 
+\noindent while differentiating against the complex conjugate of those
+variables, we obtain:
 
-\def\JVpq{\Jacob\left\{\textbf{v}_{(pq)}\right\}}
-\def\JVpq{\Jacob_{\!_{\textbf{v}_{pq}}}}
-\def\JVpq{\Jacob_{{\textbf{v}_{pq}}}}
-\def\JV{\Jacob\left\{\textbf{v}\right\}}
-%\def\JV{\Jacob_{\!_\textbf{v}}}
-\def\JV{\Jacob_{\textbf{v}}}
-%\def\JVpq{\Jacob_{\textbf{V}_{(pq)}}}
+\begin{alignat}{3}
+\label{eq:Deriv_Cgp}
+\frac{\partial \mathrm{v}^i_{pqt\nu}}{\partial \conjp{g^{d}_{pt\nu,\textbf{A}_{ij}}}}=&0\\
+\label{eq:Deriv_Cgq}
+\text{and}\ 
+\frac{\partial \mathrm{v}^i_{pqt\nu}}{\partial \conjp{g^{d}_{qt\nu,\textbf{B}_{ij}}}}=&
+\left(g^{d}_{pt\nu,\textbf{A}_{ij}}\text{s}_{d,j}\right).k^{d}_{pqt\nu}
+\end{alignat}
 
-We now consider the visibility vector $\textbf{v}_{(pq)}$ for all time
-frequency block within a given interval. According to the definition
-of Wirtinger derivative, we can write the complex Jacobian $\JVpq$ of
-$\textbf{V}_{(pq)}$ of size $[(n_t n_{\nu})\times (n_a n_d)]$, where
-$n_t$, $n_{\nu}$, $n_a$, and $n_d$ are the number of time, frequency,
-antenna and directions. Each cell of
-$\JVpq$ can be written by taking a line corresponding to the
-measurement at $(t\nu)$, and a column $i=d+a.n_d$ (for given antenna $a$ and direction $d$)
-corresponds to the derivative against $g^{d}_{a}$. We have:
+\noindent Interestinggly, we can see from Eq. \ref{eq:Deriv_gp},
+\ref{eq:Deriv_gq}, \ref{eq:Deriv_Cgp} and \ref{eq:Deriv_Cgq} that the
+derivatives are always constant with respect to the differential
+variable.
+
+\subsection{Complex Jacobian}
+
+In this section, we describe the structure of the Wirtinger Jacobian $\JV$ using the
+results of Sec. \ref{sec:Cderiv}.
+First, we consider the visibility vector $\vbl$
+for all given time frequency blocks, and writing the antenna,
+polarisation, and direction dependent gain vector as
+$\vec{g}$. Its size is $4n_an_d$, and have for $i^{th}$ component
+$i=j+4\times d+4\times a \times n_d$ the gain of antenna $a$ in
+direction $d$ for polarisation $j$, where $n_a$, and $n_d$ are the
+number of antenna and directions.
+
+We construct the corresponding Wirtinger Jacobian $\JVpq$ of size $(4n_t n_{\nu})\times (8n_a n_d)$ ($n_t$
+and $n_{\nu}$ are the number of time and frequency points) as follows:
+
+\begin{alignat}{2}
+\label{eq:dV}
+\dbf\vbl=&\JVpq\ \dbf\gwirt\\
+=&\JVpqg\ \dbf\g+\JVpqCg\ \dbf\conj{\g}\\
+\text{where }\dgwirt=&
+\begin{bmatrix}
+\dbf\vec{g}\\
+\dbf\conj{\vec{g}}
+\end{bmatrix}\\
+\text{and }\JVpq=&
+\begin{bmatrix}
+\JVpqg & \JVpqCg
+\end{bmatrix}
+\end{alignat}
+
+%% The visibility vector $\textbf{v}_{(pq)}$ has to be
+%% differentiated on the complex conjugate as well, so in the following we write the
+%% Wirtinger gain vector $\bm{g_{\!_{W}}}$ and its differencial element as:
+
+%% %\begin{equation}
+%% %\bm{g_{W}}=
+
+%% \gwirt=
+%% \begin{bmatrix}
+%% \vec{g}\\
+%% \conj{\vec{g}}
+%% \end{bmatrix}
+%% \text{ and }
+%% %\end{equation}
+
+
+
+
+Each cell of
+$\JVpq$, $\JVpqg$ and $\JVpqCg$ can be written using Eq. \ref{eq:Deriv_gp}, \ref{eq:Deriv_gq},
+\ref{eq:Deriv_Cgp} and \ref{eq:Deriv_Cgq}. Specifically, line corresponds to a
+single $i$-polarisation measurement at $(t\nu)$ for the $(pq)$ baseline, and a column
+$j+4d+a.4n_d$ to a gain for polarisation $j$, antenna $a$ and
+direction $d$ ($g^{d}_{a,j}$). The matrix $\JVpq$ can be described as follows:
 
 
 %% \begin{alignat}{2}
@@ -87,19 +190,28 @@ corresponds to the derivative against $g^{d}_{a}$. We have:
 
 \begin{alignat}{2}
 \label{eq:Jpq}
-\left[\JVpq\right]_{t\nu,i}=&
+\left[\JVpqg\right]_{t\nu,i}=&
 \begin{cases}
-\conjp{g^{d}_{qt\nu}}.k^{d}_{(pq)t\nu}.\mathrm{s}_{d}\text{ for }a=p\\
+\left(\conj{g^{d}_{qt\nu,\textbf{B}_{ij}}}\text{s}_{d,j}\right).k^{d}_{pqt\nu}\text{ for }a=p\\
+0\ \text{otherwise}
+\end{cases}
+\end{alignat}
+
+\noindent and
+
+\begin{alignat}{2}
+\label{eq:Jpq}
+\left[\JVpqCg\right]_{t\nu,i}=&
+\begin{cases}
+\left(g^{d}_{pt\nu,\textbf{A}_{ij}}\text{s}_{d,j}\right).k^{d}_{pqt\nu}\text{ for }a=q\\
 0\ \text{otherwise}
 \end{cases}
 \end{alignat}
 
 \noindent We can see that non-zero columns are the ones
-corresponding to all direction for antenna $p$. The Jacobian for all
+corresponding to all direction and all polarisations for antenna $p$. The Jacobian for all
 baselines is written in a similar way, by superposing the
 $\JVpq$ for all $(pq)$ pairs as follows:
-
-
 
 \begin{alignat}{2}
 \label{eq:J}
@@ -111,10 +223,11 @@ $\JVpq$ for all $(pq)$ pairs as follows:
 \end{bmatrix}
 \end{alignat}
 
-\noindent which have size $[(n_{bl} n_t n_{\nu})\times (n_a n_d)]$,
+\noindent which have size $[(4n_{bl} n_t n_{\nu})\times (8n_a n_d)]$,
 where $n_{bl}$ is the number of baselines and is typically
 $n_{bl}=n_a(n_a-1)/2$. Although it has large dimensions, $\JV$ is
 sparse.
+
 
 
 \begin{figure*}[ht!]
