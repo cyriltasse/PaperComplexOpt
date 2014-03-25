@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=latex 2013.12.2)  25 MAR 2014 11:58
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=latex 2013.12.2)  25 MAR 2014 17:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -279,11 +279,7 @@ Package: arydshln 2004/08/31 v1.71
 \adl@clb=\count123
 \adl@everyvbox=\toks27
 \adl@LTpagetotal=\dimen155
-) (./paper.aux
-
-LaTeX Warning: Label `eq:Jpq' multiply defined.
-
-)
+) (./paper.aux)
 \openout1 = `paper.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 56.
@@ -298,7 +294,6 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 56.
 LaTeX Font Info:    ... okay on input line 56.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 56.
 LaTeX Font Info:    ... okay on input line 56.
-
 A&A warning: Missing \institute
 LaTeX Font Info:    Try loading font information for U+msa on input line 88.
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -335,18 +330,14 @@ File: tessel.eps Graphic file (type eps)
 
 Package natbib Warning: Empty `thebibliography' environment on input line 4.
 
-) [3] (./paper.aux)
-
-LaTeX Warning: There were multiply-defined labels.
-
- ) 
+) [3] (./paper.aux) ) 
 Here is how much of TeX's memory you used:
- 3611 strings out of 495060
- 44342 string characters out of 3182053
- 125533 words of memory out of 3000000
- 6709 multiletter control sequences out of 15000+200000
+ 3612 strings out of 495060
+ 44352 string characters out of 3182053
+ 125503 words of memory out of 3000000
+ 6710 multiletter control sequences out of 15000+200000
  17681 words of font info for 66 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
  27i,21n,25p,330b,289s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on paper.dvi (3 pages, 18412 bytes).
+Output written on paper.dvi (3 pages, 18732 bytes).
