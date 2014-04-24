@@ -149,8 +149,12 @@ to derive analytically, as we'll see below in the case of radio interferometric 
 
 \section{Unpolarized direction independent calibration}
 
+\newcommand{\Na}{N_\mathrm{ant}}
+\newcommand{\Nbl}{N_\mathrm{bl}}
+\newcommand{\Nd}{N_\mathrm{dir}}
+
 Let us first consider the simplest case, that of unpolarized direction-independent calibration. Consider an interferometer
-array of $N$ antennas measuring $M=N(N-1)/2$ pairwise visibilities. Each antenna pair $pq$ ($1\leq p<q\leq N$) 
+array of $\Na$ antennas measuring $\Nbl=\Na(\Na-1)/2$ pairwise visibilities. Each antenna pair $pq$ ($1\leq p<q\leq \Na$) 
 measures the visibility
 
 \begin{equation}
@@ -170,14 +174,15 @@ minimizing residuals in the LS sense:
 
 where $d_{pq}$ are the observed visibilities. Treating this as a complex optimization problem as per the above, 
 let us write out the complex Jacobian. 
-We have a vector of $N$ complex unknowns $\bmath{g}$ and $M$ measured visibilities $d_{pq}$. It is conventional
+We have a vector of $\Na$ complex unknowns $\bmath{g}$ and $\Nbl$ measurements $d_{pq}$, the full complex
+Jacobian will then have a shape of $2\Nbl\times2\Na$. It is conventional
 to think of visibilities laid out in a visibility matrix; the normal approach at this stage is to vectorize $d_{pq}$ 
-by fixing a numbering convention so as to enumerate all the possible antenna pairs $pq$ ($p<q$) using numbers from 1 to $M$.
+by fixing a numbering convention so as to enumerate all the possible antenna pairs $pq$ ($p<q$) using numbers from 1 to $\Nbl$.
 Instead, let us keep using $pq$ as a single ``compound index'', with the implicit understanding that $pq$ in 
-subscript corresponds to a single index from 1 to $M$ using \emph{some} fixed enumeration convention. 
+subscript corresponds to a single index from 1 to $\Nbl$ using \emph{some} fixed enumeration convention. 
 Where necessary, we'll write $pq$ in square brackets (e.g. $a_{[pq],i}$) to emphasize this.
 
-Now consider the patrial Jacobian $\JJ_k$ matrix in Eq.~\ref{eq:Jk}. This is of shape $M\times N$. We can write the
+Now consider the patrial Jacobian $\JJ_k$ matrix in Eq.~\ref{eq:Jk}. This is of shape $\Nbl\times\Na$. We can write the
 partial Jacobian in terms of its value at row $[pq]$ and column $j$ as 
 
 \[
@@ -194,13 +199,13 @@ this more compactly using the Kronecker delta:
 
 
 \[
-J_k = - \overbrace{ \Matrix{c}{ m_{pq}\bar{g}_q\delta^{j}_p } } ^{j=1\dots N} \big \}{\scriptstyle [pq]=1\dots M~(p<q)}
+J_k = - \overbrace{ \Matrix{c}{ m_{pq}\bar{g}_q\delta^{j}_p } } ^{j=1\dots \Na} \big \}{\scriptstyle [pq]=1\dots \Nbl~(p<q)}
 \]
 
 Likewise, the conjugate partial Jacobian $\JJ_{\bar{k}}$ may be written as
 
 \[
-J_{\bar{k}} = - \overbrace{ \Matrix{c}{ g_p m_{pq} \delta^{j}_q } } ^{j=1\dots N} \big \}{\scriptstyle [pq]=1\dots M~(p<q)}
+J_{\bar{k}} = - \overbrace{ \Matrix{c}{ g_p m_{pq} \delta^{j}_q } } ^{j=1\dots \Na} \big \}{\scriptstyle [pq]=1\dots \Nbl~(p<q)}
 \]
 
 To give a specific example, for 3 antennas, using the numbering convention for $pq$ of
@@ -217,17 +222,17 @@ The full complex Jacobian (Eq.~\ref{eq:JJ}) then becomes, in block matrix notati
 \begin{equation}
 \label{eq:JJ:di:basic}
 \begin{array}{r@{~}cc@{~}cc}
-                & \overbrace{}^{j=1\dots N} & \overbrace{}^{j=1\dots N} \\
+                & \overbrace{~~~~~~~~}^{j=1\dots \Na} & \overbrace{~~~~~~~~}^{j=1\dots \Na} \\
 \JJ = - \bigg [ &
   \Stack{ m_{pq}\bar{g}_q\delta^{j}_p \\ \bar{m}_{pq} \bar{g}_p \delta^{j}_q } &
   \Stack{ g_p m_{pq} \delta^{j}_q \\ g_q \bar{m}_{pq} \delta^{j}_p }  
 & \bigg ] &
-\Stack{ \} {\scriptstyle [pq]=1\dots M}~(p<q) \\ \} {\scriptstyle [pq]=1\dots M}~(p<q) }
+\Stack{ \} {\scriptstyle [pq]=1\dots \Nbl}~(p<q) \\ \} {\scriptstyle [pq]=1\dots \Nbl}~(p<q) }
 
 \end{array}
 \end{equation}
 
-where the $[pq]~(p<q)$ and $j$ subscripts within each block span the full range of $1\dots M$ and $1\dots N$. Now, 
+where the $[pq]~(p<q)$ and $j$ subscripts within each block span the full range of $1\dots \Nbl$ and $1\dots \Na$. Now, 
 since $d_{pq} = \bar{d}_{qp}$ and $m_{pq} = \bar{m}_{qp}$, we may notice
 that the bottom half of the augumented residuals vector $\bmath{r}$ corresponds to the conjugate baselines 
 $qp$ ($q>p$):
@@ -236,21 +241,21 @@ $qp$ ($q>p$):
 \[
 \bmath{r} = \Matrix{c}{ r_{pq} \\ \bar{r}_{pq} } = \Matrix{c}{d_{pq}-g_p m_{pq}\bar{g}_q\\ \bar{d}_{pq}-\bar{g}_p \bar{m}_{pq}g_q} = 
 \Matrix{c}{ r_{pq} \\ r_{qp} }~~ 
-\Stack{ \} \scriptstyle [pq]=1\dots M~(p<q) \\ \} \scriptstyle [pq]=1\dots M~(p<q) }
+\Stack{ \} \scriptstyle [pq]=1\dots \Nbl~(p<q) \\ \} \scriptstyle [pq]=1\dots \Nbl~(p<q) }
 \]
 
 as does the bottom half of $\JJ$ in Eq.~\ref{eq:JJ:di:basic}. Note that we are free to reorder the rows of $\JJ$ and $\bmath{r}$ 
 and intermix the normal and conjugate baselines, as this will not affect the LS equations derived at Eq.~\ref{eq:LM}.
 This proves most convenient: instead of splitting $\JJ$ and $\bmath{r}$ into 
-two vertical blocks with the compound index $[pq]~(p<q)$ running through $M$ rows within each block, we can treat 
-the two blocks as one, with a single compound index $[pq]~(p\ne q)$ running through $2M$ rows:
+two vertical blocks with the compound index $[pq]~(p<q)$ running through $\Nbl$ rows within each block, we can treat 
+the two blocks as one, with a single compound index $[pq]~(p\ne q)$ running through $2\Nbl$ rows:
 
 \begin{equation}
 \label{eq:JJ:di}
 \begin{array}{r@{~}cc@{~}cc}
-                & \overbrace{}^{j=1\dots N} & \overbrace{}^{j=1\dots N} \\
+                & \overbrace{~~~~~~~~}^{j=1\dots \Na} & \overbrace{~~~~~~~~}^{j=1\dots \Na} \\
 \JJ = - \big [ & m_{pq}\bar{g}_q\delta^{j}_p & g_p m_{pq} \delta^{j}_q & \big ],~
-\bmath{r} = \big [ r_{pq} \big ] ~~{\} \scriptstyle [pq]=1\dots 2M~(p\ne q)}
+\bmath{r} = \big [ r_{pq} \big ] ~~{\} \scriptstyle [pq]=1\dots 2\Nbl}
 \end{array}
 \end{equation}
 
@@ -270,7 +275,8 @@ For example, the complex Jacobian $\JJ$ for the 3-antenna case would then look l
 \]
 
 
-We can now write out the structure of $\JJ^H\JJ$. This is Hermitian, consisting of four $N\times N$ blocks:
+For brevity, let us define the shorthand $y_{pq} = m_{pq} \bar{g}_q$. 
+We can now write out the structure of $\JJ^H\JJ$. This is Hermitian, consisting of four $\Na\times\Na$ blocks:
 
 \[
 \JJ^H\JJ = \Matrix{cc}{\mat{A}&\mat{B}\\\mat{C}&\mat{D}} = \Matrix{cc}{\mat{A}&\mat{B}\\\mat{B}^H&\mat{A}}
@@ -278,111 +284,112 @@ We can now write out the structure of $\JJ^H\JJ$. This is Hermitian, consisting 
 
 since the value at row $i$, column $j$ of each block is
 \begin{eqnarray}
-A_{ij} = \sum_{pq} \bar{m}_{pq} g_q m_{pq} \bar{g}_q \delta^{i}_p \delta^{j}_p &=& 
+A_{ij} = \sum_{pq} \bar{y}_{pq} y_{pq} \delta^{i}_p \delta^{j}_p &=& 
   \left \{ \begin{array}{cc}
-        \sum_{q\ne i} |g_{q}^2| |m_{iq}^2|, & i=j \\
-        0, & i\ne j
+        \sum\limits_{q\ne i} |y_{pq}^2|, & \scriptstyle i=j \\
+        0,  & \scriptstyle  i\ne j
   \end{array} \right .\nonumber\\ 
-B_{ij} = \sum_{pq} \bar{m}_{pq} g_q g_p m_{pq} \delta^{i}_p \delta^{j}_q &=& 
+B_{ij} = \sum_{pq} \bar{y}_{pq} \bar{y}_{qp} \delta^{i}_p \delta^{j}_q &=& 
   \left \{ \begin{array}{cc}
-      g_{i} g_{j} |m_{ij}^2|, & i\ne j\\
-      0, & i=j
+      \bar{y}_{pq} \bar{y}_{qp}, & \scriptstyle i\ne j\\
+      0, & \scriptstyle i=j
   \end{array} \right .\nonumber\\ 
-C_{ij} = \sum_{pq} \bar{g}_p \bar{m}_{pq} m_{pq} \bar{g}_q \delta^{i}_q \delta^{j}_p &=& 
+C_{ij} = \sum_{pq} y_{qp} y_{pq} \delta^{i}_q \delta^{j}_p &=& 
   \bar{B}_{ij} \nonumber\\
-D_{ij} = \sum_{pq} \bar{g}_p \bar{m}_{pq} g_p m_{pq} \delta^{i}_q \delta^{j}_q &=& A_{ij} 
+D_{ij} = \sum_{pq} y_{pq} \bar{y}_{pq} \delta^{i}_q \delta^{j}_q &=& A_{ij} 
 \label{eq:JHJ:DI:ABCD}
 \end{eqnarray}
 
-We then write $\JJ^H\JJ$ in terms of the four $N\times N$ blocks as:
+We then write $\JJ^H\JJ$ in terms of the four $\Na\times\Na$ blocks as:
 
 \begin{equation}
 \label{eq:JHJ:DI}
-\JJ^H \JJ = \Matrix{c@{\bigg |}c}{
-\mathrm{diag} \sum\limits_{q\ne i} |g^2_{q}| |m^2_{iq}| & 
+\JJ^H \JJ = \Matrix{c@{~\bigg |~}c}{
+\mathrm{diag} \sum\limits_{q\ne i} |y_{iq}^2| & 
   \left \{ 
   \begin{array}{@{}cc@{}}
-   g_{i} g_{j} |m^2_{ij}|&{\scriptstyle i\ne j} \\
+   \bar{y}_{ij} \bar{y}_{ji}, &{\scriptstyle i\ne j} \\
    0, &{\scriptstyle i=j}
   \end{array} \right .\\
   \left \{ 
   \begin{array}{@{}cc@{}}
-   \bar{g}_{i} \bar{g}_{j} |m^2_{ij}|,&{\scriptstyle i\ne j} \\
+   y_{ij}y_{ji},&{\scriptstyle i\ne j} \\
    0, &{\scriptstyle i=j}
   \end{array} \right . 
-  & \mathrm{diag} \sum\limits_{q\ne i} |g^2_{q}| |m^2_{iq}| 
+  & \mathrm{diag} \sum\limits_{q\ne i} |y^2_{iq}| 
 }
 % \Stack{ 
-% \bigg \} \scriptstyle i=1\dots N \\ 
-% \bigg \} \scriptstyle i=1\dots N 
+% \bigg \} \scriptstyle i=1\dots \Na \\ 
+% \bigg \} \scriptstyle i=1\dots \Na 
 %}
 \end{equation}
 
 For example, in the 3-antenna case, we have the following expression for
 $\JJ^H \JJ$:
 
-\newcommand{\yysq}[2]{{a^2_{#1}+a^2_{#2}}}
-\newcommand{\bb}[1]{{b_{#1}}}
-\newcommand{\bbb}[1]{{\bar{b}_{#1}}}
-\[
+\newcommand{\yysq}[2]{{y^2_{#1}+y^2_{#2}}}
+\newcommand{\bb}[2]{{\bar{y}_{#1#2}\bar{y}_{#2#1}}}
+\newcommand{\bbb}[2]{y_{#1#2}y_{#2#1}}
+\begin{equation}
+\label{eq:JHJ:3ant}
 {\scriptstyle
 \Matrix{c@{}c@{}c@{}c@{}c@{}c}{
-\yysq{12}{13} & 0             & 0             & 0             & \bb{12}       & \bb{13} \\
-0             & \yysq{12}{23} & 0             & \bb{12}       & 0             & \bb{23} \\
-0             & 0             & \yysq{13}{23} & \bb{13}       & \bb{23}       & 0       \\
-0             & \bbb{12}      & \bbb{13}      & \yysq{12}{13} & 0             & 0       \\ 
-\bbb{12}      & 0             & \bbb{23}      & 0             & \yysq{12}{23} & 0 \\
-\bbb{13}      & \bbb{23}      & 0             & 0             & 0             &  \yysq{13}{23}  
+\yysq{12}{13} & 0             & 0             & 0             & \bb{1}{2}       & \bb{1}{3} \\
+0             & \yysq{12}{23} & 0             & \bb{1}{2}       & 0             & \bb{2}{3} \\
+0             & 0             & \yysq{13}{23} & \bb{1}{3}       & \bb{2}{3}       & 0       \\
+0             & \bbb{1}{2}      & \bbb{1}{3}      & \yysq{12}{13} & 0             & 0       \\ 
+\bbb{1}{2}      & 0             & \bbb{2}{3}      & 0             & \yysq{12}{23} & 0 \\
+\bbb{1}{3}      & \bbb{2}{3}      & 0             & 0             & 0             &  \yysq{13}{23}  
 }
-},
-\]
-where $a_{pq}=|g_p|^2|m_{pq}|^2$, and $b_{pq}=g_p g_q |m_{pq}|^2$.
+}
+\end{equation}
 
-The other component of the LM equations (Eq.~\ref{eq:LM}) is the $\JJ^H\bmath{r}$ term. This will be a
-$2N$-vector. We can write this as a stack of two $N$-vectors:
+The other component of the LM equations (Eq.~\ref{eq:LM}) is the $\JJ^H\bmath{r}$ term. This will be a column
+vector of length $2\Na$. We can write this as a stack of two $\Na$-vectors:
 
 
 \begin{equation}
 \label{eq:JHR:DI}
 \JJ^H\bmath{r} = -\Matrix{c}{ 
-\sum\limits_{pq} \bar{m}_{pq}g_q r_{pq} \delta^{i}_p  \\
-\sum\limits_{pq} \bar{g}_p \bar{m}_{pq} r_{pq} \delta^{i}_q 
+\sum\limits_{pq} \bar{y}_{pq} r_{pq} \delta^{i}_p  \\
+\sum\limits_{pq} y_{qp} r_{pq} \delta^{i}_q 
 } = -\Matrix{c}{
-\sum\limits_{q\ne i} \bar{m}_{iq}g_q r_{iq}   \\
-\sum\limits_{q\ne i} \bar{g}_q m_{iq} \bar{r}_{iq}  
+\sum\limits_{q\ne i} \bar{y}_{iq} r_{iq}   \\
+\sum\limits_{q\ne i} y_{iq} \bar{r}_{iq}  
 }
-\Stack{ 
-\big \} \scriptstyle i=1\dots N \\ 
-\big \} \scriptstyle i=1\dots N,
+\Stack{
+\big \} \scriptstyle i=1\dots \Na \\ 
+\big \} \scriptstyle i=1\dots \Na,
 }
 \end{equation}
 
-with the second equality established by swapping $p$ and $q$ in the bottom sum, and making use of $m_{pq}=\bar{m}_{qp}$ and $r_{pq}=\bar{r}_{qp}$. Clearly, the bottom vector is the conjugate of the top:
+with the second equality established by swapping $p$ and $q$ in the bottom sum, and making use of $y_{pq}=\bar{y}_{qp}$ and $r_{pq}=\bar{r}_{qp}$. Clearly, the bottom vector is the conjugate of the top:
 
 \begin{equation}
 \label{eq:JHR:DI1}
-\JJ^H\bmath{r} = -\Matrix{c}{\bmath{c}\\\bar{\bmath{c}}},~~c_i = \sum\limits_{q\ne i} \bar{m}_{iq} g_q r_{iq}.
+\JJ^H\bmath{r} = -\Matrix{c}{\bmath{c}\\\bar{\bmath{c}}},~~c_i = \sum\limits_{q\ne i} \bar{y}_{iq} r_{iq}.
 \end{equation}
 
 Equations~\ref{eq:JHJ:DI} and \ref{eq:JHR:DI1} give us the necessary ingredients for implementing complex
 optimization of the RIME using LM, NG and/or steepest descent. 
 
 \subsection{Approximating $\JJ^H\JJ$ and Stefcal}
+\label{sec:DI:stefcal}
 
-The structure of $\JJ^H\JJ$ in Eq.~\ref{eq:JHJ:DI} suggests that it is diagonally dominant (especially 
-for larger $N$). It is therefore not unreasonable to try approximating it with a diagonal matrix for purposes 
-of inversion. Applying this to Eq.~\ref{eq:LM} with $\lambda=0$ (i.e. implementing NG minimization), we end up
-with a simple per-antenna equation for computing the $\bmath{g}$ update step:
+A naive implementation of LS or NG above would hinge on inverting a $2\Na\times2\Na$ matrix, which is generally 
+an $O(\Na^3)$ operation. However, the structure of $\JJ^H\JJ$ in Eq.~\ref{eq:JHJ:DI} suggests that it is diagonally 
+dominant (especially for larger $\Na$), as the diagonal terms are added coherently. It is therefore not unreasonable 
+to try approximating it with a diagonal matrix for purposes of inversion, thus making the problem separable per antenna,
+and making matrix inversion itself negligible ($O(\Na)$ cost, as opposed to the $O(\Na^2)$ cost of computing the 
+diagonal elements of the Jacobian in the first place). The cost of using an approximation for $\JHJ$ is a less accurate
+update step, so we can expect to require more iterations before convergence is reached.
+
+Applying this idea to Eq.~\ref{eq:LM} with $\lambda=0$ (i.e. implementing NG minimization), we end up with a 
+simple per-antenna equation for computing the $\bmath{g}$ update step:
 
 \begin{equation}
-\delta g_p = \left( \sum\limits_{q\ne p} |g^2_{q}| |m^2_{pq}| \right )^{-1} \sum\limits_{q\ne p} \bar{m}_{pq} g_q r_{pq},
-\end{equation}
-
-or
-
-\begin{equation}
-\label{eq:JHJ:diag}
-\delta g_p = \left( \sum\limits_{q\ne p} |y^2_{pq}| \right )^{-1} \sum\limits_{q\ne p} y_{pq} r_{pq},~~~y_{pq}=\bar{m}_{pq} g_q
+\label{eq:stefcal}
+\delta g_p = \left( \sum\limits_{q\ne p} |y^2_{pq}|  \right )^{-1} \sum\limits_{q\ne p} \bar{y}_{pq} r_{pq},
 \end{equation}
 
 This is remarkably similar to the update step proposed by \citet{Stefcal} for the Stefcal algorithm, 
@@ -391,22 +398,28 @@ direction, by treating Eq.~\ref{eq:cal:DI} as a function of $\bmath{g}$ only, an
 resulting complex Jacobian (Eq.~\ref{eq:JJ:di:basic}) will then have null off-diagonal blocks, and $\JJ^H\JJ$ becomes 
 diagonal.
 
+
+
 Interestingly, if we use the diagonal $\JJ^H\JJ$ approximation with the modified LM method of Eq.~\ref{eq:LM1}, substitute 
 $d_{pq} - g_p m_{pq} \bar{g}_q $ for $r_{pq}$ in the equations above, and compute the updated parameter vector as 
 $\bmath{g}^\mathrm{(new)} = \bmath{g}+\delta \bmath{g}$, we arrive at
 
 
 \begin{eqnarray*}
-g_p^\mathrm{(new)} &=& \frac{\lambda}{1+\lambda}g_p + \frac{1}{1+\lambda} \frac{\sum\limits_{q\ne p} m_{pq}\bar{g}_q d_{pq}}{\sum\limits_{q\ne p} |g^2_{q}| |m^2_{pq}|}
+g_p^\mathrm{(new)} &=& \frac{\lambda}{1+\lambda}g_p + \frac{1}{1+\lambda} \frac{\sum\limits_{q\ne p} \bar{y}_{pq} d_{pq}}{\sum\limits_{q\ne p} |y^2_{pq}|}
 \end{eqnarray*}
 
 which for $\lambda=1$ essentially becomes the basic average-update step of Stefcal.
 
 Establishing the equivalence between Stefcal and complex optimization with a diagonally-approximated $\JJ^H\JJ$ is 
 very useful for our purposes, since the convergence properties of Stefcal have been thoroughly explored 
-by \citet{Stefcal}, and we can therefore hope to apply these lessons here.
+by \citet{Stefcal}, and we can therefore hope to apply these lessons here. In particular, these authors have shown 
+that a direct application of Eq.~\ref{eq:stefcal} leads to very slow convergence, whereas averaging every pair of 
+updates leads to faster convergence. They also propose a number of variations of the algorithm, all of which are 
+directly applicable to the above.
 
 \subsection{Weighting}
+\label{sec:DI:W}
 
 Although \citet{ComplexOpt} do not mention this explicitly, it is straightforward to incorporate weights into the 
 complex LS problem. Equation~\ref{eq:LSmin} is reformulated as
@@ -425,15 +438,16 @@ LM equations as
 \end{equation}
 
 To use the diagonal $\JJ^H\JJ$ approximation, we must additionally assume that $\mat{W}$ is diagonal (i.e. that the noise terms
-in Eq.~\ref{eq:RIME:unpol} are uncorrelated, which is normally the case for visibilities). We then have a simple weights vector
-$w_{pq}$ (recall that we treat $pq$ as a compound index in this instance). The update equation then becomes:
+in Eq.~\ref{eq:RIME:unpol} are uncorrelated, which is normally the case for visibilities). We then have a vector of $\Nbl$ weights
+$\bmath{w}=[w_{pq}]$ (recall that we treat $pq$ as a compound index in this instance). The update equation then becomes:
 
 \begin{equation}
 \label{eq:JHJ:diag:W}
-\delta g_p = \left( \sum\limits_{q\ne p} w_{pq} |y^2_{pq}| \right )^{-1} \sum\limits_{q\ne p} w_{pq} y_{pq} r_{pq},~~~y_{pq}=\bar{m}_{pq} g_q
+\delta g_p = \left( \sum\limits_{q\ne p} w_{pq} |y^2_{pq}| \right )^{-1} \sum\limits_{q\ne p} w_{pq} \bar{y}_{pq} r_{pq}
 \end{equation}
 
 \subsection{Time/frequency solution intervals}
+\label{sec:DI:avg}
 
 A very common use case is to measure multiple visibilities per each baseline $pq$, across a block of timeslots and frequency 
 channels, then obtaining complex gain solutions that are constant across the block. The minimization problem can then
@@ -446,27 +460,28 @@ be written as
 
 where $t$ and $\nu$ are timeslot and channel indices, respectively. We can repeat the derivations above using 
 $[pqt\nu]$ as a single compound index. In deriving the $\JHJ$ term, the sums in Eq.~\ref{eq:JHJ:DI:ABCD}
-must be taken over all $pqt\nu$ rather than just $pq$. We then have:
+must be taken over all $pqt\nu$ rather than just $pq$. Defining the usual shorthand of 
+$y_{pqt\nu}=m_{pqt\nu}\bar{g}_q$, we then have:
 
 \begin{equation}
 \label{eq:JHJ:DI:tf}
-\JJ^H \JJ = \Matrix{c@{\bigg |}c}{
-\mathrm{diag} \sum\limits_{t\nu,q\ne i} |g^2_{q}| |m^2_{iqt\nu}| & 
+\JJ^H \JJ = \Matrix{c@{~\bigg |~}c}{
+\mathrm{diag} \sum\limits_{t\nu,q\ne i} |y^2_{iqt\nu}| & 
   \left \{ 
   \begin{array}{@{}cc@{}}
-   \sum\limits_{t\nu} g_{i} g_{j} |m^2_{ijt\nu}|&{\scriptstyle i\ne j} \\
+   \sum\limits_{t\nu} \bar{y}_{ij} \bar{y}_{ji} &{\scriptstyle i\ne j} \\
    0, &{\scriptstyle i=j}
   \end{array} \right .\\
   \left \{ 
   \begin{array}{@{}cc@{}}
-   \sum\limits_{t\nu} \bar{g}_{i} \bar{g}_{j} |m^2_{ijt\nu}|,&{\scriptstyle i\ne j} \\
+   \sum\limits_{t\nu} y_{ij}y_{ji},&{\scriptstyle i\ne j} \\
    0, &{\scriptstyle i=j}
   \end{array} \right . 
-  & \mathrm{diag} \sum\limits_{t\nu,q\ne i} |g^2_{q}| |m^2_{iq}| 
+  & \mathrm{diag} \sum\limits_{t\nu,q\ne i} |y^2_{iqt\nu}| 
 }
 % \Stack{ 
-% \bigg \} \scriptstyle i=1\dots N \\ 
-% \bigg \} \scriptstyle i=1\dots N 
+% \bigg \} \scriptstyle i=1\dots \Na \\ 
+% \bigg \} \scriptstyle i=1\dots \Na 
 %}
 \end{equation}
 
@@ -476,21 +491,22 @@ and
 \label{eq:JHR:DI:tf}
 \JJ^H\bmath{r} 
 = -\Matrix{c}{
-\sum\limits_{t\nu,q\ne i} m_{iqt\nu}\bar{g}_q r_{iqt\nu}   \\
-\sum\limits_{t\nu,q\ne i} g_q \bar{m}_{iqt\nu} \bar{r}_{iqt\nu}  
+\sum\limits_{t\nu,q\ne i} \bar{y}_{iqt\nu} r_{iqt\nu}   \\
+\sum\limits_{t\nu,q\ne i} y_{iqt\nu} \bar{r}_{iqt\nu}  
 }
 \end{equation}
 
-Using the diagonal approximation (and adding weights), we then have the following update step:
+Using the diagonal approximation and adding weights $w_{pqt\nu}$, we have
 
-\begin{eqnarray*}
+
+\begin{equation}
 \label{eq:JHJ:diag:W:tf}
-\delta g_p &=& \left( \sum\limits_{t\nu,q\ne p} w_{pqt\nu} |y^2_{pqt\nu}| \right )^{-1} \sum\limits_{t\nu,q\ne p} w_{pqt\nu} y_{pqt\nu} r_{pqt\nu}\\
-y_{pqt\nu}&=&\bar{m}_{pqt\nu}g_q \nonumber
-\end{eqnarray*}
+\delta g_p = \left( \sum\limits_{t\nu,q\ne p} w_{pqt\nu} |y^2_{pqt\nu}| \right )^{-1} \sum\limits_{t\nu,q\ne p} w_{pqt\nu} \bar{y}_{pqt\nu} r_{pqt\nu}.
+\end{equation}
 
 
 \subsection{Time/frequency sliding windows}
+\label{sec:DI:smooth}
 
 The latter formulation allows for a particularly elegant way of implementing gain solutions per timeslot, per channel
 that are constrained to be smooth over frequency and time. To see this, let's consider the visibilities and gains as
@@ -505,13 +521,14 @@ and replace summation over $tv$ in the update step above with a convolution:
 
 \begin{equation}
 \label{eq:JHJ:diag:smooth}
-\delta g_p = \left( w\circ\sum\limits_{q\ne p} |y^2_{pq}| \right )^{-1} \left( w\circ \sum\limits_{q\ne p} y_{pq} r_{pq} \right )\\
+\delta g_p = \left( w\circ\sum\limits_{q\ne p} |y^2_{pq}| \right )^{-1} \left( w\circ \sum\limits_{q\ne p} \bar{y}_{pq} r_{pq} \right )\\
 \end{equation}
 
 Iterating the above to convergence, we obtain a gain solution $\bmath{g}(t,\nu)$ that is smooth in frequency and time, with the degree of smoothness 
 constrained by the windowing function. Note that for any given fixed time and frequency $t_0,\nu_0$, this is equivalent to using Stefcal to solve a weighted least-squares version of Eq.~\ref{eq:LSmin:w}, using a ``sliding window'' of weights centred on $t_0,\nu_0$, given by $w(t-t_0,\nu-\nu_0)$.
 
 \section{Polarized direction-independent calibration}
+\label{sec:pol:DI}
 
 To incorporate polarization, let us start by rewriting the basic RIME of Eq.~\ref{eq:RIME:unpol} using $2\times 2$ matrices \citep[a full derivation
 may be found in][]{RRIME1}:
@@ -578,7 +595,7 @@ From Eq.~\ref{eq:cal:DI:pol}, one can see that
 If we now stack the gain matrices of Eq.~\ref{eq:cal:DI:pol} into one column ``vector of matrices'' 
 
 \[
-\GG = [ \GG_1,\dots,\GG_N,\GG^H_1,\dots,\GG^H_N ]^T,
+\GG = [ \GG_1,\dots,\GG_{\scriptstyle \Na},\GG^H_1,\dots,\GG^H_{\scriptstyle \Na} ]^T,
 \]
 
 then we may construct the top half of the full complex Jacobian operator in full analogy with the 
@@ -589,7 +606,7 @@ $[pq]$ will represent a single index running through $M$ values (i.e. enumeratin
 \JJ_\mathrm{top} = - \Matrix{cc}{ 
 \Rop{ \MM_{pq}\GG^H_q }\delta^j_p & 
 \Lop{ \GG_p \MM_{pq}  }\delta^j_q 
-} ~~ \} \scriptstyle [pq]=1\dots M~(p<q)
+} ~~ \} \scriptstyle [pq]=1\dots \Nbl~(p<q)
 % 
 %\Lop{ \bar{\GG}_p    \bar{\MM}_{pq} }\delta^j_q & 
 %\Rop{ \bar{\MM}_{pq} \bar{\GG^H_q}  }\delta^j_p  
@@ -601,7 +618,7 @@ and is constructed by conjugating and mirroring the top half. Let us modify this
 of the residuals instead:
 
 \[
-\bmath{r} = 
+\bmath{R} = 
 \Matrix{c}{
   \RR_{pq} \\ 
   \RR^H_{pq} 
@@ -612,8 +629,8 @@ of the residuals instead:
 } 
 ~~ 
 \Stack{ 
-\} \scriptstyle [pq]=1\dots M~(p<q) \\ 
-\} \scriptstyle [pq]=1\dots M~(p<q) 
+\} \scriptstyle [pq]=1\dots \Nbl~(p<q) \\ 
+\} \scriptstyle [pq]=1\dots \Nbl~(p<q) 
 }
 \]
 
@@ -638,31 +655,396 @@ which, making use of Eq.~\ref{eq:LA:RATT}, becomes simply:
 \Lop{ \GG_q \MM^H_{pq}  } \delta^j_p  
 }~~ 
 \Stack{ 
-\} \scriptstyle [pq]=1\dots M~(p<q) \\ 
-\} \scriptstyle [pq]=1\dots M~(p<q) 
+\} \scriptstyle [pq]=1\dots \Nbl~(p<q) \\ 
+\} \scriptstyle [pq]=1\dots \Nbl~(p<q) 
 }
 \]
 
-We may now make exactly the same observation as we did to derive Eq.~\ref{eq:JJ:di}, and rewrite both $\JJ$ and $\bmath{r}$ in terms of 
+We may now make exactly the same observation as we did to derive Eq.~\ref{eq:JJ:di}, and rewrite both $\JJ$ and $\bmath{R}$ in terms of 
 a single row block. The $pq$ index will now run through $2M$ values (i.e. enumerating all combinations of $p\ne q$):
 
 \begin{equation}
+\label{eq:JJ:pol}
 \JJ = - \Matrix{cc}{ 
 \Rop{ \MM_{pq}\GG^H_q }\delta^j_p & 
 \Lop{ \GG_p \MM_{pq}  }\delta^j_q \\
 }~~ 
-\} \scriptstyle [pq]=1\dots 2M~(p\ne q)\\ 
+\} \scriptstyle [pq]=1\dots 2\Nbl~(p\ne q)\\ 
 \end{equation}
 
 and 
 
 \begin{equation}
 \bmath{r} = \Matrix{c}{ \mat{R}_{pq}}~~ 
-\} \scriptstyle [pq]=1\dots 2M~(p\ne q)\\ 
+\} \scriptstyle [pq]=1\dots 2\Nbl~(p\ne q)\\ 
 \end{equation}
 
+This is in complete analogy to the previous section. For compactness, let us now define
+
+\newcommand{\YY}{\mat{Y}}
+\newcommand{\ZZ}{\mat{Z}}
+\[
+\YY_{pq} = \MM_{pq} \GG^H_q,
+\]
+
+and noting that 
+
+\[
+\YY_{qp}^H = \GG_p \MM_{pq},
+\]
+
+we can now write out the $\JHJ$ term, still expressed in terms of operators\footnote{The Hermitian
+conjugate operators are derived as $\Rop{\mat{A}}^H=\Rop{\mat{A}^H}$ and $\Lop{\mat{A}}^H=\Lop{\mat{A}^H}$,
+see Appendix~\ref{sec:4x4app}.} as:
+
+\begin{equation}
+\label{eq:JHJ:pol}
+\JHJ = \Matrix{cc}{
+  \mathrm{diag}\sum\limits_{q\ne i} \Rop{\YY_{iq} \YY^H_{iq}} & 
+  \left \{ 
+  \begin{array}{@{}cc@{}}
+   \Rop{ \YY^H_{ij}  } \Lop{\YY^H_{ji}},&{\scriptstyle i\ne j} \\
+   0, &{\scriptstyle i=j}
+  \end{array} \right . 
+  \\
+  \left \{ 
+  \begin{array}{@{}cc@{}}
+   \Lop{ Y_{ji}  } \Rop{\YY_{ij}},&{\scriptstyle i\ne j} \\
+   0, &{\scriptstyle i=j}
+  \end{array} \right . 
+  &
+  \mathrm{diag}\sum\limits_{q\ne i} \Lop{\YY^H_{qi}\YY_{qi}}
+}
+\end{equation}
+
+Note that this makes use of the property $\Rop{\mat{A}}\Rop{\mat{B}}=\Rop{\mat{BA}}$ and 
+$\Lop{\mat{A}}\Lop{\mat{B}}=\Lop{\mat{AB}}$. 
+Compare this to Eq.~\ref{eq:JHJ:DI}.
+
+For the $\JJ^H\bmath{R}$ term, we can directly apply the linear operators appearing in $\JJ^H$ 
+to the matrices in $\bmath{R}$:
+
+\begin{equation}
+\JJ^H\bmath{R} = -\Matrix{c}{ 
+\sum\limits_{pq} \YY^H_{pq} \RR_{pq} \delta^{i}_p  \\
+\sum\limits_{pq} \RR_{pq} \YY_{qp} \delta^{i}_q 
+} = -\Matrix{c}{
+\sum\limits_{q\ne i} \YY^H_{iq} \RR_{iq} \\
+\sum\limits_{q\ne i} \RR^H_{iq} \YY_{iq}  
+},
+% \Stack{ 
+% \big \} \scriptstyle i=1\dots \Na \\ 
+% \big \} \scriptstyle i=1\dots \Na,
+% }
+\end{equation}
+
+where the second equality is established by swapping the $p$ and $q$ indices. Unsurprisingly, and by analogy with 
+Eq.~\ref{eq:JHR:DI1}, the bottom half of the vector is Hermitian with respect to the top.
+
+To implement NG or LM optimization, there is still a matrix inversion step involved, so we need to recast the operator 
+form of Eq.~\ref{eq:JHJ:pol} into conventional matrix form. There are two options here. The brute-force numerical
+approach is to substitute the matrix forms of $\Rop{~}$ and $\Lop{~}$ derived in Appendix~\ref{sec:4x4app} into the equation, 
+and then do a straightfoward matrix inversion. The other option is to use an analogue of the diagonal approximation described in 
+Sect.~\ref{sec:DI:stefcal}. If we neglect the off-diagonal blocks of $\JHJ$, the operator form of the matrix is 
+diagonal, and the problem is separable per antenna. The inverse operator corresponding to $\Rop{\mat{A}}$ is, 
+trivially, $\Rop{\mat{A}^{-1}}$. We then have a simple per-antenna equation for the NG update step:
+
+\begin{equation}
+\label{eq:update:DI:diag:pol}
+\delta \GG_p = \left [ \sum\limits_{q\ne p} \YY^H_{pq} \RR_{pq} \right ] 
+\left [ \sum\limits_{q\ne p} \YY_{pq} \YY^H_{pq}  \right ]^{-1}
+\end{equation}
+
+This is once again equivalent to the polarized Stefcal update step proposed by \citet{Stefcal}. Note also that all 
+the tricks of weighting and time/frequency averaging or smoothing discussed in Sect.~\ref{sec:DI:W}--\ref{sec:DI:smooth} 
+can also be applied in this formulation.
 
 
+\section{Direction-dependent calibration}
+
+\newcommand{\Ns}{N_s}
+
+We can now apply a similar approach to the direction-dependent calibration problem. For DD calibration, we reformulate
+the RIME as a sum of $\Na$ sky components, each with its own direction-dependent gain. 
+It is common practice to do direction-dependent gain solutions on larger time/frequency intervals than direction-independent 
+solutions, since short intervals lead to underconstrained
+problems. We will therefore immmediately incorporate solution intervals (see Sect.~\ref{sec:DI:avg}) 
+over $\Ns=N_t N_\nu$ time/frequency samples into the  minimization problem. The residuals being minimized
+are then
+
+\newcommand{\GGd}{\GG^{(d)}}
+\newcommand{\GGdH}{\GG^{(d)H}}
+\newcommand{\MMd}{\MM^{(d)}}
+\newcommand{\YYd}{\YY^{(d)}}
+\newcommand{\YYdH}{\YY^{(d)H}}
+\newcommand{\YYc}{\YY^{(c)}}
+\newcommand{\YYcH}{\YY^{(c)H}}
+\newcommand{\ggd}{g^{(d)}}
+\newcommand{\ggdH}{\bar{g}^{(d)}}
+\newcommand{\ggc}{g^{(c)}}
+\newcommand{\ggcH}{\bar{g}^{(c)}}
+\newcommand{\mmc}{m^{(c)}}
+\newcommand{\mmd}{m^{(d)}}
+\newcommand{\mmcH}{\bar{m}^{(c)}}
+\newcommand{\mmdH}{\bar{m}^{(d)}}
+\newcommand{\yyd}{y^{(d)}}
+\newcommand{\yydH}{\bar{y}^{(d)}}
+\newcommand{\yyc}{y^{(c)}}
+\newcommand{\yycH}{\bar{y}^{(c)}}
+
+\begin{equation}
+\label{eq:cal:dd:unpol}
+%\min_{\{\GGd_p\}}\sum_{pq}||\RR_{pq}||_F,~
+r_{pqs} = d_{pqs} - \sum_{d=1}^{\Nd} \ggd_p \mmd_{pqs} \ggdH_q.
+\end{equation}
+
+in the unpolarized case, and
+
+\begin{equation}
+\label{eq:cal:dd:pol}
+%\min_{\{\GGd_p\}}\sum_{pq}||\RR_{pq}||_F,~
+\RR_{pqs} = \DD_{pqs} - \sum_{d=1}^{\Nd} \GGd_p \MMd_{pqs} \GGdH_q
+\end{equation}
+
+in the polarized case. Note that we use the $s$ index to refer to individual time/frequency slots. The sky models and the 
+data differ per baseline and sample, while the gain matrices are constant across all sampes. We seek to minimize:
+
+
+\[
+\min_{\{\ggd_p\}}\sum_{pqs}|r^2_{pqs}|,~~\mathrm{or}~~~\min_{\{\GGd_p\}}\sum_{pqs}||\RR_{pqs}||_F.
+\]
+
+For simplicity, let's consider the unpolarized case first. From looking at Eqs.~\ref{eq:cal:dd:unpol}, it's obvious that the 
+Jacobian of this problem is very similar to the one 
+in Eq.~\ref{eq:JJ:di}, but instead of having shape $2\Nbl\times2\Na$, this will have a 
+shape of $2\Nbl\Ns\times 2\Na\Nd$:
+
+\[
+\begin{array}{r@{~}cc@{~}cc}
+ & \overbrace{~~~~~~~~~~~~}^{\Stack{\scriptstyle j=1\dots \Na\\\scriptstyle d=1\dots \Nd}} & 
+   \overbrace{~~~~~~~~~~~~}^{\Stack{\scriptstyle j=1\dots \Na\\\scriptstyle d=1\dots \Nd}} \\
+\JJ = - \bigg [ &
+  \mmd_{pqs}\ggdH_q \delta^j_p & 
+  \ggd_p \mmd_{pqs}  \delta^j_q 
+\bigg ] &
+\big \}
+\begin{array}{l}
+\scriptstyle [pq]=1\dots 2\Nbl~(p\ne q)\\ \scriptstyle s=1\dots\Ns
+\end{array}
+
+\end{array}
+\]
+
+Every antenna $j$ and direction $d$ will correspond to a column in $\JJ$, but the specific order of the columns 
+(corresponding to the order in which we place the $\ggd_p$ elements in the parameter vector $\bmath{g}$)
+is up to us. Consider now the $\JHJ$ product. This will consist of $2\times2$ blocks, each of shape 
+$\Na\Nd$ squared. We'll use $i,c$ to designate the rows within each block, $j,d$ to designate the columns, 
+and define $\yyd_{pqs}=\mmd_{pqs}\ggdH_q$. The $\JHJ$ matrix will then have the following structure:
+
+\begin{equation}
+\JHJ = \Matrix{cc}{
+  \delta^i_j \sum\limits_{q\ne i,s} \yycH_{iqs} \yyd_{iqs}  & 
+  \left \{ 
+  \begin{array}{@{}cc@{}}
+   \sum\limits_{s} \yycH_{ijs} \yydH_{jis}, & {\scriptstyle i\ne j}\\
+   0 &{\scriptstyle i=j}
+  \end{array} \right . 
+  \\
+  \left \{ 
+  \begin{array}{@{}cc@{}}
+   \sum\limits_{s} \yyc_{jis} \yyd_{ijs},&{\scriptstyle i\ne j} \\
+   0 &{\scriptstyle i=j}
+  \end{array} \right . 
+  &
+  \delta^i_j \sum\limits_{q\ne i,s} \yycH_{qis}\yyd_{qis}
+},
+\label{eq:JHJ:DD:unpol}
+\end{equation}
+
+while the $\JJ^H\bmath{r}$ term will be a vector of length 2$\Na\Nd$-vector, with the element corresponding to 
+antenna $j$, direction $d$ given by 
+
+\[
+\JJ^H\bmath{r} = -\Matrix{c}{\bmath{c}\\\bar{\bmath{c}}},~~c_{jd} = \sum\limits_{q\ne j} \yydH_{jqs} r_{jqs}.
+\]
+
+Let us tackle the problem of inverting $\JHJ$ above. This is a massive matrix, so a brute force 
+approach would be computationally very expensive, typically scaling as $O(\Nd^3\Na^3)$. We can, 
+however, adopt a few approximations. Let us first arrange the parameter vector in direction 
+major, antenna minor order:
+
+\[
+\bmath{g} = [g^{(1)}_1,\dots,g^{(2)}_{N_\mathrm{ant}},g^{(2)}_1,\dots,g^{(2)}_{N_\mathrm{ant}},g^{(3)}_1,\dots ]^T
+\]
+
+The $\JHJ$ term can then be split into $\Nd\times\Nd$ blocks:
+
+\newcommand{\JJJ}{\mathcal{J}}
+\begin{equation}
+\label{eq:JHJ:DD:blocked}
+\Matrix{ccc}{\JJJ^1_1 & \dots & \JJJ^{\Nd}_1 \\
+\vdots & & \vdots \\
+\JJJ_{\Nd}^1 & \dots & \JJJ_{\Nd}^{\Nd} },
+\end{equation}
+
+where the structure of each $2\Na\times2\Na$ block at row $c$, column $d$, is exactly as 
+given by Eq.~\ref{eq:JHJ:DD:unpol}. The on-diagonal blocks $\JJJ^d_d$ will then be exactly as per 
+Eq.~\ref{eq:JHJ:DI} (or Eq.~\ref{eq:JHJ:3ant}). Consider now the off-diagonal (``cross-direction'') 
+blocks $\JJJ^d_c$. Their non-zero elements can take one of two forms:
+
+\[
+  \sum\limits_{q\ne i,s} \yycH_{iqs} \yyd_{iqs} = \sum\limits_{q\ne i} \ggc_q \ggdH_q \sum_s \mmcH_{iqs} \mmd_{iqs}
+\]
+
+or
+
+\[
+  \sum\limits_{s} \yyc_{jis} \yyd_{ijs} = \ggcH_i \ggdH_j \sum_s \mmcH_{ijs} \mmd_{ijs}.
+\]
+
+A common element of both is the dot product of sky models over samples. This is a measure of how ``non-orthogonal'' the 
+sky model components are:
+
+\begin{equation}
+\label{eq:Xpqcd}
+X_{pq}^{(cd)} = \left \langle \bmath{m}_{pq}^\mathrm{(c)},\bmath{m}^\mathrm{(d)}_{pq} \right \rangle = \sum_s \mmc_{pqs} \mmdH_{pqs}.
+\end{equation}
+
+We should now note that the sky model corresponding to each direction (e.g. each source) can be typically decomposed as
+
+\[
+\bmath{m}_{pqt\nu}^\mathrm{(d)} = S^{(d)} k^{(d)}_{pqt\nu}, 
+\]
+
+where the term $S$ represents the visibility of that sky model component if placed phase centre -- and is thus only 
+weakly dependent on $pq,t,\nu$ (in the case of a point source, for example, $S$ is just a constant flux) -- while the term
+
+\[
+k^{(d)}_{pqt,\nu} = e^{-2\pi i (\bmath{u}_{pq}(t)\cdot\bmath{\sigma}_d)\nu/c},~~~\bmath{\sigma}_d = [l_d,m_d,n_d-1]^T,
+\]
+
+represents the phase rotation to direction $\bmath{\sigma}_d$ ($lmn$ being the direction cosines), given a 
+baseline vector as a function of time $\bmath{u}_{pq}(t)$. We can then approximate the sky model dot product above as
+
+\[
+X_{pq}^{(cd)} = S^{(c)}S^{(d)} \sum_s e^{-2\pi i [\bmath{u}_{pq}(t)\cdot(\bmath{\sigma}_c-\bmath{\sigma}_d) ]\nu/c}
+\]
+
+The sum over samples $s$ is essentially just an integral over a complex fringe. We may therefore expect sky model 
+components to be more orthogonal if the directions are well-separated, and more orthogonal over longer time and
+frequency intervals. Now if we assume that the sky model components are orthogonal or near-orthogonal, then
+we may treat the ``cross-direction'' blocks of the $\JHJ$ matrix in Eq.~\ref{eq:JHJ:DD:blocked} as null. The problem is 
+then separable by direction -- $\JHJ$ becomes block-diagonal -- and the inversion complexity reduces to $O(\Nd)O(\Na^3)$, 
+which, for large numbers of directions, is a huge improvement on $O(\Nd^3\Na^3)$. 
+
+A further simplification is possible by using a Stefcal-style diagonal approximation (Sect.~\ref{sec:DI:stefcal}) for
+the per-direction $\JJJ^d_d$ blocks. Matrix inversion then reduces to $O(\Nd\Na)$ in complexity, and the problem becomes dominated by
+the $O(\Nd\Na^2)$ process of computing the diagonal elements of $\JHJ$. The update step is then a direct analogue of
+Eq.~\ref{eq:JHJ:diag:W:tf}:
+
+\begin{equation}
+\delta \ggd_p = \left( \sum\limits_{q\ne p,s} |\yyd_{pqs}|^2  \right )^{-1} \sum\limits_{q\ne p,s} \yydH_{pqs} r_{pqs},
+\end{equation}
+
+and, following \citet{Stefcal}, we can expect to improve convergence by averaging every pair of solutions together.
+
+Let us now briefly address the fully-polarized direction-dependent case. This is a straightforward application of
+the operator formalism developed in Sect.~\ref{sec:pol:DI} to the derivations above. As a result, we arrive at the
+following expression for $\JHJ$:
+
+\begin{equation}
+\label{eq:JHJ:DD:pol}
+\Matrix{cc}{
+  \delta^i_j \sum\limits_{q\ne i,s} \Rop{\YYd_{iqs} \YYcH_{iqs}} & 
+  \left \{ 
+  \begin{array}{@{}cc@{}}
+   \sum\limits_{s} \Rop{ \YYcH_{ijs}  } \Lop{\YYdH_{jis}},&{\scriptstyle i\ne j} \\
+   0 &{\scriptstyle i=j}
+  \end{array} \right . 
+  \\
+  \left \{ 
+  \begin{array}{@{}cc@{}}
+   \sum\limits_{s} \Lop{ \YYc_{jis}  } \Rop{\YYd_{ijs}},&{\scriptstyle i\ne j} \\
+   0 &{\scriptstyle i=j}
+  \end{array} \right . 
+  &
+  \delta^i_j \sum\limits_{q\ne i,s} \Lop{\YYcH_{qis}\YYd_{qis}}
+},
+\end{equation}
+
+using the normal shorthand of $\YYd_{pqs} = \MMd_{pqs} \GGdH_q$. The $\JJ^H\bmath{R}$ term is then
+
+\begin{equation}
+\label{eq:JHR:DD:pol}
+\JJ^H\bmath{R} = -\Matrix{c}{
+\sum\limits_{q\ne i,s} \YYdH_{iqs} \RR_{iqs} \\
+\sum\limits_{q\ne i,s} \RR^H_{iqs} \YYd_{iqs}  },
+\end{equation}
+
+and using both the direction separability and antenna separability assumptions above, the NG update step can be computed as
+
+\begin{equation}
+\label{eq:update:DD:diag:pol}
+\delta \GGd_p = \left [ \sum\limits_{q\ne p,s} \YYdH_{pqs} \RR_{pqs} \right ] 
+\left [ \sum\limits_{q\ne p,s} \YYd_{pqs} \YYdH_{pqs}  \right ]^{-1}
+\end{equation}
+
+Note that it is straightfoward to add weights and/or sliding window averging to this formulation, as per 
+Sect.~\ref{sec:DI:W} and \ref{sec:DI:smooth}.
+
+Equations~\ref{eq:JHJ:DD:pol}--\ref{eq:JHR:DD:pol} can be considered the principal result of this work.
+They provide the necessary ingredients for treating direction-dependent calibration as a complex optimization 
+problem, and can be combined and approximated in different ways to produce different types of calibration 
+algorithms. In particular, under both separability assumptions, we can apply Newton-Gauss to derive what is essentially a generalization of 
+Stefcal to direction-dependent solutions. An application of this algorithm to real data is presented in Sect.~\ref{sec:realdata}.
+
+Another interesting note is that Eq.~\ref{eq:update:DD:diag:pol} is embarassingly parallel, since the update step is 
+completely separated by direction and antenna. This makes it particularly well-suited to implementation on massively 
+parallel architectures such as GPUs.
+
+\section{Algorithmic variations}
+
+We should note that Eq.~\ref{eq:update:DD:diag:pol}, i.e. ``direction-dependent polarized Stefcal'', is just one
+possible approximation of the general problem given by Eqs.~\ref{eq:JHJ:DD:pol}--\ref{eq:JHR:DD:pol}. In this section
+we briefly explore other possible variations.
+
+\subsection{Feed forward}
+
+\citet{Stefcal} propose variants of their algorithm (``2-basic'' and ``2-relax'') where the results of the 
+update step (Eq.~\ref{eq:update:DI:diag:pol}, in essense) are computed sequentially per antenna, with updated
+values for $\GG_1,\dots,\GG_{k-1}$ fed forward into the equations for $\GG_k$. This is shown to 
+substantially improve convergence, while sacrificing the embarassing paralellism by antenna.
+
+This technique is directly applicable to Eq.~\ref{eq:update:DD:diag:pol}. Another interesting variation to 
+explore is feed forward by direction. That is:
+
+\begin{enumerate}
+\item Compute an update for the first direction $\GG^{(1)}_1,\dots,\GG^{(1)}_{\Na}$
+\item Recompute the residuals
+
+\end{enumerate}
+
+\subsection{Levenberg-Marquandt}
+
+\subsection{Peeling}
+
+\subsection{Blocking by direction}
+
+
+\section{Applications to real data}
+
+
+\label{sec:realdata}
+
+\section*{Conclusions}
+
+Complexity $O(\Nd\Na^2).$ Chicken!
+
+Embarassingly parallel. GPU. Chicken!
+
+Many variations possbile. Chicken!
+
+Uinfying framework? Chicken!
 
 \bibliographystyle{mn2e}
 \bibliography{cjpaper}
@@ -717,7 +1099,6 @@ three operators have an important relationship
 
 which is trivially derived from their definitions. This must necessarily also hold for the corresponding $4\times4$ matrices:
 $\Lop{\mat{A}^T} = \Top \Rop{\mat{A}}$, and can be verified from the matrix definitions above.
-
 
 \label{lastpage}
 
