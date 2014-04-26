@@ -131,7 +131,7 @@ Note that this is a $2m \times 2n$ matrix. The LM parameter update step is then 
 \end{equation}
 
 where $\II$ is the identity matrix, and $\lambda$ is the LM damping parameter. When $\lambda=0$ this becomes 
-equivalent to the Newton-Gauss (NG) method; with $\lambda\to\infty$ this corresponds to steepest descent with ever smaller steps.
+equivalent to the Gauss-Newton (GN) method; with $\lambda\to\infty$ this corresponds to steepest descent with ever smaller steps.
 
 An alternative version of LM is formulated as
 
@@ -153,7 +153,7 @@ to derive analytically, as we'll see below in the case of radio interferometric 
 \newcommand{\Nbl}{N_\mathrm{bl}}
 \newcommand{\Nd}{N_\mathrm{dir}}
 
-Let us first consider the simplest case, that of unpolarized direction-independent calibration. Consider an interferometer
+Let us first consider the simplest case, that of unpolarized direction-independent (DI) calibration. Consider an interferometer
 array of $\Na$ antennas measuring $\Nbl=\Na(\Na-1)/2$ pairwise visibilities. Each antenna pair $pq$ ($1\leq p<q\leq \Na$) 
 measures the visibility
 
@@ -371,12 +371,12 @@ with the second equality established by swapping $p$ and $q$ in the bottom sum, 
 \end{equation}
 
 Equations~\ref{eq:JHJ:DI} and \ref{eq:JHR:DI1} give us the necessary ingredients for implementing complex
-optimization of the RIME using LM, NG and/or steepest descent. 
+optimization of the RIME using LM, GN and/or steepest descent. 
 
-\subsection{Approximating $\JJ^H\JJ$ and Stefcal}
+\subsection{Diagonal approximation and Stefcal}
 \label{sec:DI:stefcal}
 
-A naive implementation of LS or NG above would hinge on inverting a $2\Na\times2\Na$ matrix, which is generally 
+A naive implementation of LS or GN above would hinge on inverting a $2\Na\times2\Na$ matrix, which is generally 
 an $O(\Na^3)$ operation. However, the structure of $\JJ^H\JJ$ in Eq.~\ref{eq:JHJ:DI} suggests that it is diagonally 
 dominant (especially for larger $\Na$), as the diagonal terms are added coherently. It is therefore not unreasonable 
 to try approximating it with a diagonal matrix for purposes of inversion, thus making the problem separable per antenna,
@@ -384,30 +384,35 @@ and making matrix inversion itself negligible ($O(\Na)$ cost, as opposed to the 
 diagonal elements of the Jacobian in the first place). The cost of using an approximation for $\JHJ$ is a less accurate
 update step, so we can expect to require more iterations before convergence is reached.
 
-Applying this idea to Eq.~\ref{eq:LM} with $\lambda=0$ (i.e. implementing NG minimization), we end up with a 
+Applying this idea to Eq.~\ref{eq:LM} with $\lambda=0$ (i.e. implementing GN minimization), we end up with a 
 simple per-antenna equation for computing the $\bmath{g}$ update step:
 
 \begin{equation}
-\label{eq:stefcal}
+\label{eq:update:di:unpol}
 \delta g_p = \left( \sum\limits_{q\ne p} |y^2_{pq}|  \right )^{-1} \sum\limits_{q\ne p} \bar{y}_{pq} r_{pq},
 \end{equation}
 
-This is remarkably similar to the update step proposed by \citet{Stefcal} for the Stefcal algorithm, 
-and by \citet{Mitchell-RTS} for MWA calibration. Note that these authors arrive at the equation from a different 
+Even more elegantly, the updated parameter estimate $\hat{\bmath{g}} = \bmath{g}+\delta \bmath{g}$ can be written as
+
+\begin{equation}
+\label{eq:stefcal}
+\hat{g}_p = g_p + \frac{\sum\limits_{q\ne p} \bar{y}_{pq} (d_{pq} - g_p y_{pq})}{\sum\limits_{q\ne p} \bar{y}_{pq} y_{pq}} 
+= \frac{\sum\limits_{q\ne p} \bar{y}_{pq} d_{pq} }{\sum\limits_{q\ne p} \bar{y}_{pq} y_{pq}},
+\end{equation}
+
+which eliminates the need to actually compute residuals. This is identical to the update step proposed by \citet{Stefcal} for the 
+Stefcal algorithm, and by \citet{Mitchell-RTS} for MWA calibration. Note that these authors arrive at the equation from a different 
 direction, by treating Eq.~\ref{eq:cal:DI} as a function of $\bmath{g}$ only, and ignoring the conjugate term. The 
 resulting complex Jacobian (Eq.~\ref{eq:JJ:di:basic}) will then have null off-diagonal blocks, and $\JJ^H\JJ$ becomes 
 diagonal.
 
+Interestingly, if we use the diagonal $\JJ^H\JJ$ approximation with the modified LM method of Eq.~\ref{eq:LM1}, we instead 
+arrive at
 
-
-Interestingly, if we use the diagonal $\JJ^H\JJ$ approximation with the modified LM method of Eq.~\ref{eq:LM1}, substitute 
-$d_{pq} - g_p m_{pq} \bar{g}_q $ for $r_{pq}$ in the equations above, and compute the updated parameter vector as 
-$\bmath{g}^\mathrm{(new)} = \bmath{g}+\delta \bmath{g}$, we arrive at
-
-
-\begin{eqnarray*}
-g_p^\mathrm{(new)} &=& \frac{\lambda}{1+\lambda}g_p + \frac{1}{1+\lambda} \frac{\sum\limits_{q\ne p} \bar{y}_{pq} d_{pq}}{\sum\limits_{q\ne p} |y^2_{pq}|}
-\end{eqnarray*}
+\[
+\hat{g}_p = \frac{\lambda}{1+\lambda}g_p + \frac{1}{1+\lambda} \frac{\sum\limits_{q\ne p} \bar{y}_{pq} d_{pq}}{
+\sum\limits_{q\ne p} \bar{y}_{pq} y_{pq}}
+\]
 
 which for $\lambda=1$ essentially becomes the basic average-update step of Stefcal.
 
@@ -443,7 +448,7 @@ $\bmath{w}=[w_{pq}]$ (recall that we treat $pq$ as a compound index in this inst
 
 \begin{equation}
 \label{eq:JHJ:diag:W}
-\delta g_p = \left( \sum\limits_{q\ne p} w_{pq} |y^2_{pq}| \right )^{-1} \sum\limits_{q\ne p} w_{pq} \bar{y}_{pq} r_{pq}
+\hat{g}_p = \left( \sum\limits_{q\ne p} w_{pq} |y^2_{pq}| \right )^{-1} \sum\limits_{q\ne p} w_{pq} \bar{y}_{pq} d_{pq}
 \end{equation}
 
 \subsection{Time/frequency solution intervals}
@@ -455,29 +460,29 @@ be written as
 
 \begin{equation}
 \label{eq:cal:DI:tf}
-\min_{\bmath{g}}\sum_{pqt\nu}|d_{pqt\nu}-g_p m_{pqt\nu} \bar{g}_q|^2, 
+\min_{\bmath{g}}\sum_{pqs}|d_{pqs}-g_p m_{pqs} \bar{g}_q|^2, 
 \end{equation}
 
-where $t$ and $\nu$ are timeslot and channel indices, respectively. We can repeat the derivations above using 
-$[pqt\nu]$ as a single compound index. In deriving the $\JHJ$ term, the sums in Eq.~\ref{eq:JHJ:DI:ABCD}
-must be taken over all $pqt\nu$ rather than just $pq$. Defining the usual shorthand of 
-$y_{pqt\nu}=m_{pqt\nu}\bar{g}_q$, we then have:
+where $s$ is a sample index enumerating all the samples within the time/frequency solution interval.
+We can repeat the derivations above using  $[pqs]$ as a single compound index. In deriving the $\JHJ$ term, 
+the sums in Eq.~\ref{eq:JHJ:DI:ABCD} must be taken over all $pqs$ rather than just $pq$. Defining the usual shorthand of 
+$y_{pqs}=m_{pqs}\bar{g}_q$, we then have:
 
 \begin{equation}
 \label{eq:JHJ:DI:tf}
 \JJ^H \JJ = \Matrix{c@{~\bigg |~}c}{
-\mathrm{diag} \sum\limits_{t\nu,q\ne i} |y^2_{iqt\nu}| & 
+\mathrm{diag} \sum\limits_{q\ne i,s} |y^2_{iqs}| & 
   \left \{ 
   \begin{array}{@{}cc@{}}
-   \sum\limits_{t\nu} \bar{y}_{ij} \bar{y}_{ji} &{\scriptstyle i\ne j} \\
+   \sum\limits_{s} \bar{y}_{ijs} \bar{y}_{jis} &{\scriptstyle i\ne j} \\
    0, &{\scriptstyle i=j}
   \end{array} \right .\\
   \left \{ 
   \begin{array}{@{}cc@{}}
-   \sum\limits_{t\nu} y_{ij}y_{ji},&{\scriptstyle i\ne j} \\
+   \sum\limits_{t\nu} y_{ijs}y_{jis},&{\scriptstyle i\ne j} \\
    0, &{\scriptstyle i=j}
   \end{array} \right . 
-  & \mathrm{diag} \sum\limits_{t\nu,q\ne i} |y^2_{iqt\nu}| 
+  & \mathrm{diag} \sum\limits_{q\ne i,s} |y^2_{iqs}| 
 }
 % \Stack{ 
 % \bigg \} \scriptstyle i=1\dots \Na \\ 
@@ -491,17 +496,16 @@ and
 \label{eq:JHR:DI:tf}
 \JJ^H\bmath{r} 
 = -\Matrix{c}{
-\sum\limits_{t\nu,q\ne i} \bar{y}_{iqt\nu} r_{iqt\nu}   \\
-\sum\limits_{t\nu,q\ne i} y_{iqt\nu} \bar{r}_{iqt\nu}  
+\sum\limits_{q\ne i,s} \bar{y}_{iqs} r_{iqs}   \\
+\sum\limits_{q\ne i,s} y_{iqs} \bar{r}_{iqs}  
 }
 \end{equation}
 
-Using the diagonal approximation and adding weights $w_{pqt\nu}$, we have
-
+Using the diagonal approximation and adding weights $w_{pqs}$, we have
 
 \begin{equation}
 \label{eq:JHJ:diag:W:tf}
-\delta g_p = \left( \sum\limits_{t\nu,q\ne p} w_{pqt\nu} |y^2_{pqt\nu}| \right )^{-1} \sum\limits_{t\nu,q\ne p} w_{pqt\nu} \bar{y}_{pqt\nu} r_{pqt\nu}.
+\hat{g}_p = \left( \sum\limits_{q\ne p,s} w_{pqs} |y^2_{pqs}| \right )^{-1} \sum\limits_{q\ne p,s} w_{pqs} \bar{y}_{pqs} d_{pqs}.
 \end{equation}
 
 
@@ -517,11 +521,21 @@ a Gaussian smoothing kernel:
 w(x,y) = \frac{1}{2\pi\sqrt{\sigma_x\sigma_y}} \exp\left( -\frac{x^2}{2\sigma^2_x} - \frac{y^2}{2\sigma_y^2} \right),
 \]
 
-and replace summation over $tv$ in the update step above with a convolution:
+Now we replace summation over $s$ in the update step above with a convolution over the $t,v$ axes. We define
+
+\[
+\alpha_p(t,\nu) = \sum\limits_{q\ne p} \bar{y}_{pq}(t,\nu) d_{pq}(t,\nu)
+\]
+
+\[
+\beta_p(t,\nu) = \sum\limits_{q\ne p} \bar{y}_{pq}(t,\nu) y_{pq}(t,\nu)
+\]
+
+and then (where ``$\circ$'' is a convolution operator):
 
 \begin{equation}
 \label{eq:JHJ:diag:smooth}
-\delta g_p = \left( w\circ\sum\limits_{q\ne p} |y^2_{pq}| \right )^{-1} \left( w\circ \sum\limits_{q\ne p} \bar{y}_{pq} r_{pq} \right )\\
+\hat{g}_p = [ w\circ\beta_p ]^{-1} [ w\circ \alpha_p ]\\
 \end{equation}
 
 Iterating the above to convergence, we obtain a gain solution $\bmath{g}(t,\nu)$ that is smooth in frequency and time, with the degree of smoothness 
@@ -717,9 +731,8 @@ see Appendix~\ref{sec:4x4app}.} as:
 }
 \end{equation}
 
-Note that this makes use of the property $\Rop{\mat{A}}\Rop{\mat{B}}=\Rop{\mat{BA}}$ and 
-$\Lop{\mat{A}}\Lop{\mat{B}}=\Lop{\mat{AB}}$. 
-Compare this to Eq.~\ref{eq:JHJ:DI}.
+(Note that this makes use of the property $\Rop{\mat{A}}\Rop{\mat{B}}=\Rop{\mat{BA}}$ and 
+$\Lop{\mat{A}}\Lop{\mat{B}}=\Lop{\mat{AB}}$.) Compare the result to Eq.~\ref{eq:JHJ:DI}.
 
 For the $\JJ^H\bmath{R}$ term, we can directly apply the linear operators appearing in $\JJ^H$ 
 to the matrices in $\bmath{R}$:
@@ -741,17 +754,17 @@ to the matrices in $\bmath{R}$:
 where the second equality is established by swapping the $p$ and $q$ indices. Unsurprisingly, and by analogy with 
 Eq.~\ref{eq:JHR:DI1}, the bottom half of the vector is Hermitian with respect to the top.
 
-To implement NG or LM optimization, there is still a matrix inversion step involved, so we need to recast the operator 
+To implement GN or LM optimization, there is still a matrix inversion step involved, so we need to recast the operator 
 form of Eq.~\ref{eq:JHJ:pol} into conventional matrix form. There are two options here. The brute-force numerical
 approach is to substitute the matrix forms of $\Rop{~}$ and $\Lop{~}$ derived in Appendix~\ref{sec:4x4app} into the equation, 
 and then do a straightfoward matrix inversion. The other option is to use an analogue of the diagonal approximation described in 
 Sect.~\ref{sec:DI:stefcal}. If we neglect the off-diagonal blocks of $\JHJ$, the operator form of the matrix is 
 diagonal, and the problem is separable per antenna. The inverse operator corresponding to $\Rop{\mat{A}}$ is, 
-trivially, $\Rop{\mat{A}^{-1}}$. We then have a simple per-antenna equation for the NG update step:
+trivially, $\Rop{\mat{A}^{-1}}$. We then have a simple per-antenna equation for the GN update step:
 
 \begin{equation}
 \label{eq:update:DI:diag:pol}
-\delta \GG_p = \left [ \sum\limits_{q\ne p} \YY^H_{pq} \RR_{pq} \right ] 
+\hat{\GG}_p = \left [ \sum\limits_{q\ne p} \YY^H_{pq} \DD_{pq} \right ] 
 \left [ \sum\limits_{q\ne p} \YY_{pq} \YY^H_{pq}  \right ]^{-1}
 \end{equation}
 
@@ -764,9 +777,9 @@ can also be applied in this formulation.
 
 \newcommand{\Ns}{N_s}
 
-We can now apply a similar approach to the direction-dependent calibration problem. For DD calibration, we reformulate
-the RIME as a sum of $\Na$ sky components, each with its own direction-dependent gain. 
-It is common practice to do direction-dependent gain solutions on larger time/frequency intervals than direction-independent 
+We can now apply a similar approach to the direction-dependent (DD) calibration problem. For DD calibration, we reformulate
+the RIME as a sum of $\Na$ sky components, each with its own DD gain. 
+It is common practice to do DD gain solutions on larger time/frequency intervals than DI 
 solutions, since short intervals lead to underconstrained
 problems. We will therefore immmediately incorporate solution intervals (see Sect.~\ref{sec:DI:avg}) 
 over $\Ns=N_t N_\nu$ time/frequency samples into the  minimization problem. The residuals being minimized
@@ -880,9 +893,10 @@ major, antenna minor order:
 The $\JHJ$ term can then be split into $\Nd\times\Nd$ blocks:
 
 \newcommand{\JJJ}{\mathcal{J}}
+
 \begin{equation}
 \label{eq:JHJ:DD:blocked}
-\Matrix{ccc}{\JJJ^1_1 & \dots & \JJJ^{\Nd}_1 \\
+\JHJ = \Matrix{ccc}{\JJJ^1_1 & \dots & \JJJ^{\Nd}_1 \\
 \vdots & & \vdots \\
 \JJJ_{\Nd}^1 & \dots & \JJJ_{\Nd}^{\Nd} },
 \end{equation}
@@ -934,21 +948,55 @@ The sum over samples $s$ is essentially just an integral over a complex fringe. 
 components to be more orthogonal if the directions are well-separated, and more orthogonal over longer time and
 frequency intervals. Now if we assume that the sky model components are orthogonal or near-orthogonal, then
 we may treat the ``cross-direction'' blocks of the $\JHJ$ matrix in Eq.~\ref{eq:JHJ:DD:blocked} as null. The problem is 
-then separable by direction -- $\JHJ$ becomes block-diagonal -- and the inversion complexity reduces to $O(\Nd)O(\Na^3)$, 
-which, for large numbers of directions, is a huge improvement on $O(\Nd^3\Na^3)$. 
+then separable by direction, and $\JHJ$ becomes block-diagonal:
+
+
+\begin{equation}
+\label{eq:JHJ:DD:block-diag}
+\JHJ \approx \Matrix{ccc}{\JJJ^1_1 &  & 0 \\
+& \ddots &  \\
+0 & & \JJJ_{\Nd}^{\Nd} },
+\end{equation}
+
+
+The inversion complexity then reduces to $O(\Nd)O(\Na^3)$, which, for large numbers of directions, is a huge improvement on $O(\Nd^3\Na^3)$. 
 
 A further simplification is possible by using a Stefcal-style diagonal approximation (Sect.~\ref{sec:DI:stefcal}) for
 the per-direction $\JJJ^d_d$ blocks. Matrix inversion then reduces to $O(\Nd\Na)$ in complexity, and the problem becomes dominated by
-the $O(\Nd\Na^2)$ process of computing the diagonal elements of $\JHJ$. The update step is then a direct analogue of
-Eq.~\ref{eq:JHJ:diag:W:tf}:
+the $O(\Nd\Na^2)$ process of computing the diagonal elements of $\JHJ$. The GN update step is then a direct analogue of
+Eq.~\ref{eq:update:di:unpol}:
 
 \begin{equation}
+\label{eq:update:dd:unpol}
 \delta \ggd_p = \left( \sum\limits_{q\ne p,s} |\yyd_{pqs}|^2  \right )^{-1} \sum\limits_{q\ne p,s} \yydH_{pqs} r_{pqs},
 \end{equation}
 
-and, following \citet{Stefcal}, we can expect to improve convergence by averaging every pair of solutions together.
+Note, however, that unlike the DI case, where this equation directly translates into
+an expression for the updated parameter vector $\hat{\bmath{g}}$, simply by replacing the residual term with the data 
+term (Eq.~\ref{eq:stefcal}), here this is no longer the case. Indeed:
 
-Let us now briefly address the fully-polarized direction-dependent case. This is a straightforward application of
+\begin{equation}
+\label{eq:stefcal:dd:unpol}
+\begin{array}{@{}l@{}l}
+\hat{g}_p^{(d)} &= \ggd_p + \frac{
+\textstyle \sum\limits_{q\ne p,s} \bar{y}_{pqs} (d_{pqs} - \sum\limits_c \ggc_p \mmc_{pqs} \ggcH_q )
+}{
+\textstyle \sum\limits_{q\ne p,s} \bar{y}_{pqs} y_{pqs}
+} \\
+&= \frac{
+\textstyle \sum\limits_{q\ne p,s} \bar{y}_{pqs} (d_{pqs} - \sum\limits_{c\ne d} \ggc_p \mmc_{pqs} \ggcH_q )
+}{
+\textstyle \sum\limits_{q\ne p,s} \bar{y}_{pqs} y_{pqs}
+},
+\end{array}
+\end{equation}
+
+i.e. the model predict towards all other directions must be taken into account. In practice therefore, it it probably more economical 
+to use the $\delta g$-form (Eq.~\ref{eq:update:dd:unpol}) for updates, 
+and recompute  the residuals at every iteration (though see the next section for a possible alternative). Following \citet{Stefcal}, 
+we can expect to improve convergence by averaging every pair of updates together.
+
+Let us now briefly address the fully-polarized DD case. This is a straightforward application of
 the operator formalism developed in Sect.~\ref{sec:pol:DI} to the derivations above. As a result, we arrive at the
 following expression for $\JHJ$:
 
@@ -974,14 +1022,17 @@ following expression for $\JHJ$:
 
 using the normal shorthand of $\YYd_{pqs} = \MMd_{pqs} \GGdH_q$. The $\JJ^H\bmath{R}$ term is then
 
+\newcommand{\CCC}{\mathcal{C}}
+
 \begin{equation}
 \label{eq:JHR:DD:pol}
 \JJ^H\bmath{R} = -\Matrix{c}{
 \sum\limits_{q\ne i,s} \YYdH_{iqs} \RR_{iqs} \\
-\sum\limits_{q\ne i,s} \RR^H_{iqs} \YYd_{iqs}  },
+\sum\limits_{q\ne i,s} \RR^H_{iqs} \YYd_{iqs}  } 
+,
 \end{equation}
 
-and using both the direction separability and antenna separability assumptions above, the NG update step can be computed as
+and using both the direction separability and antenna separability assumptions above, the GN update step can be computed as
 
 \begin{equation}
 \label{eq:update:DD:diag:pol}
@@ -993,10 +1044,10 @@ Note that it is straightfoward to add weights and/or sliding window averging to 
 Sect.~\ref{sec:DI:W} and \ref{sec:DI:smooth}.
 
 Equations~\ref{eq:JHJ:DD:pol}--\ref{eq:JHR:DD:pol} can be considered the principal result of this work.
-They provide the necessary ingredients for treating direction-dependent calibration as a complex optimization 
+They provide the necessary ingredients for treating DD calibration as a complex optimization 
 problem, and can be combined and approximated in different ways to produce different types of calibration 
-algorithms. In particular, under both separability assumptions, we can apply Newton-Gauss to derive what is essentially a generalization of 
-Stefcal to direction-dependent solutions. An application of this algorithm to real data is presented in Sect.~\ref{sec:realdata}.
+algorithms. In particular, under both separability assumptions, we can apply Gauss-Newton to derive what is essentially a generalization of 
+Stefcal to DD solutions. An application of this algorithm to real data is presented in Sect.~\ref{sec:realdata}.
 
 Another interesting note is that Eq.~\ref{eq:update:DD:diag:pol} is embarassingly parallel, since the update step is 
 completely separated by direction and antenna. This makes it particularly well-suited to implementation on massively 
@@ -1004,29 +1055,192 @@ parallel architectures such as GPUs.
 
 \section{Algorithmic variations}
 
-We should note that Eq.~\ref{eq:update:DD:diag:pol}, i.e. ``direction-dependent polarized Stefcal'', is just one
-possible approximation of the general problem given by Eqs.~\ref{eq:JHJ:DD:pol}--\ref{eq:JHR:DD:pol}. In this section
-we briefly explore other possible variations.
+The mathematical framework developed above (in particular, Eqs.~\ref{eq:JHJ:DD:pol}--\ref{eq:JHR:DD:pol}) provides
+a general description of the polarized DD calibration problem. Practical implementations of this hinge around inversion of
+a very large $\JHJ$ matrix. In this context, we can view ``DD-Stefcal'' (Eq.~\ref{eq:update:DD:diag:pol}) as just one 
+possible approximation to the inversion problem. The convergence properties of 
+DD-Stefcal are not yet well-understood; established properties of DI-Stefcal \citep{Stefcal} are encouraging, but ought not 
+be treated as anything more than a strong pointer for the DD case. It is therefore well worth exploring other approximations to 
+the problem. In this section we map out a few such options.
 
 \subsection{Feed forward}
+\label{sec:feed-forward}
 
-\citet{Stefcal} propose variants of their algorithm (``2-basic'' and ``2-relax'') where the results of the 
+\citet{Stefcal} propose variants of the Stefcal algorithm (``2-basic'' and ``2-relax'') where the results of the 
 update step (Eq.~\ref{eq:update:DI:diag:pol}, in essense) are computed sequentially per antenna, with updated
 values for $\GG_1,\dots,\GG_{k-1}$ fed forward into the equations for $\GG_k$. This is shown to 
-substantially improve convergence, while sacrificing the embarassing paralellism by antenna.
+substantially improve convergence, at the cost of sacrificing the embarassing paralellism by antenna. This technique 
+is directly applicable to Eq.~\ref{eq:update:DD:diag:pol}. 
 
-This technique is directly applicable to Eq.~\ref{eq:update:DD:diag:pol}. Another interesting variation to 
-explore is feed forward by direction. That is:
+An interesting variation to explore is feed forward by direction. In Eq.~\ref{eq:update:DD:diag:pol}, the DD gain 
+update is computed independently for each direction (since one of the approximations made is that the ``cross-direction''
+blocks $\JJJ^c_d$ are null). From practical experience, we know that inaccuracies towards brighter 
+sources will tend to affect solutions towards fainter sources. We can therefore expect to improve convergence
+by incorporating information about DD gains towards brighter sources in the solutions for the fainter ones. There are
+a few approaches to this. One is a direct extension of the feed forward idea. Assuming 
+the sky model components are ordered by decreasing brightness (and revisiting Eq.~\ref{eq:update:dd:unpol}), we may:
 
 \begin{enumerate}
-\item Compute an update for the first direction $\GG^{(1)}_1,\dots,\GG^{(1)}_{\Na}$
-\item Recompute the residuals
+\item Compute the direction-1 residuals, by subtracting every sky model component except the first:
+\[
+  \RR^{(1)}_{pqs} = \DD_{pqs} - \sum\limits_{d\ne1} \GGd_p \MMd_{pqs} \GGdH_q .
+\]
+\item Compute an update for direction 1, all antennas: $\GG^{(1)}_1,\dots,\GG^{(1)}_{\Na}$ (optionally using feed forward
+for the antenna solutions):
+
+\[
+\hat{\GG}^{(1)}_p = \left [ \sum\limits_{q\ne p,s} \YYdH_{pqs} \RR^{(1)}_{pqs} \right ] 
+\left [ \sum\limits_{q\ne p,s} \YYd_{pqs} \YYdH_{pqs}  \right ]^{-1}
+\]
+
+\item Compute the direction-2 residuals as
+\[
+  \RR^{(2)}_{pqs} = \RR^{(1)}_{pqs} - \hat{\GG}^{(1)}_p \MM^{(1)}_{pqs} \hat{\GG}^{(1)H}_q + \GG^{(2)}_p \MM^{(2)}_{pqs} \GG^{(2)H}_q
+\]
+
+\item Go to step (ii) to compute $\hat{\GG}^{(2)}_p$, etc.
 
 \end{enumerate}
 
-\subsection{Levenberg-Marquandt}
+Intuitively, this procedure corresponds to feeding the estimates obtained for directions $1,...,k-1$ forward into the 
+equations for direction $k$. Whether in practice this actually improves convergence to justify the extra complexity remains to be seen.
+
+\subsection{Triangular approximation}
+
+Another approach to incorporating directions $1,...,k-1$ into the solution for $k$ is to approximate the $\JHJ$ matrix as
+block-triangular:
+
+\begin{equation}
+\label{eq:JHJ:DD:block-triag}
+\JHJ \approx \Matrix{cccc}{
+\JJJ^1_1 & 0 & \cdots & 0 \\
+\JJJ^1_2 & \JJJ^2_2 & \cdots & 0 \\
+\vdots & & \ddots &  \vdots \\
+\JJJ_{\Nd}^1 & \JJJ_{\Nd}^2 & \cdots & \JJJ_{\Nd}^{\Nd} },
+\end{equation}
+
+\newcommand{\KKK}{\mathcal{K}}
+
+The inverse of this is also block triangular:
+\begin{equation}
+\label{eq:JHJ:DD:block-triag-inv}
+\KKK = \JHJ^{-1} = \Matrix{cccc}{
+\KKK^1_1 & 0 & \cdots & 0 \\
+\KKK^1_2 & \KKK^2_2 & \cdots & 0 \\
+\vdots & & \ddots &  \vdots \\
+\KKK_{\Nd}^1 & \KKK_{\Nd}^2 & \cdots & \KKK_{\Nd}^{\Nd} },
+\end{equation}
+which can be computed using Gaussian elimination:
+
+\[
+\begin{array}{l@{~}l}
+\KKK^1_1 &= [\JJJ^1_1]^{-1} \\
+\KKK^2_2 &= [\JJJ^2_2]^{-1} \\
+\KKK^1_2 &= - \KKK^2_2 \JJJ^1_2 \KKK^1_1\\
+\KKK^3_3 &= [\JJJ^3_3]^{-1} \\
+\KKK^2_3 &= - \KKK^3_3 \JJJ^2_3 \KKK^2_2\\
+\KKK^1_3 &= - \KKK^3_3 [ \JJJ^1_3 \KKK^1_1 + \JJJ^2_3 \KKK^1_2  ]\\
+\cdots
+\end{array}
+\]
+
+The GN update equations then take the following form (not forgetting $\KKK$ is in operator notation):
+
+\[
+\delta \GG^{(d)}_p = \sum\limits_{c=1}^d \KKK^c_d \left [ \sum\limits_{q\ne p,s} \YY^{(c)H}_{pqs} \RR_{pqs}  \right ],
+\]
+
+i.e. the update for direction $d$ explictly incorporates information on directions $1,...,d-1$. The corresponding matrix operations 
+are cumbersome to write out, but are straightforward to implement algorithmically.
+
+
+
+% Let's again assume the diagonal approximation for inverting the $\JJJ^c_d$ blocks (recalling -- see Eq.~\ref{eq:JHJ:pol} -- that
+% $\JJJ$ and $\KKK$ are in operator notation, and correspond to matrix multiplication \emph{from the right}). Let's also define
+% two shorthands:
+
+% \[
+% \mat{C}^{(d)}_p = \sum\limits_{q\ne p,s} \YY^{(d)H}_{pqs} \RR_{pqs},~~
+% \mat{K}^{(cd)}_p = \sum\limits_{q\ne p,s} \YY^{(d)}_{pqs} \YY^{(c)H}_{pqs},
+% \]
+
+% so that the standard GN update equations (Eq.~\ref{eq:update:DD:diag:pol}) are simply $\delta \GGd_p = \mat{C}^{(d)}_p \mat{K}^{(dd)-1}_p$.
+
+% For example,
+
+% \[
+% \begin{array}{l@{~}l}
+% \delta \GG^{(1)}_p &= \mat{C}^{(1)}_p \mat{K}^{(11)-1}_p \\
+% \delta \GG^{(2)}_p &= [ \mat{C}^{(2)}_p - \delta \GG^{(1)}_p \mat{K}^{(21)}_p ] \mat{K}^{(22)-1}_p 
+% \end{array}
+% \]
 
 \subsection{Peeling}
+
+The \emph{peeling} procedure was originally suggested by \citet{JEN:peeling} as a ``kludge'', i.e. an implementation of DD calibration 
+using the DI functionality of existing packages. In a nutshell, this procedure solves for DD gains towards one source at a time, from
+brighter to fainter, by
+
+\begin{enumerate}
+\item Rephasing the visibilities to place the source at phase centre;
+\item Averaging over some time/frequency interval (to suppress the contribution of other sources);
+\item Doing a standard solution for DI gains (which approximates the DD gains towards the source);
+\item Subtracting the source from the visibilities using the obtained solutions;
+\item Repeating the procedure for the next source.
+\end{enumerate}
+
+The term ``peeling'' comes from step (iv), since sources are ``peeled'' away one at a time\footnote{The term ``peeling'' has 
+occasionally been misappropriated to describe other schemes, e.g. simultaneous independent DD gain solutions. We consider this a 
+misuse: both the original formulation by \citet{JEN:peeling}, and the word ``peeling'' itself, strongly implies dealing with 
+one direction at a time.}.
+
+Within the framework above, peeling can be considered as the ultimate feed forward approach. Peeling is essentially similar to 
+the procedure in Sect.~\ref{sec:feed-forward}, except rather than taking just one step, each direction is iterated to full 
+convergence before moving on to the next direction. The procedure can then be repeated beginning with the brightest source again,
+a second cycle tends to improve the solutions. This approach, using Stefcal for the actual iterations, has been successfully
+implemented by \citet{OMS-Stefcal}, and has been used with JVLA L-band data to obtain what is (at time of writing) a world 
+record dynamic range (3.2 million) image of the field around 3C147 \citep{Perley-3C147}.
+
+\subsection{Semi-exact Gauss-Newton and Levenberg-Marquardt}
+
+In the authors' experience \citep{OMS-Stefcal}, an LM implementation of the DI calibration problem converges in fewer steps 
+than Stefcal, but is almost always slower in terms of ``wall time'' due to the more expensive iterations. This is a 
+typical ``cheap--approximate'' versus ``expensive--accurate'' trade-off, consistent with the expected scaling properties 
+of the algorithms. It is the diagonal (separable by antenna) approximation that makes for cheap matrix inversion.
+
+However, with low $\Na$ there may still be regimes where approaches with slower yet more precise update steps may have an advantage. 
+It is therefore worth noting how these can fit within our framework. 
+
+Recall again that we make two approximations to keep the inversion of $\JHJ$ (an $O(\Nd^3\Na^3)$ problem if brute-forced) tractable:
+
+\begin{itemize}
+\item We separate the problem by direction, approximating $\JHJ$ as block-diagonal (Eq.~\ref{eq:JHJ:DD:block-diag}) or block-triangular
+(Eq.~\ref{eq:JHJ:DD:block-triag}).
+\item We separate the problem by antenna, approximating each block $\JJJ^d_d$ as diagonal or $2\times2$ block-diagonal. 
+\end{itemize} 
+
+It is straightforward to avoid the second approximation, and compute the true inverse of each $\JJJ^d_d$. The problem then becomes
+$O(\Nd\Na^3)$ in complexity, but the update steps are presumably more precise, and the LM method may be applied as well. Whether
+this offers any performance advantage (again, conceivably only in a low-$\Na$ regime) remians to be seen.
+
+Another obvious alternative is to avoid the first approximation, and rearrange the rows of the Jacobian so that $\JHJ$ becomes blocked per antenna:
+
+\newcommand{\JJX}{\tilde{\JJJ}}
+\begin{equation}
+\label{eq:JHJ:DD:blocked-ant}
+\JHJ = \Matrix{ccc}{\JJX^1_1 & \dots & \JJX^{\Na}_1 \\
+\vdots & & \vdots \\
+\JJX_{\Na}^1 & \dots & \JJX_{\Na}^{\Na} }.
+\end{equation}
+
+If we then assume the cross-antenna blocks $\JJX^p_q$ to be small, we may treat this matrix as block-diagonal and compute the true inverse of
+each $\JJX^p_p$. The problem then reduces to $O(\Nd^3\Na)$ in complexity, and LM again becomes an option. This approach has not been 
+tested, but it could perhaps offer some performance advantages in a low-$\Nd$ regime.
+
+
+
+
+
 
 \subsection{Blocking by direction}
 
@@ -1042,9 +1256,9 @@ Complexity $O(\Nd\Na^2).$ Chicken!
 
 Embarassingly parallel. GPU. Chicken!
 
-Many variations possbile. Chicken!
+Many variations possible. Chicken!
 
-Uinfying framework? Chicken!
+Unifying framework? Chicken!
 
 \bibliographystyle{mn2e}
 \bibliography{cjpaper}
