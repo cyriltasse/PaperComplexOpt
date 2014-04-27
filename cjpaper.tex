@@ -580,16 +580,6 @@ operators, where $\mat{A}$ is a given $2\times2$ matrix:
 \Lop{\mat{A}} [\mat{X}] = \mat{AX}.
 \end{equation}
 
-Trivial properties of these two operators are 
-
-\begin{eqnarray}
-\label{eq:LA:RATT}
-\Lop{\mat{A}}[\cdot] = \big[ \Rop{\mat{A}^T}[\cdot] \big ]^T~~&~&~~
-\big[ \Lop{\mat{A}}[\cdot] \big]^T = \Rop{\mat{A}^T}[\cdot] \nonumber\\
-\Lop{\bar{\mat{A}}}[\cdot] = \big[ \Rop{\mat{A}^H}[\cdot] \big ]^T~~&~&~~
-\big[ \Lop{\bar{\mat{A}}}[\cdot] \big]^T = \Rop{\mat{A}^H}[\cdot]
-\end{eqnarray}
-
 Next, let us define two operators that take the Wirtinger derivatives w.r.t. a complex matrix:
 
 \begin{equation}
@@ -1044,10 +1034,11 @@ Note that it is straightfoward to add weights and/or sliding window averging to 
 Sect.~\ref{sec:DI:W} and \ref{sec:DI:smooth}.
 
 Equations~\ref{eq:JHJ:DD:pol}--\ref{eq:JHR:DD:pol} can be considered the principal result of this work.
-They provide the necessary ingredients for treating DD calibration as a complex optimization 
-problem, and can be combined and approximated in different ways to produce different types of calibration 
-algorithms. In particular, under both separability assumptions, we can apply Gauss-Newton to derive what is essentially a generalization of 
-Stefcal to DD solutions. An application of this algorithm to real data is presented in Sect.~\ref{sec:realdata}.
+They provide the necessary ingredients for implementing GN or LM methods for DD calibration, treating it as a 
+fully complex optimization problem. As we'll show below, the equations may be combined and approximated in different 
+ways to produce different types of calibration algorithms. In particular, under both separability assumptions, we can 
+apply GN to derive what is essentially a generalization of Stefcal to DD solutions. An application of this algorithm to 
+real data is presented in Sect.~\ref{sec:realdata}.
 
 Another interesting note is that Eq.~\ref{eq:update:DD:diag:pol} is embarassingly parallel, since the update step is 
 completely separated by direction and antenna. This makes it particularly well-suited to implementation on massively 
@@ -1221,9 +1212,10 @@ Recall again that we make two approximations to keep the inversion of $\JHJ$ (an
 
 It is straightforward to avoid the second approximation, and compute the true inverse of each $\JJJ^d_d$. The problem then becomes
 $O(\Nd\Na^3)$ in complexity, but the update steps are presumably more precise, and the LM method may be applied as well. Whether
-this offers any performance advantage (again, conceivably only in a low-$\Na$ regime) remians to be seen.
+this offers any performance advantage (again, conceivably only in a low-$\Na$ regime) remains to be seen.
 
-Another obvious alternative is to avoid the first approximation, and rearrange the rows of the Jacobian so that $\JHJ$ becomes blocked per antenna:
+Another obvious alternative is to avoid the first approximation, and rearrange the rows of the Jacobian so that $\JHJ$ 
+can be decomposed into blocks by antenna, each of size $\Nd\times\Nd$:
 
 \newcommand{\JJX}{\tilde{\JJJ}}
 \begin{equation}
@@ -1233,30 +1225,57 @@ Another obvious alternative is to avoid the first approximation, and rearrange t
 \JJX_{\Na}^1 & \dots & \JJX_{\Na}^{\Na} }.
 \end{equation}
 
-If we then assume the cross-antenna blocks $\JJX^p_q$ to be small, we may treat this matrix as block-diagonal and compute the true inverse of
-each $\JJX^p_p$. The problem then reduces to $O(\Nd^3\Na)$ in complexity, and LM again becomes an option. This approach has not been 
-tested, but it could perhaps offer some performance advantages in a low-$\Nd$ regime.
+If we then assume the problem is separable by antenna, then we ignore the cross-antenna blocks $\JJX^p_q$, and treat this 
+matrix as block-diagonal, computing the true inverse of each $\JJX^p_p$. The problem then reduces to $O(\Nd^3\Na)$ in complexity, 
+and LM again becomes an option. This approach has not been tested, but it could perhaps offer some performance advantages in a low-$\Nd$ regime.
+
+\section{Demonstration on real data}
+
+\begin{figure*}
+\begin{center}
+%\hspace*{-1.3cm}
+\includegraphics[width=\textwidth]{resid}
+\includegraphics[width=\textwidth]{residZoom}
+\caption{\label{fig:resid} This figure shows compares the image
+  (left), the residuals data after simple skymodel substraction
+  (center), and the residuals data after substracting the
+  sky model corrupted by the direction-dependent solution (right).}
+\end{center}
+\end{figure*}
+
+
+We test the ``DD-Stefval'' algorithm described above on a LOFAR observation of 3C295. The
+visibilities produced by this interferometer are predominantly affected by direction dependent effects including (i) the phased beam instability and deviation from the
+theoritical model, (ii) ionosphere time delays shifts, and (iii) Faraday rotation.
+
+We first calibrate the dataset using BBS, and in order to build a pertinent model of the field, we substract 3C295. We extract the
+sources using pyBDSM. The sources are the clustered in 10 directions using Voronoitesselation (fig. \ref{fig:tessel}). In Fig \ref{fig:resid}, we compare the residuals as
+computed by substracting the model data in the visibility domain, and the model data affected by DDEs.
 
 
 
 
+\begin{figure}[]
+\begin{center}
+%\hspace*{-1.3cm}
+\includegraphics[width=\columnwidth]{tessel}
+\caption{\label{fig:tessel} In order to minimize the number of degrees
+of freedom, and increase the amount of signal in each direction, we cluster the sources in 10 direction using a Voronoi
+tesselation.}
+\end{center}
+\end{figure}
 
-
-\subsection{Blocking by direction}
-
-
-\section{Applications to real data}
 
 
 \label{sec:realdata}
 
 \section*{Conclusions}
 
-Complexity $O(\Nd\Na^2).$ Chicken!
+Complexity $O(\mathrm{chicken}).$ Chicken!
 
 Embarassingly parallel. GPU. Chicken!
 
-Many variations possible. Chicken!
+Many variations possible, describes previous algorithms as special cases (approximations). Chicken!
 
 Unifying framework? Chicken!
 
@@ -1268,7 +1287,10 @@ Unifying framework? Chicken!
 \section{Deriving $4\times4$ operator representations}
 \label{sec:4x4app}
 
-If we introduce the vectorization operator ``vec'' in the usual way:
+This section contains the technical derivations needed for Sect.~\ref{sec:pol:DI}, and demonstartes how the
+operator notation used therein maps onto the conventional matrix approach.
+
+First, let us introduce the vectorization operator ``vec'' in the usual way, e.g. for a $2\times2$ matrix:
 
 \newcommand{\VEC}[1]{\mathrm{vec}\,{#1}}
 
@@ -1276,9 +1298,22 @@ If we introduce the vectorization operator ``vec'' in the usual way:
 \VEC{\mat{X}} = \Matrix{c}{x_{11}\\x_{12}\\x_{21}\\x_{22}},
 \]
 
-then any linear operator on $\mat{X}$ must be equivalent to multiplication of $\VEC{\mat{X}}$ by a patricular $4\times 4$ matrix. We will leave the derivation of these matrixes to the appendix, for our purposes it is sufficient to know that these matrices exist. We'll reuse the notation 
-$\Rop{\mat{A}}$ and $\Lop{\mat{A}}$ to represent the $4\times4$ matrices as well. Finally, note that
+This sets up a trivial isomorphism between the space of $2\times2$ complex matrices $\COMPLEX^{2\times2}$ and $\COMPLEX^4$. 
+Any linear operator on $\mat{X} \in \COMPLEX^{2\times2}$ must be equivalent to multiplication of $\VEC{\mat{X}} \in \COMPLEX^4$ by 
+a $4\times 4$ complex matrix. 
 
+Of particular interest to us are three linear operators on $\COMPLEX^{2\times2}$: right multiply by $\mat{A}$, left multiply by $\mat{A}$, and
+transpose: 
+
+\[
+\begin{array}{l@{~}l}
+\Rop{\mat{A}}[\mat{X}] &= \mat{XA} \\
+\Lop{\mat{A}}[\mat{X}] &= \mat{AX} \\
+\Top[\mat{X}] &= \mat{X}^T
+\end{array}
+\]
+
+Being linear, these operators must have a $4\times4$ matrix representation in $\COMPLEX^4$. 
 Indeed, if $\mat{Y}=\Rop{\mat{A}}[\mat{X}]$, then 
 
 \begin{equation}
@@ -1302,17 +1337,41 @@ and
 \Matrix{cccc}{1&0&0&0 \\ 0&0&1&0 \\ 0&1&0&0 \\ 0&0&0&1} \VEC{\mat{X}}.
 \end{equation}
 
+Since $(\mat{A}\mat{X})^T = \mat{X}^T \mat{A}^T$, 
+transposing \emph{the result} of an $\mathcal{L}$ or $\mathcal{R}$ operator turns it into the
+opposite operator for the transpose:
 
-We'll reuse the notation $\Top$, $\Rop{\mat{A}}$ and $\Lop{\mat{A}}$ to represent the $4\times4$ matrices above. Now, note that the
-three operators have an important relationship
+\begin{eqnarray}
+\label{eq:LA:RATT}
+\big[ \Rop{\mat{A}^T}[\cdot] \big ]^T = \Lop{\mat{A}}[\cdot] ~~&~&~~
+\big[ \Lop{\mat{A}}[\cdot] \big]^T = \Rop{\mat{A}^T}[\cdot] \nonumber\\
+\big[ \Rop{\mat{A}^H}[\cdot] \big ]^T = \Lop{\bar{\mat{A}}}[\cdot] ~~&~&~~
+\big[ \Lop{\bar{\mat{A}}}[\cdot] \big]^T = \Rop{\mat{A}^H}[\cdot],
+\end{eqnarray}
+
+which we can also write as e.g.
 
 \begin{equation}
-%\label{eq:LA:TRA}
-\Lop{\mat{A}^T}[\mat{X}] = \Top \big[ \Rop{\mat{A}}[\mat{X}] \big ]
+\label{eq:RATT:op}
+\Lop{\mat{A}} = \Top \Rop{\mat{A}^T},~~~\Top\Lop{\mat{A}} = \Lop{\mat{A}^T}.
 \end{equation}
 
-which is trivially derived from their definitions. This must necessarily also hold for the corresponding $4\times4$ matrices:
-$\Lop{\mat{A}^T} = \Top \Rop{\mat{A}}$, and can be verified from the matrix definitions above.
+We may repurpose the symbols $\Top$, $\Rop{\mat{A}}$ and $\Lop{\mat{A}}$ to represent the $4\times4$ matrices above. It
+is easy to see that Eq.~\ref{eq:RATT:op} must necessarily hold for the $4\times4$ matrix forms as well.
+
+Note that the meaning of $\Top$ is specifically a transpose in $\COMPLEX^{2\times2}$ space -- it is not the same
+thing as a transpose of the $4\times4$ matrices. The operation of $\Top$ in $\COMPLEX^4$ is a swapping of vector 
+elements (rows). $\Top\Rop{\mat{A}}\ne\Rop{\mat{A}}^T!$.
+
+Another obvious property is
+
+\begin{equation}
+\label{eq:RAB:LAB}
+\Lop{\mat{A}}\Lop{\mat{B}} = \Lop{\mat{AB}},~~~\Rop{\mat{A}}\Rop{\mat{B}} = \Rop{\mat{BA}}
+\end{equation}
+
+
+
 
 \label{lastpage}
 
