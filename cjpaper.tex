@@ -567,46 +567,54 @@ $\DD_{pq}=\DD^H_{qp}$, and $\MM_{pq}=\MM^H_{qp}$. The basic polarization calibra
 \newcommand{\Top}{\mathcal{T}}
 
 In principle, this can be recast into an ordinary complex NLLS problem (Eq.~\ref{eq:LSmin}) by vectorizing each matrix in the above equation, 
-and then deriving the complex Jacobian according to Eq.~\ref{eq:JJ}. This is somewhat cumbersome, but we can obtain a more elegant derivation
-by using $2\times2$ matrices instead of scalars, and writing the Jacobian in terms of linear operators on matrices. Appendix~\ref{sec:4x4app}
-will establish that this is entirely equivalent to the conventional (vectorized) approach. 
+and then deriving the complex Jacobian according to Eq.~\ref{eq:JJ}. As this procedure is somewhat cumbersome, let us obtain a 
+more elegant derivation using operator notation, where the ``atomic'' elements are $2\times2$ matrices rather than scalars. We will define the Jacobian in terms of operators on such matrices. Appendix~\ref{sec:4x4app} supplies the technical detail linking this to the 
+conventional (vectorized) approach. 
 
 For starters, let us define two linear operators acting on $2\times2$ matrices: the ``right-multiply'' and ``left-multiply by $\mat{A}$'' \
 operators, where $\mat{A}$ is a given $2\times2$ matrix:
 
 \begin{equation}
-\label{eq:def::RL}
+\label{eq:def:RL}
 \Rop{\mat{A}} [\mat{X}] = \mat{XA}, ~~~~~
 \Lop{\mat{A}} [\mat{X}] = \mat{AX}.
 \end{equation}
 
-Next, let us define two operators that take the Wirtinger derivatives w.r.t. a complex matrix:
+In the conventional approach, the above operators correspond to multiplying 4-vectors by $4\times4$ matrices of a specific structure.
+
+Next, we can formally define the operators $\partial/\partial\GG$ and $\partial/\partial\GG^H$ -- the equivalent of 
+Wirtinger derivatives over a $2\times2$ complex matrix. These are a convenient shorthand for taking separate 
+derivatives over all four matrix elements. Appendix~\ref{sec:4x4app} will show that from Eq.~\ref{eq:cal:DI:pol} in particular
+we get
+
+%let us formally define the equivalent of Wirtinger derivatives w.r.t. a $2\times2$ complex matrix:
+% \begin{equation}
+% \label{eq:def:partial:G}
+% \frac{\partial}{\partial\GG} = \Matrix{cc}{ {\partial}/{\partial g_{11}} & {\partial}/{\partial g_{12}} \\
+% {\partial}/{\partial g_{21}} & {\partial}/{\partial g_{22}}} \\
+% \frac{\partial}{\partial{\GG^H}} = \Matrix{cc}{ {\partial}/{\partial \bar{g}_{11}} & {\partial}/{\partial \bar{g}_{21}} \\
+% {\partial}/{\partial \bar{g}_{12}} & {\partial}/{\partial \bar{g}_{22}}}
+% \end{equation}
 
 \begin{equation}
-\frac{\partial}{\partial\GG} = \Matrix{cc}{ {\partial}/{\partial g_{11}} & {\partial}/{\partial g_{12}} \\
-{\partial}/{\partial g_{21}} & {\partial}/{\partial g_{22}}} \\
-\frac{\partial}{\partial{\GG^H}} = \Matrix{cc}{ {\partial}/{\partial \bar{g}_{11}} & {\partial}/{\partial \bar{g}_{21}} \\
-{\partial}/{\partial \bar{g}_{12}} & {\partial}/{\partial \bar{g}_{22}}}
-\end{equation}
-
-From Eq.~\ref{eq:cal:DI:pol}, one can see that
-
-\[
+\label{eq:dR:dG}
 \frac{\partial\RR_{pq}}{\partial\GG_p} = -\Rop{\MM_{pq}\GG^H_q},\mathrm{~~and~~}
 \frac{\partial\RR_{pq}}{\partial\GG^H_q} = -\Lop{\GG_p \MM_{pq}}.
-\]
+\end{equation}
 
-If we now stack the gain matrices of Eq.~\ref{eq:cal:DI:pol} into one column ``vector of matrices'' 
+If we now stack the gain matrices of Eq.~\ref{eq:cal:DI:pol} into one ``vector of matrices'' 
 
-\[
+\begin{equation}
+\label{eq:GGvec}
 \GG = [ \GG_1,\dots,\GG_{\scriptstyle \Na},\GG^H_1,\dots,\GG^H_{\scriptstyle \Na} ]^T,
-\]
+\end{equation}
 
 then we may construct the top half of the full complex Jacobian operator in full analogy with the 
 derivation of Eq.~\ref{eq:JJ:di:basic}. We'll use the same ``compound index'' convention for $pq$. That is, 
 $[pq]$ will represent a single index running through $M$ values (i.e. enumerating all combinations of $p<q$).
 
-\[
+\begin{equation}
+\label{eq:JJtop}
 \JJ_\mathrm{top} = - \Matrix{cc}{ 
 \Rop{ \MM_{pq}\GG^H_q }\delta^j_p & 
 \Lop{ \GG_p \MM_{pq}  }\delta^j_q 
@@ -615,13 +623,19 @@ $[pq]$ will represent a single index running through $M$ values (i.e. enumeratin
 %\Lop{ \bar{\GG}_p    \bar{\MM}_{pq} }\delta^j_q & 
 %\Rop{ \bar{\MM}_{pq} \bar{\GG^H_q}  }\delta^j_p  
 %}.
-\]
+\end{equation}
+
+Note that there are two fully equivalent ways to read the above equation. In operator notation, it specifies a linear operator $\JJ_\mathrm{top}$
+that maps a $2\Na$-vector of $2\times2$ matrices to an $\Nbl$-vector of $2\times2$ matrices. In conventional matrix notation, 
+$\JJ_\mathrm{top}$ is just a $4\Nbl\times8\Na$ matrix; the above equation then specifies the structure of this matrix in terms
+of $4\times4$ blocks, where each block is the matrix equivalent of the appropriate $\mathcal{R}$ or $\mathcal{L}$ operator.
+
 
 Consider now the bottom half of the Jacobian. In Eq.~\ref{eq:JJ}, this corresponds to the complex conjugate of the residuals, 
 and is constructed by conjugating and mirroring the top half. Let us modify this construction by taking the Hermitian transpose 
 of the residuals instead:
 
-\[
+\begin{equation}
 \bmath{R} = 
 \Matrix{c}{
   \RR_{pq} \\ 
@@ -636,9 +650,11 @@ of the residuals instead:
 \} \scriptstyle [pq]=1\dots \Nbl~(p<q) \\ 
 \} \scriptstyle [pq]=1\dots \Nbl~(p<q) 
 }
-\]
+\label{eq:RRtranspose}
+\end{equation}
 
-This adds an extra transpose operation over the usual definition which must then be propagated\footnote{As shown in Appendix~\ref{sec:4x4app}, the transpose is simply a matter of reordering rows in the Jacobian and the augmented residual vector.} into the bottom half of the Jacobian:
+This adds an extra transpose operation over the usual definition which must then be propagated\footnote{As shown in Appendix~\ref{sec:4x4app}, the transpose 
+is simply a matter of reordering rows in the Jacobian and the augmented residual vector.} into the bottom half of the Jacobian:
 
 \[
 \JJ = - \Matrix{cc}{ 
@@ -1290,17 +1306,27 @@ Unifying framework? Chicken!
 This section contains the technical derivations needed for Sect.~\ref{sec:pol:DI}, and demonstartes how the
 operator notation used therein maps onto the conventional matrix approach.
 
-First, let us introduce the vectorization operator ``vec'' in the usual way, e.g. for a $2\times2$ matrix:
+\subsection{Basic operators}
+
+First, let us introduce the vectorization operator ``vec'' and its inverse in the usual way, e.g. for a $2\times2$ matrix:
 
 \newcommand{\VEC}[1]{\mathrm{vec}\,{#1}}
+\newcommand{\VECINV}[1]{\mathrm{vec}^{-1}\,{#1}}
 
 \[
-\VEC{\mat{X}} = \Matrix{c}{x_{11}\\x_{12}\\x_{21}\\x_{22}},
+\VEC{\mat{X}} = \Matrix{c}{x_{11}\\x_{12}\\x_{21}\\x_{22}},~~~
+\VECINV{\Matrix{c}{x_{11}\\x_{12}\\x_{21}\\x_{22}}} = \mat{X},
 \]
 
 This sets up a trivial isomorphism between the space of $2\times2$ complex matrices $\COMPLEX^{2\times2}$ and $\COMPLEX^4$. 
 Any linear operator on $\mat{X} \in \COMPLEX^{2\times2}$ must be equivalent to multiplication of $\VEC{\mat{X}} \in \COMPLEX^4$ by 
-a $4\times 4$ complex matrix. 
+a $4\times 4$ complex matrix. To put this formally, the $\mathrm{vec}$ operator induces an isomorphism 
+$\mathrm{W}$ between $\COMPLEX^{4\times4}$ and the space of linear operators on $\COMPLEX^{2\times2}$:
+
+\begin{eqnarray}
+&& \mathrm{W}:\COMPLEX^{4\times4}\to\mathrm{Lin}(\COMPLEX^{2\times2},\COMPLEX^{2\times2}) \nonumber\\
+&& \mathrm{W}(\mat{A})[\mat{X}] = \VEC{(\mat{A}\VEC{\mat{X}})} \label{eq:iso:W}
+\end{eqnarray}
 
 Of particular interest to us are three linear operators on $\COMPLEX^{2\times2}$: right multiply by $\mat{A}$, left multiply by $\mat{A}$, and
 transpose: 
@@ -1326,7 +1352,7 @@ Likewise,
 
 \begin{equation}
 \VEC{\Lop{\mat{A}}[\mat{X}]} = 
-\Matrix{cccc}{a_{11}&a_{12}&0&0 \\ 0&0&a_{11}&a_{12} \\ a_{21}&a_{22}&0&0  \\ 0&0&a_{21}&a_{22} }
+\Matrix{cccc}{a_{11}&0&a_{12}&0 \\ 0&a_{11}&0&a_{12} \\ a_{21}&0&a_{22}&0  \\ 0&a_{21}&0&a_{22} }
 \VEC{\mat{X}},
 \end{equation}
 
@@ -1337,9 +1363,8 @@ and
 \Matrix{cccc}{1&0&0&0 \\ 0&0&1&0 \\ 0&1&0&0 \\ 0&0&0&1} \VEC{\mat{X}}.
 \end{equation}
 
-Since $(\mat{A}\mat{X})^T = \mat{X}^T \mat{A}^T$, 
-transposing \emph{the result} of an $\mathcal{L}$ or $\mathcal{R}$ operator turns it into the
-opposite operator for the transpose:
+Since $(\mat{A}\mat{X})^T = \mat{X}^T \mat{A}^T$, the superposition of a transpose and
+an $\Lop{\mat{A}}$ or $\Rop{\mat{A}}$ operator is equivalent to the opposite-hand operator using $\mat{A}^T$:
 
 \begin{eqnarray}
 \label{eq:LA:RATT}
@@ -1360,15 +1385,68 @@ We may repurpose the symbols $\Top$, $\Rop{\mat{A}}$ and $\Lop{\mat{A}}$ to repr
 is easy to see that Eq.~\ref{eq:RATT:op} must necessarily hold for the $4\times4$ matrix forms as well.
 
 Note that the meaning of $\Top$ is specifically a transpose in $\COMPLEX^{2\times2}$ space -- it is not the same
-thing as a transpose of the $4\times4$ matrices. The operation of $\Top$ in $\COMPLEX^4$ is a swapping of vector 
-elements (rows). $\Top\Rop{\mat{A}}\ne\Rop{\mat{A}}^T!$.
+thing as a transpose of the $4\times4$ matrices. What $\Top$ actual does in $\COMPLEX^4$ is a swapping of vector 
+elements (i.e. swapping of rows 2 and 3). 
 
-Another obvious property is
+Other obvious properties are:
 
 \begin{equation}
 \label{eq:RAB:LAB}
-\Lop{\mat{A}}\Lop{\mat{B}} = \Lop{\mat{AB}},~~~\Rop{\mat{A}}\Rop{\mat{B}} = \Rop{\mat{BA}}
+\Lop{\mat{A}}\Lop{\mat{B}} = \Lop{\mat{AB}},~~~\Rop{\mat{A}}\Rop{\mat{B}} = \Rop{\mat{BA}},~~~[\Rop{\mat{A}}]^{-1} = \Rop{\mat{A^{-1}}}
 \end{equation}
+
+The above equations are true whether interpreted as operators, or as $4\times4$ matrix products.
+
+\subsection{Derivatives and Jacobians}
+
+A matrix-valued function of a matrix $\mat{F}(\mat{G})$, $\mat{F}:\COMPLEX^{2\times2}\to\COMPLEX^{2\times2}$ has a natural
+representation as a vector-valued function of a vector, $\bmath{f}:\COMPLEX^4\to\COMPLEX^4$:
+
+\[
+\bmath{f}(\bmath{g}) = \VEC{\mat{F}(\VECINV{\bmath{g}})}.
+\]
+
+The partial and conjugate partial Jacobians of $\bmath{f}$ with respect to $\bmath{g}$ ($\bar{\bmath{g}}$) are then $4\times4$ matrices (Eq.~\ref{eq:Jk}):
+
+\[
+\JJ_g = [ \partial f_i / \partial g_j ],~~~\JJ_{\bar{g}} = [ \partial f_i / \partial \bar{g}_j ]
+\]
+
+We can now use the isomorphism of Eq.~\ref{eq:iso:W} to formally define the corresponding ``''Wirtinger derivative operators'' 
+of $\mat{F}$ with respect to $\mat{G}$ and $\mat{G^H}$ as
+
+\begin{equation}
+\label{eq:def:dF:dG}
+\frac{\partial\mat{F}}{\partial{\mat{G}}} = \mathrm{W}(\JJ_g),~~~
+\frac{\partial\mat{F}}{\partial{\mat{G}^H}} = \Top \mathrm{W}(\JJ_{\bar{g}})
+\end{equation}
+
+This definition allows to formulate the Jacobians of Sect.~\ref{sec:pol:DI} (see e.g. Eq.~\ref{eq:JJtop}) 
+in terms of matrices of operators. In particular, it is easy to see (just from considering the corresponding $4\times4$ matrices) that 
+
+\[
+\frac{\partial(\mat{GA})}{\partial{\mat{G}}} = \Rop{A},~~~~\frac{\partial(\mat{AG^H})}{\partial{\mat{G^H}}} = \Lop{A}.
+\]
+
+\subsection{Row reordering and the transpose}
+
+Equation~\ref{eq:JJ} builds the full complex Jacobian from the partial Jacobian components. It is important to note that
+once constructed, the rows of such a Jacobian matrix may be arbitrarily reshuffled, as long as we reshuffle the components of the residuals 
+vector in exactly the same way, and vice versa.
+
+A particularly useful reshuffle corresponds to the $\Top$ operator above (i.e. to a transpose in $\COMPLEX^{2\times2}$ space). We exploit this
+in Eq.~\ref{eq:RRtranspose} to re-write the reshuffle the residuals vector (in $\COMPLEX^{4\Nbl}$ space) so that its bottom half represents
+to the matrices given by $\mat{R}^H$ (rather than simply the element-by-element conjugate $\bar{\mat{R}}$). Propagating this reshuffle into
+the Jacobian is equivalent to applying $\Top$ to every operator in the bottom half of the Jacobian. Conveniently, as shown by Eq.~\ref{eq:LA:RATT} above, this turns
+the $\mathcal{R}$ operator into  $\mathcal{L}$, and vice versa.
+
+\subsection{Conjugating the Jacobian}
+
+The complex Jacobian given in operator notation of Eq.~\ref{eq:JJ:pol} is a matrix of $2\Nbl\times2\Na$ operators. Its equivalent in conventional
+notation is a matrix of $8\Nbl\times8\Na$ complex numbers, in which each $4\times4$ block of complex numbers corresponds to one operator 
+(via the $\mathrm{W}$ isomorphism defined above).
+
+
 
 
 
