@@ -330,10 +330,11 @@ $\JJ^H \JJ$:
 \newcommand{\yysq}[2]{{y^2_{#1}+y^2_{#2}}}
 \newcommand{\bb}[2]{{\bar{y}_{#1#2}\bar{y}_{#2#1}}}
 \newcommand{\bbb}[2]{y_{#1#2}y_{#2#1}}
-\begin{equation}
-\label{eq:JHJ:3ant}
+
+\[
+%\label{eq:JHJ:3ant}
 {\scriptstyle
-\Matrix{c@{}c@{}c@{}c@{}c@{}c}{
+\Matrix{@{~}c@{}c@{}c@{}c@{}c@{}c@{~}}{
 \yysq{12}{13} & 0             & 0             & 0             & \bb{1}{2}       & \bb{1}{3} \\
 0             & \yysq{12}{23} & 0             & \bb{1}{2}       & 0             & \bb{2}{3} \\
 0             & 0             & \yysq{13}{23} & \bb{1}{3}       & \bb{2}{3}       & 0       \\
@@ -342,7 +343,7 @@ $\JJ^H \JJ$:
 \bbb{1}{3}      & \bbb{2}{3}      & 0             & 0             & 0             &  \yysq{13}{23}  
 }
 }
-\end{equation}
+\]
 
 The other component of the LM equations (Eq.~\ref{eq:LM}) is the $\JJ^H\bmath{r}$ term. This will be a column
 vector of length $2\Na$. We can write this as a stack of two $\Na$-vectors:
@@ -376,12 +377,13 @@ optimization of the RIME using LM, GN and/or steepest descent.
 \subsection{Diagonal approximation and Stefcal}
 \label{sec:DI:stefcal}
 
-A naive implementation of LS or GN above would hinge on inverting a $2\Na\times2\Na$ matrix, which is generally 
+Both LM and GN hinge on inverting the $\JJ^H\JJ$ matrix. This is of size $2\Na\times2\Na$, 
+and a naive implementation of inversion then becomes 
 an $O(\Na^3)$ operation. However, the structure of $\JJ^H\JJ$ in Eq.~\ref{eq:JHJ:DI} suggests that it is diagonally 
-dominant (especially for larger $\Na$), as the diagonal terms are added coherently. It is therefore not unreasonable 
+dominant (especially for larger $\Na$), as the diagonal terms are added coherently in amplitude. It is therefore not unreasonable 
 to try approximating it with a diagonal matrix for purposes of inversion, thus making the problem separable per antenna,
 and making matrix inversion itself negligible ($O(\Na)$ cost, as opposed to the $O(\Na^2)$ cost of computing the 
-diagonal elements of the Jacobian in the first place). The cost of using an approximation for $\JHJ$ is a less accurate
+diagonal elements of the Jacobian in the first place). The cost of using an approximate inverse for $\JHJ$ is a less accurate
 update step, so we can expect to require more iterations before convergence is reached.
 
 Applying this idea to Eq.~\ref{eq:LM} with $\lambda=0$ (i.e. implementing GN minimization), we end up with a 
