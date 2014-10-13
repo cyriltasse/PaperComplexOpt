@@ -1,0 +1,16 @@
+\begin{thebibliography}{4}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+
+\bibitem[{{Hamaker} {et~al.}(1996){Hamaker}, {Bregman}, \& {Sault}}]{Hamaker96}
+{Hamaker}, J.~P., {Bregman}, J.~D., \& {Sault}, R.~J. 1996, \aaps, 117, 137
+
+\bibitem[{{Smirnov} \& {Tasse}(2014)}]{SmirnovTasse14}
+{Smirnov}, O. \& {Tasse}, C. 2014, ArXiv e-prints
+
+\bibitem[{{Smirnov}(2011)}]{Oleg11}
+{Smirnov}, O.~M. 2011, \aap, 527, A106
+
+\bibitem[{{van der Tol}(2009)}]{Tol09}
+{van der Tol}, S. 2009, PhD thesis, TU Delft
+
+\end{thebibliography}
