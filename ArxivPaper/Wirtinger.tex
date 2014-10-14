@@ -1,20 +1,22 @@
 \section{Complex optimisation}
 \label{sec:Wirtinger}
 
-This section describes the shape and structures of the
-Jacobian over the complex scalar field, instead of what is usually done, by
-considering the real and imaginary separatly (later refered as the
-{\it Wirtinger} and {\it classical} Jacobians respectively). 
-
+Given a set of cross correlations between antenna voltages (the
+visibility set) in a given time-frequency domain and a model of the sky brightness, the calibration
+step in radio interferometry consists in estimating a set of
+direction-dependent Jones matrices per antenna. This is usually done
+using a chi-square minimisation technique such as the
+Levenberg-Maquardt. In this paper, we use the alternative Wirtinger's
+definition of complex derivative, instead of what is usually done by
+considering the real and imaginary (later referred as the
+{\it Wirtinger} and {\it classical} approaches respectively).
 
 \subsection{RIME formalism}
 
-Using the Radio Interferometry Measurement
-Equation (RIME) formalism \citep[for
-extensive discussions on the validity and limitations of the measurement
-equation see][]{Hamaker96,Oleg11}, the 4-polarisation visibility
-vector $\vbl$ measured on baseline
-$(pq)$, at time $t$ and frequency $\nu$ can be written as
+Using the Radio Interferometry Measurement Equation (RIME) formalism
+\citep[][]{Hamaker96}, the
+4-polarisation visibility vector $\vbl$ measured on baseline $(pq)$,
+at time $t$ and frequency $\nu$ can be written as
 
 
 \begin{alignat}{2}
@@ -27,16 +29,34 @@ $(pq)$, at time $t$ and frequency $\nu$ can be written as
 \text{and}\ \n=&\sqrt{1-\l^2-\m^2}
 \end{alignat}
 
-\noindent where $[\u,\v,\w]^T$ is the baseline vector between antennas
+\noindent where $\JMat^{d}_{pt\nu}$ is the Jones matrix of antenna $p$
+in direction $d$, $\Skyd$ is the four-polarization sky matrix, $\Kron$
+is the Kronecker product, $[\u,\v,\w]^T$ is the baseline vector between antennas
 $p$ and $q$ in wavelength units, and
 $\vec{s}_d=[\l,\m,\n=\sqrt{1-\l^2-\m^2}]^T$ is a sky direction later
-labeled as $d$. 
+labeled as $d$.
+In the following, the Jones matrix $\JMat^{d}_{pt\nu}$ is
+represented by scalars $g^{d}_{pt\nu,k}$ as
+
+\begin{equation}
+\JMat^{d}_{pt\nu}=
+\begin{bmatrix}
+g^{d}_{pt\nu,0} & g^{d}_{pt\nu,2} \\ 
+g^{d}_{pt\nu,1} & g^{d}_{pt\nu,3} 
+\end{bmatrix}
+\end{equation}
+
+\noindent and the set of Jones matrices is represented by a gain
+vector $\vec{g}$ containing the scalars $g^{d}_{pt\nu,k}$ for all
+directions, antennas and polarisations.
 
 From Eq. \ref{eq:ME}, the $i^{th}$ polarisation component of $\vbl$
-can be writen as
+can be written as
 
 \begin{alignat}{2}
-\mathrm{v}^i_{pqt\nu}=&
+\label{eq:hpq}
+\mathrm{v}^i_{pqt\nu}=&h^i_{pq}(\vec{g})\\
+=&
 \displaystyle\sum\limits_{d}
 \displaystyle\sum\limits_{j=0}^3 \left(g^{d}_{pt\nu,\textbf{A}_{ij}}.\conj{g^{d}_{qt\nu,\textbf{B}_{ij}}}\right).k^{d}_{pqt\nu}.\text{s}_{d,j}
 \end{alignat}
@@ -67,10 +87,10 @@ can be writen as
 \label{sec:Cderiv}
 
 In order to compute a Jacobian, a
-derivative definition for complex numbers has to be choosen. Instead of
+derivative definition for complex numbers has to be chosen. Instead of
 differentiating against real and imaginary parts independently, one can
 adopt a Wirtinger differentiation point of view and consider the
-complex and their conjugate as being indepedent. Choosing this type of differentiation
+complex and their conjugate as being independent. Choosing this type of differentiation
 turns out to be rather powerful to solve problems of the form of
 Eq. \ref{eq:ME} (see
 Sec. \ref{sec:Solver}). If a complex number is written as $z=x+iy$, the
@@ -84,7 +104,7 @@ Wirtinger complex derivative operator becomes
 
 \noindent where $x$ and $y$ are the real and imaginary parts
 respectively. The
-Wirtinger has a trivial but remarquable property that a scalar and its
+Wirtinger has a trivial but remarkable property that a scalar and its
 complex conjugate can be viewed as independent variables, and in
 particular
 
@@ -126,7 +146,7 @@ variables, one obtain
 \left(g^{d}_{pt\nu,\textbf{A}_{ij}}\text{s}_{d,j}\right).k^{d}_{pqt\nu}
 \end{alignat}
 
-Interestinggly, Eq. \ref{eq:Deriv_gp},
+Interestingly, Eq. \ref{eq:Deriv_gp},
 \ref{eq:Deriv_gq}, \ref{eq:Deriv_Cgp} and \ref{eq:Deriv_Cgq} show that the
 derivatives are always constant with respect to the differential
 variable.
@@ -139,14 +159,14 @@ results of Sec. \ref{sec:Cderiv}.
 First, let consider the visibility vector $\vbl$
 for all given time frequency blocks, and write the antenna,
 polarisation, and direction dependent gain vector as
-$\vec{g}$. Its size is $4n_an_d$, and have for $i^{th}$ component
-$i=j+4\times d+4\times a \times n_d$ the gain of antenna $a$ in
+$\vec{g}$. Its size is $4n_an_d$, and have for $k^{th}$ component
+$k=j+4\times d+4\times a \times n_d$ the gain of antenna $a$ in
 direction $d$ for polarisation $j$, where $n_a$, and $n_d$ are the
 number of antenna and directions.
 
 The corresponding Wirtinger Jacobian $\JVpq$ has size $(4n_t n_{\nu})\times (8n_a n_d)$ ($n_t$
 and $n_{\nu}$ are the number of time and frequency points), and can be
-written as follows:
+decomposed as follows:
 
 \begin{alignat}{2}
 \label{eq:dV}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=latex 2014.9.15)  13 OCT 2014 15:15
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=latex 2014.9.15)  14 OCT 2014 11:11
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -332,36 +332,41 @@ LaTeX Warning: Label `eq:LMWirtinger' multiply defined.
 )
 \openout1 = `paper.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 57.
-LaTeX Font Info:    ... okay on input line 57.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 57.
-LaTeX Font Info:    ... okay on input line 57.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 57.
-LaTeX Font Info:    ... okay on input line 57.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 57.
-LaTeX Font Info:    ... okay on input line 57.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 57.
-LaTeX Font Info:    ... okay on input line 57.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 57.
-LaTeX Font Info:    ... okay on input line 57.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
 
 A&A warning: Missing \date
-LaTeX Font Info:    Try loading font information for U+msa on input line 93.
+LaTeX Font Info:    Try loading font information for U+msa on input line 94.
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 93.
+LaTeX Font Info:    Try loading font information for U+msb on input line 94.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for U+bbold on input line 93.
+LaTeX Font Info:    Try loading font information for U+bbold on input line 94.
 
 (/usr/share/texlive/texmf-dist/tex/latex/bbold/Ubbold.fd) (./Defs.tex)
 (./Wirtinger.tex
 
 LaTeX Font Warning: Font shape `OT1/cmss/m/it' in size <10.95> not available
-(Font)              Font shape `OT1/cmss/m/sl' tried instead on input line 10.
+(Font)              Font shape `OT1/cmss/m/sl' tried instead on input line 14.
+
+
+Underfull \hbox (badness 3536) in paragraph at lines 16--20
+\OT1/cmr/m/n/10 (RIME) for-mal-ism (Hamaker et al. 1996), the 4-
+ []
 
 [1
 
@@ -371,39 +376,42 @@ File: ConvergenceLog.eps Graphic file (type eps)
  <ConvergenceLog.eps>
 
 LaTeX Font Warning: Font shape `OT1/cmss/m/sc' in size <10.95> not available
-(Font)              Font shape `OT1/cmr/m/sc' tried instead on input line 48.
+(Font)              Font shape `OT1/cmr/m/sc' tried instead on input line 67.
 
 [2]
 File: HalfJHJ2.eps Graphic file (type eps)
- <HalfJHJ2.eps>) (./SimulData.tex
+ <HalfJHJ2.eps>
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+Underfull \hbox (badness 5359) in paragraph at lines 137--140
+[]\OT1/cmr/m/n/10 Another in-ter-est-ing prop-erty is that, as-sum-ing
+ []
+
+) (./SimulData.tex
 File: residSimZoom2.eps Graphic file (type eps)
- <residSimZoom2.eps>
-
-LaTeX Font Warning: Font shape `OT1/cmss/bx/sc' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 15.
-
-
-Underfull \hbox (badness 1590) in paragraph at lines 20--28
+ <residSimZoom2.eps> [3]
+Underfull \hbox (badness 1590) in paragraph at lines 22--30
 \OT1/cmr/m/n/10 A vis-i-bil-ity dataset is sim-u-lated as-sum-ing the Low
  []
 
-[3]) (./Conclusion.tex) (./paper.bbl) [4
+) (./Conclusion.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-] (./paper.aux)
-
-LaTeX Font Warning: Some font shapes were not available, defaults substituted.
-
+)
+(./paper.bbl) [4] (./paper.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 4013 strings out of 495029
- 51525 string characters out of 6181523
- 134923 words of memory out of 5000000
- 7098 multiletter control sequences out of 15000+600000
+ 4011 strings out of 495029
+ 51470 string characters out of 6181523
+ 137926 words of memory out of 5000000
+ 7096 multiletter control sequences out of 15000+600000
  22683 words of font info for 85 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  42i,21n,26p,461b,291s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on paper.dvi (4 pages, 25632 bytes).
+Output written on paper.dvi (4 pages, 27724 bytes).

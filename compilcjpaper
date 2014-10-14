@@ -1,0 +1,6 @@
+latex cjpaper.tex
+bibtex cjpaper
+latex cjpaper.tex
+latex cjpaper.tex
+dvips cjpaper.dvi
+ps2pdf cjpaper.ps
