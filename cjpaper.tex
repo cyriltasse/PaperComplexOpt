@@ -62,6 +62,18 @@ $^1$Institute For The Advancement Of Complex Chicken Recipes}
 \label{firstpage}
 
 \begin{abstract}
+Recent developments in optimization theory have extended some traditional algorithms for least-squares optimization of 
+real-valued functions (Gauss-Newton, Levenberg-Marquardt, etc.) into the domain of complex functions of a complex variable. This
+employs a formalism called the Wirtinger derivative, and derives a full-complex Jacobian counterpart to the conventional 
+real Jacobian. We apply these developments to the problem of radio interferometric gain calibration, and show how the 
+general complex Jacobian formalism, when combined with conventional optimization approaches, yields a whole new family 
+of calibration algorithms, including those for the polarized and direction-dependent gain regime. We further extend the Wirtinger 
+calculus to an operator-based matrix calculus for describing the polarized calibration regime. Using approximate matrix 
+inversion results in computationally efficient implementations; we show that some recently proposed calibration algorithms 
+such as {\sc StefCal} and peeling can be understood as special cases of this, and place them in the context of the general 
+formalism. Finally, we present an implementation and some applied results of {\sc CohJones}, another specialized 
+direction-dependent calibration algorithm derived from the formalism.
+
 \end{abstract}
 
 \begin{keywords}
@@ -853,7 +865,7 @@ We should now note that each model component will typically correspond to a sour
 expressed as
 
 \[
-\bmath{m}_{pqt\nu}^\mathrm{(d)} = S^{(d)}_{pqt\nu} k^{(d)}_{pqt\nu}, 
+m_{pqt\nu}^{(d)} = S^{(d)}_{pqt\nu} k^{(d)}_{pqt\nu}, 
 \]
 
 where the term $S$ represents the visibility of that sky model component if placed at phase centre (usually 
@@ -1596,7 +1608,7 @@ Better approximations to $(\JHJ)^{-1}$ (or a faster exact inverse) may exist. Co
 the matrix consists of four blocks, with the diagonal blocks being trivially invertable, and the off-diagonal blocks having a 
 very specific structure. All the approaches discussed in this paper approximate the off-diagonal blocks by zero, and thus 
 yield algorithms which converge to the solution via many cheap approximative steps. If a fast way to invert matrices of the 
-off-diagonal type (faster than $O(\N^3)$, that is) could be found, this could yield calibration algorithms that converge in fewer more accurate iterations.
+off-diagonal type (faster than $O(N^3)$, that is) could be found, this could yield calibration algorithms that converge in fewer more accurate iterations.
 
 \section{Implementation and real data}
 
