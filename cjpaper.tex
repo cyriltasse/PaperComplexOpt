@@ -666,7 +666,6 @@ Finally, let us note that the property of Eq.~\ref{eq:v_Jg} also holds for the d
 
 
 \section{Inverting $\JJ^H\JJ$ and separability}
-
 \label{sec:separability}
 
 In principle, implementing one of the flavours of calibration above is ``just'' a matter of  
@@ -680,7 +679,8 @@ cost of inversion.
 
 \begin{figure*}
 \begin{center}
-\includegraphics[width=\textwidth]{ThreeJhJ}
+%\includegraphics[width=\textwidth]{ThreeJhJ.eps}
+\includegraphics[width=\textwidth]{FourOrderJhJ.pdf}
 \caption{\label{fig:JHJ}A graphical representation of $\JHJ$ for a case of 
 40 antennas and 5 directions. Each pixel represents the amplitude of a single matrix element.
 (a) Conventional real-only Jacobian constructed by taking the partial
@@ -1588,6 +1588,9 @@ one direction at a time.}.
 Within the framework above, peeling can be considered as the ultimate feed forward approach. Peeling is essentially feed-forward by direction, except rather than taking one step over each direction in turn, each direction is iterated to full convergence before moving on to the next direction. The procedure can then be repeated beginning with the brightest source again, a second cycle tends to improve the solutions. 
 
 \subsection{Exact matrix inversion}
+
+\newcommand{\N}{\mathcal{N}}
+
 
 Better approximations to $(\JHJ)^{-1}$ (or a faster exact inverse) may exist. Consider again Fig.~\ref{fig:JHJ}: in most cases, 
 the matrix consists of four blocks, with the diagonal blocks being trivially invertable, and the off-diagonal blocks having a 
