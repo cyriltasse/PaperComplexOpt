@@ -1,0 +1,14 @@
+ \newcommand{\noop}[1]{}
+\begin{thebibliography}{3}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+
+\bibitem[{{Hamaker} {et~al.}(1996){Hamaker}, {Bregman}, \& {Sault}}]{Hamaker96}
+{Hamaker}, J.~P., {Bregman}, J.~D., \& {Sault}, R.~J. 1996, \aaps, 117, 137
+
+\bibitem[{{Smirnov} \& {Tasse}(\noop{3002}in preparation)}]{SmirnovTasse14}
+{Smirnov}, O. \& {Tasse}, C. \noop{3002}in preparation, MNRAS
+
+\bibitem[{{van der Tol}(2009)}]{Tol09}
+{van der Tol}, S. 2009, PhD thesis, TU Delft
+
+\end{thebibliography}

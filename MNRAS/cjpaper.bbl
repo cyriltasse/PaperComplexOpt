@@ -1,0 +1,36 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citeauthoryear{Laurent, {van Barel} \& {de
+  Lathauwer}}{Laurent et~al.}{2012}]{ComplexOpt}
+Laurent S.,  {van Barel} M.,    {de Lathauwer} L.,  2012, SIAM J. Optim., 22,
+  879
+
+\bibitem[\protect\citeauthoryear{{Mitchell}, {Greenhill}, {Wayth}, {Sault},
+  {Lonsdale}, {Cappallo}, {Morales} \& {Ord}}{{Mitchell}
+  et~al.}{2008}]{Mitchell-RTS}
+{Mitchell} D.~A.,  {Greenhill} L.~J.,  {Wayth} R.~B.,  {Sault} R.~J.,
+  {Lonsdale} C.~J.,  {Cappallo} R.~J.,  {Morales} M.~F.,    {Ord} S.~M.,  2008,
+  IEEE Journal of Selected Topics in Signal Processing, 2, 707
+
+\bibitem[\protect\citeauthoryear{{Noordam}}{{Noordam}}{2004}]{JEN:peeling}
+{Noordam} J.~E.,  2004, in {Oschmann} J. J.~M.,  ed., {Ground-based Telescopes}
+  Vol.~5489 of {Society of Photo-Optical Instrumentation Engineers (SPIE)
+  Conference Series}, {LOFAR calibration challenges}.
+p.~817
+
+\bibitem[\protect\citeauthoryear{Salvini \& Wijnholds}{Salvini \&
+  Wijnholds}{2014}]{Stefcal}
+Salvini S.,  Wijnholds S.,  2014, URSI GASS
+
+\bibitem[\protect\citeauthoryear{{Smirnov}}{{Smirnov}}{2011}]{RRIME1}
+{Smirnov} O.~M.,  2011, \aap, 527, A106
+
+\bibitem[\protect\citeauthoryear{{Smirnov}}{{Smirnov}}{2013}]{OMS-Stefcal}
+{Smirnov} O.~M.,  2013, StefCal: The fastest selfcal in the West, {presentation
+  at 3GC3 workshop (Port Alfred, February 2013),\\
+  https://sites.google.com/a/ska.ac.za/3gc3/programmes/talk-slides}
+
+\bibitem[\protect\citeauthoryear{{van der Tol}}{{van der Tol}}{2009}]{Tol09}
+{van der Tol} S.,  2009, PhD thesis, TU Delft
+
+\end{thebibliography}

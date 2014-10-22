@@ -1,0 +1,3 @@
+pdflatex cjpaper
+bibtex cjpaper
+pdflatex cjpaper
