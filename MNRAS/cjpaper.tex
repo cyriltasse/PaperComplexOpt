@@ -507,6 +507,82 @@ with the second equality established by swapping $p$ and $q$ in the bottom sum, 
 \end{equation}
 
 
+\subsection{Computing the parameter update}
+
+Due to the structure of the RIME, we have a particularly elegant way of computing the GN update step.
+By analogy with the augmented residuals vector $\Rr$, we can express the data and model visibilities as $2\Nbl$-vectors,
+using the compound index $[pq]$ $(p\ne q)$:
+
+\[
+\Dd = [ d_{pq} ],~~\Vv = [ g_p m_{pq} \bar{g}_q ],~~\Rr =\Dd-\Vv
+\]
+
+As noted by \citet{tasse-cohjones}, we have the wonderful properties that
+
+\begin{equation}
+\label{eq:v_Jg}
+\Vv = \JJ_\LEFT \bmath{g}  = \frac{1}{2}\JJ \Gg,~~~\mathrm{where}~\Gg = \Matrix{c}{\bmath{g} \\ \bmath{\bar g}},
+\end{equation}
+
+(where $\bmath{X}_\LEFT$ designates the left half of matrix $\bmath{X}$ -- see Table~\ref{tab:notation} for a summary of notation),
+which basically comes about due to the RIME being bilinear with respect to $\bmath{g}$ and $\bmath{\bar g}$. 
+Substituting this into the GN update step, and noting that $\bmath{X}(\bmath{Y}_\LEFT)} = (\bmath{XY})_\LEFT$, 
+we have 
+
+\[
+\Matrix{c}{\delta\vecg\\\delta\vecgc} = (\JHJ)^{-1} \JJ^H (\Dd - \JJ_\LEFT \vecg) = (\JHJ)^{-1} \JJ^H \Dd - \vecg.
+\]
+
+Consequently, the updated gain values at each iteration can be derived directly from the data, thus obviating the need
+for computing residuals. 
+
+%%%% RESTORE OLD SECTIONS FROM HERE ON
+
+\begin{equation}
+\label{eq:ghat}
+\vecg_{k+1} = \vecg_k + \delta\vecg = (\JHJ)^{-1}_\UL \JJ_\LEFT^H \Dd.
+\end{equation}
+
+This can represent substantial algorithmic savings, and we will return to the idea again.
+
+Interestingly, applying the same idea to LM optimization (Eq.~\ref{eq:LM1}), and remembering that $\JHJ$ is 
+diagonal, we can derive the following update equation instead:
+
+\begin{equation}
+\bmath{g}_{k+1} = \frac{\lambda}{1+\lambda}\bmath{g}_k + \frac{1}{1+\lambda} (\JHJ)_\UL^{-1} \JJ_\LEFT^H \Dd,
+\label{eq:stefcal-lambda-average}
+\end{equation}
+
+which for $\lambda=1$ essentially becomes the basic average-update step of \StefCal. We should note that \citet{Stefcal} empirically 
+find better convergence when Eq.~\ref{eq:ghat} is employed for odd $k$, and Eq.~\ref{eq:stefcal-lambda-average} for even $k$.
+In terms of the framework defined here, the basic \StefCal\ algorithm can be succinctly described as {\em complex optimization with a 
+diagonally-approximated Jacobian, using GN for the odd steps, and LM ($\lambda=1$) for the even steps}.
+
+Note also that the ``shortcut'' of Eq.~\ref{eq:ghat} only holds as long as we approximate $\JHJ$ by a block-diagonal matrix
+
+$
+ (\JHJ)^{-1} \approx \Matrix{cc}{\bmath{A}^{-1}&0\\0&\bmath{A}^{-1}},
+$
+
+since it is the off-diagonal nulls that cause only the top-half of the $\JJ^H \Rr$ vector to be selected. If the inverse of
+$\JHJ$ is not block-diagonal, i.e.
+
+$
+ \JHJ = \Matrix{cc}{\bmath{A} & \bmath{B} \\ \bmath{B}^H & \bmath{A}},~~
+ (\JHJ)^{-1} = \Matrix{cc}{\bmath{E} & \bmath{F} \\ \bmath{F}^H & \bmath{E}},
+$
+
+then the GN update for $\delta\vecg$ is
+
+\begin{eqnarray}
+\delta \vecg = [ \bmath{E}~~\bmath{F} ] \JJ^H \Dd - [ \bmath{E}~~\bmath{F} ] \JJ^H \JJ_\LEFT \vecg ~\nonumber\\
+~~~~~= [ \bmath{E}~~\bmath{F} ] \JJ^H \Dd - [ \bmath{E}~~\bmath{F} ] \Matrix{c}{ \bmath{A} \\ \bmath{B}^H }  \vecg \nonumber\\
+~~~~~~= [ \bmath{E}~~\bmath{F} ] \JJ^H \Dd - ( \bmath{EA}+\bmath{FB}^H ) \vecg \nonumber
+\end{eqnarray}
+
+
+
+
 \subsection{Time/frequency solution intervals}
 \label{sec:unpol:DI:avg}
 \label{sec:solution-intervals}
@@ -855,26 +931,27 @@ find better convergence when Eq.~\ref{eq:ghat} is employed for odd $k$, and Eq.~
 In terms of the framework defined here, the basic \StefCal\ algorithm can be succinctly described as {\em complex optimization with a 
 diagonally-approximated Jacobian, using GN for the odd steps, and LM ($\lambda=1$) for the even steps}.
 
-
 Note also that the ``shortcut'' of Eq.~\ref{eq:ghat} only holds as long as we approximate $\JHJ$ by a block-diagonal matrix
 
 $
  (\JHJ)^{-1} \approx \Matrix{cc}{\bmath{A}^{-1}&0\\0&\bmath{A}^{-1}},
 $
 
-since it is the off-diagonal nulls that cause only the top-half of the $\JJ^H \Rr$ vector to be selected. If some other 
-approximation is in use, e.g.
+since it is the off-diagonal nulls that cause only the top-half of the $\JJ^H \Rr$ vector to be selected. If the inverse of
+$\JHJ$ is not block-diagonal, i.e.
 
 $
- (\JHJ)^{-1} \approx \Matrix{cc}{\bmath{E} & \bmath{F} \\ \bmath{F}^H & \bmath{E}},
+ \JHJ = \Matrix{cc}{\bmath{A} & \bmath{B} \\ \bmath{B}^H & \bmath{A}},~~
+ (\JHJ)^{-1} = \Matrix{cc}{\bmath{E} & \bmath{F} \\ \bmath{F}^H & \bmath{E}},
 $
 
-then the update is
+then the GN update for $\delta\vecg$ is
 
-\[
-\delta \vecg = ( \bmath{E} \JJ_\LEFT^H  +  \bmath{F} \JJ_\RIGHT^H ) \Dd - 
-\bmath{E} \bmath{A} \vecg - \bmath{F} \bmath{A} \vecgc
-\]
+\begin{eqnarray}
+\delta \vecg = [ \bmath{E}~~\bmath{F} ] \JJ^H \Dd - [ \bmath{E}~~\bmath{F} ] \JJ^H \JJ_\LEFT \vecg ~\nonumber\\
+~~~~~= [ \bmath{E}~~\bmath{F} ] \JJ^H \Dd - [ \bmath{E}~~\bmath{F} ] \Matrix{c}{ \bmath{A} \\ \bmath{B}^H }  \vecg \nonumber\\
+~~~~~~= [ \bmath{E}~~\bmath{F} ] \JJ^H \Dd - ( \bmath{EA}+\bmath{FB}^H ) \vecg \nonumber
+\end{eqnarray}
 
 
 
