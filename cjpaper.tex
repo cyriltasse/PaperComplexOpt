@@ -26,6 +26,8 @@
 \newcommand{\zzc}{\bmath{\bar z}}
 \newcommand{\rr}{\bmath{r}}
 \newcommand{\rrc}{\bmath{\bar r}}
+\newcommand{\vv}{\bmath{v}}
+\newcommand{\vvc}{\bmath{\bar v}}
 %\newcommand{\gg}{\bmath{g}}
 %\newcommand{\ggc}{\bmath{\bar g}}
 
@@ -35,6 +37,7 @@
 \newcommand{\DD}{\mat{D}}
 \newcommand{\MM}{\mat{M}}
 \newcommand{\RR}{\mat{R}}
+\newcommand{\VV}{\mat{V}}
 \newcommand{\LL}{\mat{L}}
 \newcommand{\RHO}{\mat{\Rho}}
 \newcommand{\GG}{\mat{G}}
@@ -86,6 +89,67 @@ Chicken chicken chicken. Chicken chicken? Chicken\footnote{Chicken chicken!} chi
 
 \section{Prior work}
 
+\newcommand{\Matrix}[2]{\left [ \begin{array}{@{}#1@{}}#2\end{array} \right ]}
+\newcommand{\Stack}[1]{\begin{array}{@{}c@{}}#1\end{array}}
+
+\newcommand{\AUGx}[1]{\mathbf{\breve{#1}}}
+\newcommand{\AUG}[1]{\bmath{\breve{#1}}}
+
+\newcommand{\Zz}{\AUG{z}}
+\newcommand{\Gg}{\AUG{g}}
+\newcommand{\Rr}{\AUG{r}}
+\newcommand{\Dd}{\AUG{d}}
+\newcommand{\Vv}{\AUG{v}}
+\newcommand{\GGg}{\AUGx{G}}
+\newcommand{\RRr}{\AUGx{R}}
+\newcommand{\DDd}{\AUGx{D}}
+\newcommand{\VVv}{\AUGx{V}}
+\newcommand{\TOP}{\mathrm{top}}
+\newcommand{\UL}{\mathrm{ul}}
+\newcommand{\Rop}[1]{\mathcal{R}_{{#1}}}
+\newcommand{\Lop}[1]{\mathcal{L}_{{#1}}}
+\newcommand{\Top}{\mathcal{T}}
+
+
+
+\begin{table}
+\caption{\label{tab:notation}Notation and frequently used symbols}
+\begin{tabular}{ll}
+\hline\\
+$x$        & scalar value $x$    \\
+$\bmath{x}$  & vector $\bmath{x}$  \\
+$\bmath{X}$  & matrix $\bmath{X}$ \\
+$\mathbf{X}$  & vector of $2\times2$ matrices $\mathbf{X}=[\bmath{X}_i]$ (Sect.~\ref{sec:pol})  \\
+$\REAL$ & space of real numbers \\
+$\COMPLEX$ & space of complex numbers \\
+$\II$ & identity matrix \\
+$\mathrm{diag}\,\bmath{x}$ & diagonal matrix formed from $\bmath{x}$\\
+$||\cdot||_F$ & Frobenius norm \\
+$(\cdot)^T$ & transpose \\
+$(\cdot)^H$ & Hermitian transpose \\
+$\bmath{\bar x},\bmath{\bar X}$ & element-by-element complex conjugate of $\bmath{x}$, $\bmath{X}$  \\
+$\AUG{x}, \AUGx{X}$ & augmented vectors $\AUG{x} = \Matrix{c}{\bmath{x} \\ \bmath{\bar x}},~~\AUGx{X}=\Matrix{c}{\bmath{X}_i \\ \bmath{X}^H_i}$ \\
+$\TOP\,\bmath{X}$ & top half of matrix $\bmath{X}$\\
+$\UL\,\bmath{X}$ & upper-left quadrant of matrix $\bmath{X}$\\
+$\bmath{d},\bmath{v},\bmath{r}, \bmath{g}, \bmath{m} $ & data, model, residuals, gains, sky coherency\\
+$(\cdot)_k$ & value associated with iteration $k$ \\
+$(\cdot)_{p,k}$ & value associated with antenna $p$, iteration $k$ \\
+$(\cdot)^{(d)}$ & value associated with direction $d$\\
+$\bmath{W}$ & matrix of weights \\
+$\JJ$ & full complex Jacobian \\
+$\JJ_k~~[\JJ_{\bar k}]$ & [conjugate] partial Jacobian at iteration $k$\\
+$\mathrm{vec}\,\bmath{X}$ & vectorization operator \\
+$\Rop{A}$ & right-multiply by $\bmath{A}$ operator (Sect.~\ref{sec:pol}) \\
+$\Lop{A}$ & left-multiply by $\bmath{A}$ operator (Sect.~\ref{sec:pol}) \\
+$\delta^i_j$ & Kronecker delta symbol \\
+$\searrow,\nearrow,\downarrow$ & repeated matrix block \\
+\hline
+
+
+
+\end{tabular}
+\end{table}
+
 \subsection{Complex optimization \& Wirtinger calculus}
 
 The traditional approach to optimizing a function of $n$ complex variables $f(\zz),$ $\zz\in\COMPLEX^n$ is
@@ -119,29 +183,19 @@ complex Jacobians and Hessians, and applied to the complex optimization problem.
 us, they generalize the Gauss-Newton (GN) and Levenberg-Marquardt (LM) methods for solving the non-linear 
 least squares (LS) problem
 
-\newcommand{\Matrix}[2]{\left [ \begin{array}{@{}#1@{}}#2\end{array} \right ]}
-\newcommand{\Stack}[1]{\begin{array}{@{}c@{}}#1\end{array}}
-
-\newcommand{\AUG}[1]{\bmath{\breve{#1}}}
-
-\newcommand{\Zz}{\AUG{z}}
-\newcommand{\Gg}{\AUG{g}}
-\newcommand{\Rr}{\AUG{r}}
-\newcommand{\Dd}{\AUG{d}}
-\newcommand{\Vv}{\AUG{v}}
-\newcommand{\GGg}{\AUG{G}}
-\newcommand{\RRr}{\AUG{R}}
-\newcommand{\DDd}{\AUG{D}}
-\newcommand{\VVv}{\AUG{V}}
 
 
 \begin{equation}
 \label{eq:LSmin}
-\min_{\bmath{z}} ||\bmath{r}(\zz,\zzc)||_F,
+\min_{\bmath{z}} ||\bmath{r}(\zz,\zzc)||_F,~~~\mathrm{or}~\min_{\bmath{z}} ||\bmath{d}-\bmath{v}(\zz,\zzc)||_F
 \end{equation}
 
-where $\bmath{r}$ has values in $\COMPLEX^m$, and $||\cdot||_F$ is the Frobenius norm. This is done as follows.
-Let us formally treat $\zz$ and $\zzc$ as independent variables, define an {\em augmented parameter vector} containing both, 
+where $\bmath{r},\bmath{d},\bmath{v}$ have values in $\COMPLEX^m$, and $||\cdot||_F$ is the Frobenius norm. The latter form 
+refers to LS fitting of the parameterized model $\bmath{v}$ to observed data $\bmath{d}$, and is the preferred formulation
+in the context of radio interferometry.
+
+Complex optimization is done as follows. Let us formally treat $\zz$ and $\zzc$ as independent variables, 
+define an {\em augmented parameter vector} containing both, 
 
 
 
@@ -155,13 +209,18 @@ and designate its value at step $k$ by $\Zz_k$. Then, define
 
 \begin{equation}
 \label{eq:Jkrk}
-\JJ_k=\frac{\partial \rr}{\partial \zz} (\Zz_k), ~\JJ_{\bar{k}}=\frac{\partial \rr}{\partial \bar{\zz}}(\Zz_k),~
+\JJ_k=\frac{\partial \vv}{\partial \zz} (\Zz_k), ~\JJ_{\bar{k}}=\frac{\partial \vv}{\partial \bar{\zz}}(\Zz_k),~
 \Rr_k=\Matrix{c}{\rr(\Zz_k)\\\bar{\rr}(\Zz_k)}
 \end{equation}
 
-We'll call the $m\times n$ matrices $\JJ_k$ and $\JJ_{\bar{k}}$ the \emph{partial} and \emph{partial conjugate Jacobian}, respectively, 
+We'll call the $m\times n$ matrices $\JJ_k$ and $\JJ_{\bar{k}}$ the \emph{partial} and \emph{partial conjugate 
+Jacobian}\footnote{\citet{ComplexOpt} define the Jacobian via $\partial\rr$ rather than
+$\partial\vv$. This yields the same Jacobian with a minus sign, and adds a minus sign to 
+Eqs.~\ref{eq:LM} and \ref{eq:LM1}. In this paper we use the $\partial\vv$ convention, as is common in the
+context of radio interferometric calibration.}
+respectively, 
 and the $2m$-vector $\Rr_k$ the \emph{augmented residual vector}. The \emph{complex Jacobian} 
-of the cost function $||\Rr(\Zz)||_F$ can then be written (in block matrix form) as
+of the model $\vv$ can then be written (in block matrix form) as
 
 \begin{equation}
 \label{eq:JJ}
@@ -172,7 +231,7 @@ Note that this is a $2m \times 2n$ matrix. The LM parameter update step is then 
 
 \begin{equation}
 \label{eq:LM}
-\delta\Zz = \Matrix{c}{\delta \zz \\ \delta \bar{\zz}} = -(\JJ^H \JJ + \lambda\II)^{-1}\JJ^H \Rr_k,
+\delta\Zz = \Matrix{c}{\delta \zz \\ \delta \bar{\zz}} = (\JJ^H \JJ + \lambda\II)^{-1}\JJ^H \Rr_k,
 \end{equation}
 
 where $\II$ is the identity matrix, and $\lambda$ is the LM damping parameter. When $\lambda=0$ this becomes 
@@ -182,19 +241,18 @@ An alternative version of LM is formulated as
 
 \begin{equation}
 \label{eq:LM1}
-\delta\Zz = -(\JJ^H \JJ + \lambda \DD)^{-1}\JJ^H \Rr_k,
+\delta\Zz = (\JJ^H \JJ + \lambda \DD)^{-1}\JJ^H \Rr_k,
 \end{equation}
 
-where $\DD$ is simply the diagonalized version of $\JJ^H\JJ$.
+where $\DD$ is the diagonalized version of $\JJ^H\JJ$.
 
 Note that while $\delta\zz$ and $\delta \bar{\zz}$ are formally computed independently, the structure of the equations 
 ensures that the results are consistent, i.e. that $\overline{\delta\zz} = \delta \bar{\zz}$. In practice this 
 redundancy usually means that only half the calculations need to be performed.
 
 \citet{ComplexOpt} show that Eq.~\ref{eq:LM} yields exactly the same system of LS equations as would have 
-been produced had we treated $\rr(\zz)$ as a function of real and imaginary parts 
-$\rr(\bmath{x},\bmath{y})$, and taken ordinary derivatives in 
-$\REAL^{2n}$. However, the complex Jacobian may be easier and more elegant 
+been produced had we treated $\rr(\zz)$ as a function of real and imaginary parts $\rr(\bmath{x},\bmath{y})$, 
+and taken ordinary derivatives in $\REAL^{2n}$. However, the complex Jacobian may be easier and more elegant 
 to derive analytically, as we'll see below in the case of radio interferometric calibration.
 
 \section{Unpolarized calibration}
@@ -245,7 +303,7 @@ partial Jacobian in terms of its value at row $[pq]$ and column $j$ as
 \[
 [ \JJ_k ]_{[pq],j} = \left \{  
   \begin{array}{ll} 
-  -m_{pq}\bar{g}_q,& j=p, \\
+  m_{pq}\bar{g}_q,& j=p, \\
   0, & \mathrm{otherwise.}
   \end{array}
 \right .
@@ -257,14 +315,14 @@ this more compactly using the Kronecker delta:
 
 \begin{equation}
 \label{eq:Jk}
-J_k = - \overbrace{ \Matrix{c}{ m_{pq}\bar{g}_q\delta^{j}_p } } ^{j=1\dots \Na} \big \}{\scriptstyle [pq]=1\dots \Nbl~(p<q)}
+J_k = \overbrace{ \Matrix{c}{ m_{pq}\bar{g}_q\delta^{j}_p } } ^{j=1\dots \Na} \big \}{\scriptstyle [pq]=1\dots \Nbl~(p<q)}
 v\end{equation}
 
 Likewise, the conjugate partial Jacobian $\JJ_{\bar{k}}$ may be written as
 
 \begin{equation}
 \label{eq:Jbark}
-J_{\bar{k}} = - \overbrace{ \Matrix{c}{ g_p m_{pq} \delta^{j}_q } } ^{j=1\dots \Na} \big \}{\scriptstyle [pq]=1\dots \Nbl~(p<q)}
+J_{\bar{k}} = \overbrace{ \Matrix{c}{ g_p m_{pq} \delta^{j}_q } } ^{j=1\dots \Na} \big \}{\scriptstyle [pq]=1\dots \Nbl~(p<q)}
 \end{equation}
 
 A specific example is provided in Appendix~\ref{sec:3ant}. The full complex Jacobian (Eq.~\ref{eq:JJ}) then 
@@ -274,7 +332,7 @@ becomes, in block matrix notation,
 \label{eq:JJ:di:basic}
 \begin{array}{r@{~}cc@{~}cc}
                 & \overbrace{~~~~~~~~}^{j=1\dots \Na} & \overbrace{~~~~~~~~}^{j=1\dots \Na} \\
-\JJ = - \bigg [ &
+\JJ = \bigg [ &
   \Stack{ m_{pq}\bar{g}_q\delta^{j}_p \\ \bar{m}_{pq} \bar{g}_p \delta^{j}_q } &
   \Stack{ g_p m_{pq} \delta^{j}_q \\ g_q \bar{m}_{pq} \delta^{j}_p }  
 & \bigg ] &
@@ -305,7 +363,7 @@ the two blocks as one, with a single compound index $[pq]~(p\ne q)$ running thro
 \label{eq:JJ:di}
 \begin{array}{r@{~}cc@{~}cc}
                 & \overbrace{~~~~~~~~}^{j=1\dots \Na} & \overbrace{~~~~~~~~}^{j=1\dots \Na} \\
-\JJ = - \big [ & m_{pq}\bar{g}_q\delta^{j}_p & g_p m_{pq} \delta^{j}_q & \big ],~
+\JJ = \big [ & m_{pq}\bar{g}_q\delta^{j}_p & g_p m_{pq} \delta^{j}_q & \big ],~
 \Rr = \big [ r_{pq} \big ] ~~{\} \scriptstyle [pq]=1\dots 2\Nbl}
 \end{array}
 \end{equation}
@@ -414,10 +472,10 @@ The other component of the LM/GN equations (Eq.~\ref{eq:LM}) is the $\JJ^H\Rr$ t
 
 \begin{equation}
 \label{eq:JHR:DI}
-\JJ^H\Rr = -\Matrix{c}{ 
+\JJ^H\Rr = \Matrix{c}{ 
 \sum\limits_{pq} \bar{y}_{pq} r_{pq} \delta^{i}_p  \\
 \sum\limits_{pq} y_{qp} r_{pq} \delta^{i}_q 
-} = -\Matrix{c}{
+} = \Matrix{c}{
 \sum\limits_{q\ne i} \bar{y}_{iq} r_{iq}   \\
 \sum\limits_{q\ne i} y_{iq} \bar{r}_{iq}  
 }
@@ -431,7 +489,7 @@ with the second equality established by swapping $p$ and $q$ in the bottom sum, 
 
 \begin{equation}
 \label{eq:JHR:DI1}
-\JJ^H\Rr = -\Matrix{c}{\bmath{c}\\\bar{\bmath{c}}},~~c_i = \sum\limits_{q\ne i} \bar{y}_{iq} r_{iq}.
+\JJ^H\Rr = \Matrix{c}{\bmath{c}\\\bar{\bmath{c}}},~~c_i = \sum\limits_{q\ne i} \bar{y}_{iq} r_{iq}.
 \end{equation}
 
 \subsection{Computing the parameter update}
@@ -511,7 +569,7 @@ where the symbols $\searrow$ and $\nearrow^H$ represent a copy and a copy-transp
 \begin{equation}
 \label{eq:JHR:DI:tf}
 \JJ^H\Rr 
-= -\Matrix{c}{
+= \Matrix{c}{
 \sum\limits_{q\ne i,s} \bar{y}_{iqs} r_{iqs}   \\
  \hline \\[-8pt]
 \downarrow^H
@@ -534,7 +592,7 @@ where $\mat{W}$ is an $M\times M$ weights matrix (usually, the inverse of the da
 
 \begin{equation}
 \label{eq:LM:W}
-\delta\Zz = -(\JJ^H \mat{W} \JJ + \lambda\II)^{-1}\JJ^H \mat{W} \Rr_k.
+\delta\Zz = (\JJ^H \mat{W} \JJ + \lambda\II)^{-1}\JJ^H \mat{W} \Rr_k.
 \end{equation}
 
 Adding weights to Eqs.~\ref{eq:JHJ:DI:tf} and \ref{eq:JHR:DI:tf}, we arrive at the following:
@@ -561,7 +619,7 @@ Adding weights to Eqs.~\ref{eq:JHJ:DI:tf} and \ref{eq:JHR:DI:tf}, we arrive at t
 \begin{equation}
 \label{eq:JHR:DI:tfw}
 \JJ^H\mat{W}\Rr 
-= -\Matrix{c}{
+= \Matrix{c}{
 \sum\limits_{q\ne i,s} w_{iqs} \bar{y}_{iqs} r_{iqs}   \\
 \hline\\[-8pt]
 \downarrow^H
@@ -614,7 +672,7 @@ shape of $2\Nbl\Ns\times 2\Na\Nd$. We now treat $[pqs]$ and $[jd]$ as compound i
 \begin{array}{r@{~}cc@{~}cc}
  & \overbrace{~~~~~~~~~~~~}^{\Stack{\scriptstyle j=1\dots \Na\\\scriptstyle d=1\dots \Nd}} & 
    \overbrace{~~~~~~~~~~~~}^{\Stack{\scriptstyle j=1\dots \Na\\\scriptstyle d=1\dots \Nd}} \\
-\JJ = - \bigg [ &
+\JJ = \bigg [ &
   \mmd_{pqs}\ggdH_q \delta^j_p & 
   \ggd_p \mmd_{pqs}  \delta^j_q 
 \bigg ] &
@@ -665,7 +723,7 @@ antenna $j$, direction $d$:
 
 \begin{equation}
 \label{eq:JHR:DD:unpol}
-\JJ^H\Rr = -\Matrix{c}{\bmath{c}\\\bar{\bmath{c}}},~~c_{jd} = \sum\limits_{q\ne j,s} 
+\JJ^H\Rr = \Matrix{c}{\bmath{c}\\\bar{\bmath{c}}},~~c_{jd} = \sum\limits_{q\ne j,s} 
 \yydH_{jqs} r_{jqs}.
 \end{equation}
 
@@ -692,14 +750,13 @@ cost of inversion.
 
 \begin{figure*}
 \begin{center}
-\includegraphics[width=\textwidth]{ThreeJhJ}
+\includegraphics[width=\textwidth]{FourOrderJhJ}
 \caption{\label{fig:JHJ}A graphical representation of $\JHJ$ for a case of 
 40 antennas and 5 directions. Each pixel represents the amplitude of a single matrix element.
-(a) Conventional real-only Jacobian constructed by taking the partial
-derivatives w.r.t. the real and imaginary parts of the gains; (b) full complex Jacobian where the gains 
-are ordered by direction major, antenna minor; (c) full complex Jacobian where the gains are ordered by 
-antenna major, direction minor. Note that (c) can also be taken to represent the direction-independent case, 
-with each $5\times5$ block becoming one pixel.}
+The top row (a--d) shows conventional real-only Jacobians constructed by taking the partial derivatives w.r.t. 
+the real and imaginary parts of the gains. The ordering of the parameters is (a) real/imaginary major, 
+direction, antenna minor (i.e. antenna changes fastest); (b) real/imaginary, antenna, direction; (c) direction, 
+real/imaginary, antenna; (d) antenna, real/imaginary, direction. The bottom row (e--h) shows full complex Jacobians with similar parameter ordering (direct/conjugate instead of real/imaginary). Note that panel (f) can also be taken to represent the direction-independent case, if we imagine each $5\times5$ block as one pixel.}
 \end{center}
 \end{figure*}
 
@@ -717,7 +774,7 @@ algorithms, while others produce new algorthmic variations.
 Let us first consider the DI case. The structure of $\JJ^H\JJ$ in Eq.~\ref{eq:JHJ:DI} suggests that it is diagonally 
 dominant (especially for larger $\Na$), as each diagonal element is a coherent sum of $\Na$ amplitude-squared $y$-terms, 
 while the off-diagonal elements are either zero or a product of two $y$ terms. This is graphically illustrated in 
-Fig.~\ref{fig:JHJ}(c). It is therefore not unreasonable 
+Fig.~\ref{fig:JHJ}(f). It is therefore not unreasonable 
 to approximate $\JHJ$ with a diagonal matrix for purposes of inversion (or equivalently, making the assumption that 
 the problem is separable per antenna). This makes the costs of matrix inversion negligible -- $O(\Na)$ operations, as 
 compared to the $O(\Na^2)$ cost 
@@ -727,18 +784,15 @@ $\JHJ$ is a less accurate update step, so we can expect to require more iteratio
 Combining this approximation with GN optimization, we may use Eq.~\ref{eq:ghat} to write out the GN update step:
 
 \[
-\Gg_{k+1} = -(\JHJ)^{-1} \JJ^H \Dd,
+\Gg_{k+1} = (\JHJ)^{-1} \JJ^H \Dd,
 \]
 
 Exploiting the redundancy of the equations, we only need to compute the update to $\bmath{g}$ and not $\bmath{\bar g}$.
 Since the diagonal approximation consists of assuming $\bmath{B}=0$ in Eq.~\ref{eq:JHJ:DI:ABCD}, we can write the 
 update to $\bmath{g}$ as:
 
-\newcommand{\TOP}{\mathrm{top}}
-\newcommand{\UL}{\mathrm{ul}}
-
 \[
-\bmath{g}_{k+1} = -\UL(\JHJ)^{-1} \TOP(\JJ^H) \Dd,
+\bmath{g}_{k+1} = \UL(\JHJ)^{-1} \TOP(\JJ)^H \Dd,
 \]
 
 where $\UL\,\bmath{X}$ designates the upper-left quadrant of matrix $\bmath{X}$, and $\TOP\,\bmath{X}$ designates its top half. The per-element expression is then
@@ -759,7 +813,7 @@ Interestingly, if apply the diagonal $\JJ^H\JJ$ approximation to LM optimization
 update equation (in full analogy with Eq.~\ref{eq:ghat}):
 
 \begin{equation}
-\bmath{g}_{k+1} = \frac{\lambda}{1+\lambda}\bmath{g}_k - \frac{1}{1+\lambda} \UL(\JHJ)^{-1} \TOP(\JJ^H) \Dd,
+\bmath{g}_{k+1} = \frac{\lambda}{1+\lambda}\bmath{g}_k + \frac{1}{1+\lambda} \UL(\JHJ)^{-1} \TOP(\JJ^H) \Dd,
 \label{eq:stefcal-lambda-average}
 \end{equation}
 
@@ -815,7 +869,7 @@ g^{(1)}_2 \dots g^{(\Nd)}_2, \bar{g}^{(1)}_2 \dots ]^T
 
 \end{itemize}
 
-Figure~\ref{fig:JHJ} graphically illustrates two of these orderings: (b) CDA and (c) CAD.
+Figure~\ref{fig:JHJ}(e--h) graphically illustrates the structure of the Jacobian under these orderings.
 
 At this point we may derive a whole family of DD calibration algorithms -- there are many ways to skin a cat. Each 
 algorithm is defined by picking an ordering for $\Gg$, then examining the corresponding $\JHJ$ structure and specifying 
@@ -873,7 +927,7 @@ only weakly dependent on $t,\nu$ -- in the case of a point source, for example, 
 while the term
 
 \[
-k^{(d)}_{pqt,\nu} = e^{-2\pi i (\bmath{u}_{pq}(t)\cdot\bmath{\sigma}_d)\nu/c},~~~\bmath{\sigma}_d = [l_d,m_d,n_d-1]^T,
+k^{(d)}_{pqt\nu} = e^{-2\pi i (\bmath{u}_{pq}(t)\cdot\bmath{\sigma}_d)\nu/c},~~~\bmath{\sigma}_d = [l_d,m_d,n_d-1]^T,
 \]
 
 represents the phase rotation to direction $\bmath{\sigma}_d$ (where $lmn$ are the corresponding direction cosines), 
@@ -906,7 +960,7 @@ $O(\Nd^3\Na^3)$. Either GN and LM optimization may now be applied.
 
 \subsubsection{COHJONES: separating by antenna}
 
-A complementary approach is to separate the problem by antenna instead. Consider the CAD ordering (Fig.~\ref{fig:JHJ}c). 
+A complementary approach is to separate the problem by antenna instead. Consider the CAD ordering (Fig.~\ref{fig:JHJ}f). 
 The top half of $\JHJ$ then has the following block structure (and the bottom half is its symmetric conjugate):
 
 \newcommand{\JJX}{\bmath{A}}
@@ -931,13 +985,13 @@ and either LM or GN optimization may be applied.
 For GN, the update step may be computed in direct analogy to Eq.~\ref{eq:stefcal}:
 
 \[
-\bmath{g}_{k+1} = -\bmath{A}^{-1} \TOP(\JJ^H) \Dd.
+\bmath{g}_{k+1} = \bmath{A}^{-1} \TOP(\JJ^H) \Dd.
 \]
 
 Note that for LM, the analogy is only approximate:
 
 \[
-\Gg_{k+1} \approx \frac{\lambda}{1+\lambda}\Gg_k - \frac{1}{1+\lambda} \bmath{A}^{-1} \TOP(\JJ^H) \Dd,
+\Gg_{k+1} \approx \frac{\lambda}{1+\lambda}\Gg_k + \frac{1}{1+\lambda} \bmath{A}^{-1} \TOP(\JJ^H) \Dd,
 \]
 
 since $\bmath{A}$ is only approximately diagonal.
@@ -948,7 +1002,7 @@ implemented as the {\sc CohJones} (complex half-Jacobian optimization for $n$-di
 algorithm\footnote{In fact it was the initial development of {\sc CohJones} by \citet{tasse:cohjones} that directly led to the
 present work.}, the results of which applied to simulated data are presented below.
 
-\subsubsection{ALLJONES: Separating by everything}
+\subsubsection{ALLJONES: Separating all}
 
 Perhaps the biggest simplification available is to start with CDA or CAD ordering, and assume a Stefcal-style diagonal 
 approximation the entirety of $\JHJ$. The matrix then becomes purely diagonal, matrix inversion reduces to $O(\Nd\Na)$ in 
@@ -956,7 +1010,7 @@ complexity, and algorithmic cost becomes dominated by the $O(\Nd\Na^2)$ process 
 $\JHJ$. The GN update step can then computed in direct analogy to Eq.~\ref{eq:stefcal}:
 
 \[
-\bmath{g}_{k+1} = -\UL(\JHJ)^{-1} \TOP(\JJ^H) \Dd,
+\bmath{g}_{k+1} = \UL(\JHJ)^{-1} \TOP(\JJ^H) \Dd,
 \]
 
 and the per-element expression is 
@@ -1075,9 +1129,6 @@ $\DD_{pq}=\DD^H_{qp}$, and $\MM_{pq}=\MM^H_{qp}$. The basic polarization calibra
 \end{equation}
 
 
-\newcommand{\Rop}[1]{\mathcal{R}_{{#1}}}
-\newcommand{\Lop}[1]{\mathcal{L}_{{#1}}}
-\newcommand{\Top}{\mathcal{T}}
 
 In principle, this can be recast into an ordinary complex NLLS problem (Eq.~\ref{eq:LSmin}) by vectorizing each 
 matrix in the above equation,  and then deriving the complex Jacobian according to Eq.~\ref{eq:JJ}. We may, however, 
@@ -1233,8 +1284,8 @@ Let us apply the operator calculus developed above to Eq.~\ref{eq:cal:DI:pol}. W
 
 \begin{equation}
 \label{eq:dR:dG}
-\frac{\partial\RR_{pq}}{\partial\GG_p} = -\Rop{\MM_{pq}\GG^H_q},\mathrm{~~and~~}
-\frac{\partial\RR_{pq}}{\partial\GG^H_q} = -\Lop{\GG_p \MM_{pq}}.
+\frac{\partial\VV_{pq}}{\partial\GG_p} = \Rop{\MM_{pq}\GG^H_q},\mathrm{~~and~~}
+\frac{\partial\VV_{pq}}{\partial\GG^H_q} = \Lop{\GG_p \MM_{pq}}.
 \end{equation}
 
 If we now stack all the gain matrices into one augmented ``vector of matrices'':
@@ -1253,7 +1304,7 @@ $[pq]$ will represent a single index running through $M$ values (i.e. enumeratin
 \begin{array}{r@{~}cc@{~}cc}
   & \overbrace{~~~~~~~~}^{j=1\dots \Na} & \overbrace{~~~~~~~~}^{j=1\dots \Na} \\
 
-\JJ_\mathrm{top} = - \big [ & 
+\JJ_\mathrm{top} = \big [ & 
 \Rop{ \MM_{pq}\GG^H_q }\delta^j_p & 
 \Lop{ \GG_p \MM_{pq}  }\delta^j_q 
 & \big ] ~~ \} \scriptstyle [pq]=1\dots \Nbl~(p<q)
@@ -1291,12 +1342,12 @@ as:
 % Note that this modification is simply a matter of swapping some rows (Eq.~\ref{eq:vec:XH}) in the conjugate residual vector,
 % i.e. a simple change in the numbering of the  equations. 
 
-Now, since $\RR^H_{pq}=\GG_q \MM^H_{pq} \GG^H_p,$ we have
+Now, since $\VV^H_{pq}=\GG_q \MM^H_{pq} \GG^H_p,$ we have
 
 \begin{equation}
 \label{eq:dRH:dG}
-\frac{\partial\RR^H_{pq}}{\partial\GG_q} = -\Rop{\MM^H_{pq}\GG^H_p},\mathrm{~~and~~}
-\frac{\partial\RR^H_{pq}}{\partial\GG^H_p} = -\Lop{\GG_q \MM^H_{pq}},
+\frac{\partial\VV^H_{pq}}{\partial\GG_q} = \Rop{\MM^H_{pq}\GG^H_p},\mathrm{~~and~~}
+\frac{\partial\VV^H_{pq}}{\partial\GG^H_p} = \Lop{\GG_q \MM^H_{pq}},
 \end{equation}
 
 and we may write out the complete complex Jacobian as
@@ -1319,7 +1370,7 @@ a single row block. The $pq$ index will now run through $2\Nbl$ values (i.e. enu
 
 \begin{equation}
 \label{eq:JJ:pol}
-\JJ = - \Matrix{cc}{ 
+\JJ = \Matrix{cc}{ 
 \Rop{ \MM_{pq}\GG^H_q }\delta^j_p & 
 \Lop{ \GG_p \MM_{pq}  }\delta^j_q \\
 }~~ 
@@ -1381,11 +1432,11 @@ For the $\JJ^H\RRr$ term, we can directly apply the linear operators appearing i
 to the matrices in $\Rr$:
 
 \begin{equation}
-\JJ^H\RRr = -\Matrix{c}{ 
+\JJ^H\RRr = \Matrix{c}{ 
 \sum\limits_{pq} \YY^H_{pq} \RR_{pq} \delta^{i}_p  \\
 \hline\\[-8pt]
 \sum\limits_{pq} \RR_{pq} \YY_{qp} \delta^{i}_q 
-} = -\Matrix{c}{
+} = \Matrix{c}{
 \sum\limits_{q\ne i} \YY^H_{iq} \RR_{iq} \\
 \hline\\[-8pt]
 \downarrow^H
@@ -1474,7 +1525,7 @@ using the normal shorthand of $\YYd_{pqs} = \MMd_{pqs} \GGdH_q$. The $\JJ^H\RRr$
 
 \begin{equation}
 \label{eq:JHR:DD:pol}
-\JJ^H\RRr = -\Matrix{c}{
+\JJ^H\RRr = \Matrix{c}{
 \sum\limits_{q\ne i,s} \YYdH_{iqs} \RR_{iqs} \\
 \hline\\[-8pt]
 \downarrow^H}.
@@ -1601,7 +1652,7 @@ Within the framework above, peeling can be considered as the ultimate feed forwa
 
 \subsection{Exact matrix inversion}
 
-Better approximations to $(\JHJ)^{-1}$ (or a faster exact inverse) may exist. Consider again Fig.~\ref{fig:JHJ}: in most cases, 
+Better approximations to $(\JHJ)^{-1}$ (or a faster exact inverse) may exist. Consider, for example, Fig.~\ref{fig:JHJ}f: 
 the matrix consists of four blocks, with the diagonal blocks being trivially invertable, and the off-diagonal blocks having a 
 very specific structure. All the approaches discussed in this paper approximate the off-diagonal blocks by zero, and thus 
 yield algorithms which converge to the solution via many cheap approximative steps. If a fast way to invert matrices of the 
