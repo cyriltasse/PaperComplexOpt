@@ -825,7 +825,8 @@ As noted by \citet{tasse-cohjones}, we have the wonderful properties that
 \end{equation}
 
 which basically comes about due to the RIME being bilinear with respect to $\bmath{g}$ and $\bmath{\bar g}$. 
-Substituting this into the GN update step of Eq.~\ref{eq:stefcal-matrix}, we have 
+Substituting this into the GN update step of Eq.~\ref{eq:stefcal-matrix}, and noting that $\JJ_\LEFT^H \JJ_\LEFT=(\JHJ)_\UL$, 
+we have 
 
 \[
 \delta\vecg = (\JHJ)_\UL^{-1} \JJ_\LEFT^H (\Dd - \JJ_\LEFT \vecg) = (\JHJ)^{-1}_\UL \JJ_\LEFT^H \Dd - \vecg.
@@ -871,7 +872,8 @@ $
 then the update is
 
 \[
-\delta \vecg = \bmath{E} \JJ_\LEFT^H \Rr +  \bmath{F} \JJ_\RIGHT^H \Rr
+\delta \vecg = ( \bmath{E} \JJ_\LEFT^H  +  \bmath{F} \JJ_\RIGHT^H ) \Dd - 
+\bmath{E} \bmath{A} \vecg - \bmath{F} \bmath{A} \vecgc
 \]
 
 
