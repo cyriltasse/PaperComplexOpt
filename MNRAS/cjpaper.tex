@@ -34,8 +34,8 @@
 \newcommand{\rrc}{\bmath{\bar r}}
 \newcommand{\vv}{\bmath{v}}
 \newcommand{\vvc}{\bmath{\bar v}}
-%\newcommand{\gg}{\bmath{g}}
-%\newcommand{\ggc}{\bmath{\bar g}}
+\newcommand{\vecg}{\bmath{g}}
+\newcommand{\vecgc}{\bmath{\bar g}}
 
 \newcommand{\mat}[1]{{\bmath{#1}}}
 
@@ -56,7 +56,8 @@
 \newcommand{\nat}{Nature}
 \newcommand{\physrep}{Phys. Rep.}
 \newcommand{\FigDir}{../Figures/}
-\def\COH{\textsc{cohjones}}
+\newcommand{\COH}{{\sc CohJones}}
+\newcommand{\StefCal}{{\sc StefCal}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -82,7 +83,7 @@ general complex Jacobian formalism, when combined with conventional optimization
 of calibration algorithms, including those for the polarized and direction-dependent gain regime. We further extend the Wirtinger 
 calculus to an operator-based matrix calculus for describing the polarized calibration regime. Using approximate matrix 
 inversion results in computationally efficient implementations; we show that some recently proposed calibration algorithms 
-such as {\sc StefCal} and peeling can be understood as special cases of this, and place them in the context of the general 
+such as {\sc \StefCal} and peeling can be understood as special cases of this, and place them in the context of the general 
 formalism. Finally, we present an implementation and some applied results of {\sc CohJones}, another specialized 
 direction-dependent calibration algorithm derived from the formalism.
 
@@ -113,11 +114,12 @@ Chicken chicken chicken. Chicken chicken? Chicken\footnote{Chicken chicken!} chi
 \newcommand{\RRr}{\AUGx{R}}
 \newcommand{\DDd}{\AUGx{D}}
 \newcommand{\VVv}{\AUGx{V}}
-\newcommand{\TOP}{\mathrm{top}}
-\newcommand{\UL}{\mathrm{ul}}
+\newcommand{\TOP}{\mathrm{th}}
+\newcommand{\LEFT}{\mathrm{lh}}
+\newcommand{\RIGHT}{\mathrm{rh}}
+\newcommand{\UL}{\mathrm{tlq}}
 \newcommand{\Rop}[1]{\mathcal{R}_{{#1}}}
 \newcommand{\Lop}[1]{\mathcal{L}_{{#1}}}
-\newcommand{\Top}{\mathcal{T}}
 
 
 
@@ -138,8 +140,11 @@ $(\cdot)^T$ & transpose \\
 $(\cdot)^H$ & Hermitian transpose \\
 $\bmath{\bar x},\bmath{\bar X}$ & element-by-element complex conjugate of $\bmath{x}$, $\bmath{X}$  \\
 $\AUG{x}, \AUGx{X}$ & augmented vectors $\AUG{x} = \Matrix{c}{\bmath{x} \\ \bmath{\bar x}},~~\AUGx{X}=\Matrix{c}{\bmath{X}_i \\ \bmath{X}^H_i}$ \\
-$\TOP\,\bmath{X}$ & top half of matrix $\bmath{X}$\\
-$\UL\,\bmath{X}$ & upper-left quadrant of matrix $\bmath{X}$\\
+$\TOP\,\bmath{X}, \bmath{X}_\TOP$ & top half of matrix $\bmath{X}$\\
+$\LEFT\,\bmath{X}, \bmath{X}_\LEFT$ & left half of matrix $\bmath{X}$ \\
+$\RIGHT\,\bmath{X}, \bmath{X}_\RIGHT$ & right half of matrix $\bmath{X}$\\
+$\UL\,\bmath{X}, \bmath{X}_\UL$ & top left quadrant of matrix $\bmath{X}$\\
+& note order of operations: $\bmath{X}_\mathrm{yy}^Z = (\bmath{X}_\mathrm{yy})^Z$\\
 $\bmath{d},\bmath{v},\bmath{r}, \bmath{g}, \bmath{m} $ & data, model, residuals, gains, sky coherency\\
 $(\cdot)_k$ & value associated with iteration $k$ \\
 $(\cdot)_{p,k}$ & value associated with antenna $p$, iteration $k$ \\
@@ -501,38 +506,6 @@ with the second equality established by swapping $p$ and $q$ in the bottom sum, 
 \JJ^H\Rr = \Matrix{c}{\bmath{c}\\\bar{\bmath{c}}},~~c_i = \sum\limits_{q\ne i} \bar{y}_{iq} r_{iq}.
 \end{equation}
 
-\subsection{Computing the parameter update}
-
-By analogy with the augmented residuals vector $\Rr$, we can express the data and model visibilities as $2\Nbl$-vectors,
-using the compound index $[pq]$ $(p\ne q)$:
-
-\[
-\Dd = [ d_{pq} ],~~\Vv = [ g_p m_{pq} \bar{g}_q ],~~\Rr =\Dd-\Vv
-\]
-
-As noted by \citet{tasse:cohjones}, we have the wonderful property that
-
-\begin{equation}
-\label{eq:v_Jg}
-\Vv = -\JJ \Gg,~~~\mathrm{where}~\Gg = \Matrix{c}{\bmath{g} \\ \bmath{\bar g}}
-\end{equation}
-
-which basically comes about due to the RIME being bilinear with respect to $\bmath{g}$ and $\bmath{\bar g}$. Consider now the GN update step (Eq.~\ref{eq:LM} with $\lambda=0$):
-
-\[
-\Gg_{k+1} = \Gg_k + \delta\Gg = \Gg_k - (\JHJ)^{-1} \JJ^H (\Dd - \Vv)
-\]
-
-Substituting Eq.~\ref{eq:v_Jg} into this, we arrive at
-
-\begin{equation}
-\label{eq:ghat}
-\Gg_{k+1} = -(\JHJ)^{-1} \JJ^H \Dd,
-\end{equation}
-
-which indicates that the updated parameters at each iteration can be computed directly from the data, thus obviating the need
-for computing residuals. This can represent substantial algorithmic savings, and we will return to the idea again.
-
 
 \subsection{Time/frequency solution intervals}
 \label{sec:unpol:DI:avg}
@@ -782,7 +755,7 @@ the optimization problem into subsets of parameters that are treated as independ
 that some of these approximations are similar to or even fully equivalent to previously proposed 
 algorithms, while others produce new algorthmic variations.
 
-\subsection{Diagonal approximation and Stefcal}
+\subsection{Diagonal approximation and \StefCal}
 \label{sec:DI:stefcal}
 
 Let us first consider the DI case. The structure of $\JJ^H\JJ$ in Eq.~\ref{eq:JHJ:DI} suggests that it is diagonally 
@@ -795,46 +768,37 @@ compared to the $O(\Na^2)$ cost
 of computing the diagonal elements of the Jacobian in the first place. The price of using an approximate inverse for 
 $\JHJ$ is a less accurate update step, so we can expect to require more iterations before convergence is reached.
 
-Combining this approximation with GN optimization, we may use Eq.~\ref{eq:ghat} to write out the GN update step:
+Combining this approximation with GN optimization, we may write out the GN update step as
 
 \[
-\Gg_{k+1} = (\JHJ)^{-1} \JJ^H \Dd,
+\Matrix{c}{\delta\vecg \\ \delta\vecgc } = (\JHJ)^{-1} \JJ^H \Rr,
 \]
 
-Exploiting the redundancy of the equations, we only need to compute the update to $\bmath{g}$ and not $\bmath{\bar g}$.
+Exploiting the redundancy of the equations, we only need to compute the top half, i.e. update to $\delta\bmath{g}$.
 Since the diagonal approximation consists of assuming $\bmath{B}=0$ in Eq.~\ref{eq:JHJ:DI:ABCD}, we can write the 
-update to $\bmath{g}$ as:
+update as:
 
-\[
-\bmath{g}_{k+1} = \UL(\JHJ)^{-1} \TOP(\JJ)^H \Dd,
-\]
+\begin{equation}
+\label{eq:stefcal-matrix}
+\delta \vecg = (\JHJ)_\UL^{-1} \JJ_\LEFT^H \Rr,
+\end{equation}
 
-where $\UL\,\bmath{X}$ designates the upper-left quadrant of matrix $\bmath{X}$, and $\TOP\,\bmath{X}$ designates its top half. The per-element expression is then
+where $\bmath{X}_\UL$ designates the top left quadrant of matrix $\bmath{X}$, and $\bmath{X}_\LEFT$ designates its left half 
+(see Table~\ref{tab:notation} for a summary of notation). The per-element expression is then
 
 \begin{equation}
 \label{eq:stefcal}
-g_{p,k+1} = \big( \sum\limits_{q\ne p} \bar{y}_{pq} y_{pq} \big)^{-1} \sum\limits_{q\ne p} \bar{y}_{pq} d_{pq}.
+\delta g_p = \big( \sum\limits_{q\ne p} \bar{y}_{pq} y_{pq} \big)^{-1} \sum\limits_{q\ne p} \bar{y}_{pq} r_{pq}.
 \end{equation}
 
-Note that this expression does not contain the residual term, but only the data term. This eliminates the need to 
-recompute the residuals at each step (except perhaps for purposes of checking convergence). Equation~\ref{eq:stefcal} 
-is identical to the update step proposed by \citet{Stefcal} for the Stefcal algorithm, and by \citet{Mitchell-RTS} for MWA calibration. Note that these authors arrive at the result from a different 
+Equation~\ref{eq:stefcal} 
+is identical to the update step proposed by \citet{Stefcal} for the \StefCal\ algorithm, and by \citet{Mitchell-RTS} for MWA calibration. Note that these authors arrive at the result from a different 
 direction, by treating Eq.~\ref{eq:cal:DI} as a function of $\bmath{g}$ only, and completely ignoring the conjugate term. 
 The resulting complex Jacobian (Eq.~\ref{eq:JJ:di:basic}) then has null off-diagonal blocks, and $\JJ^H\JJ$ becomes 
 diagonal.
 
-Interestingly, if apply the diagonal $\JJ^H\JJ$ approximation to LM optimization (Eq.~\ref{eq:LM1}), we can derive the following
-update equation (in full analogy with Eq.~\ref{eq:ghat}):
-
-\begin{equation}
-\bmath{g}_{k+1} = \frac{\lambda}{1+\lambda}\bmath{g}_k + \frac{1}{1+\lambda} \UL(\JHJ)^{-1} \TOP(\JJ^H) \Dd,
-\label{eq:stefcal-lambda-average}
-\end{equation}
-
-which for $\lambda=1$ essentially becomes the basic average-update step of Stefcal.
-
-Establishing the equivalence between Stefcal and complex optimization with a diagonally-approximated $\JJ^H\JJ$ is 
-very useful for our purposes, since the convergence properties of Stefcal have been thoroughly explored 
+Establishing the equivalence between \StefCal\ and complex optimization with a diagonally-approximated $\JJ^H\JJ$ is 
+very useful for our purposes, since the convergence properties of \StefCal\ have been thoroughly explored 
 by \citet{Stefcal}, and we can therefore hope to apply these lessons here. In particular, these authors have shown 
 that a direct application of Eq.~\ref{eq:stefcal} leads to very slow convergence, whereas averaging every pair of 
 updates leads to faster convergence. They also propose a number of variations of the algorithm, all of which are 
@@ -842,6 +806,75 @@ directly applicable to the above.
 
 Finally, let us note in passing that the update step of Eq.~\ref{eq:stefcal} is embarassingly parallel, in the sense 
 that the update for each antenna is computed entirely independently.
+
+\subsection{Computing the parameter update}
+
+With the diagonal approximation in use, we have a particularly elegant way of computing the gain paremeter update.
+By analogy with the augmented residuals vector $\Rr$, we can express the data and model visibilities as $2\Nbl$-vectors,
+using the compound index $[pq]$ $(p\ne q)$:
+
+\[
+\Dd = [ d_{pq} ],~~\Vv = [ g_p m_{pq} \bar{g}_q ],~~\Rr =\Dd-\Vv
+\]
+
+As noted by \citet{tasse-cohjones}, we have the wonderful properties that
+
+\begin{equation}
+\label{eq:v_Jg}
+\Vv = \JJ_\LEFT \bmath{g}  = \frac{1}{2}\JJ \Gg,~~~\mathrm{where}~\Gg = \Matrix{c}{\bmath{g} \\ \bmath{\bar g}},
+\end{equation}
+
+which basically comes about due to the RIME being bilinear with respect to $\bmath{g}$ and $\bmath{\bar g}$. 
+Substituting this into the GN update step of Eq.~\ref{eq:stefcal-matrix}, we have 
+
+\[
+\delta\vecg = (\JHJ)_\UL^{-1} \JJ_\LEFT^H (\Dd - \JJ_\LEFT \vecg) = (\JHJ)^{-1}_\UL \JJ_\LEFT^H \Dd - \vecg.
+\]
+
+Consequently, the updated gain values at each iteration can be derived directly from the data, thus obviating the need
+for computing residuals:
+
+\begin{equation}
+\label{eq:ghat}
+\vecg_{k+1} = \vecg_k + \delta\vecg = (\JHJ)^{-1}_\UL \JJ_\LEFT^H \Dd.
+\end{equation}
+
+This can represent substantial algorithmic savings, and we will return to the idea again.
+
+Interestingly, applying the same idea to LM optimization (Eq.~\ref{eq:LM1}), and remembering that $\JHJ$ is 
+diagonal, we can derive the following update equation instead:
+
+\begin{equation}
+\bmath{g}_{k+1} = \frac{\lambda}{1+\lambda}\bmath{g}_k + \frac{1}{1+\lambda} (\JHJ)_\UL^{-1} \JJ_\LEFT^H \Dd,
+\label{eq:stefcal-lambda-average}
+\end{equation}
+
+which for $\lambda=1$ essentially becomes the basic average-update step of \StefCal. We should note that \citet{Stefcal} empirically 
+find better convergence when Eq.~\ref{eq:ghat} is employed for odd $k$, and Eq.~\ref{eq:stefcal-lambda-average} for even $k$.
+In terms of the framework defined here, the basic \StefCal\ algorithm can be succinctly described as {\em complex optimization with a 
+diagonally-approximated Jacobian, using GN for the odd steps, and LM ($\lambda=1$) for the even steps}.
+
+
+Note also that the ``shortcut'' of Eq.~\ref{eq:ghat} only holds as long as we approximate $\JHJ$ by a block-diagonal matrix
+
+$
+ (\JHJ)^{-1} \approx \Matrix{cc}{\bmath{A}^{-1}&0\\0&\bmath{A}^{-1}},
+$
+
+since it is the off-diagonal nulls that cause only the top-half of the $\JJ^H \Rr$ vector to be selected. If some other 
+approximation is in use, e.g.
+
+$
+ (\JHJ)^{-1} \approx \Matrix{cc}{\bmath{E} & \bmath{F} \\ \bmath{F}^H & \bmath{E}},
+$
+
+then the update is
+
+\[
+\delta \vecg = \bmath{E} \JJ_\LEFT^H \Rr +  \bmath{F} \JJ_\RIGHT^H \Rr
+\]
+
+
 
 \subsection{Separability of the direction-dependent case}
 
@@ -991,7 +1024,7 @@ that is, its left half is block-diagonal, consisting of $\Nd\times\Nd$ blocks (w
 from Eq.~\ref{eq:JHJ:DD:unpol}), while its right half consists of elements of the form given by
 Eq.~\ref{eq:JHJ:DD:crossterms}. 
 
-By analogy with the Stefcal approach, we may assume $\JJY^i_j \approx 0$, i.e. treat the problem as
+By analogy with the \StefCal\ approach, we may assume $\JJY^i_j \approx 0$, i.e. treat the problem as
 separable by antenna. The $\JHJ$ matrix then becomes block-diagonal, and we only need to compute the 
 true matrix inverse of each $\JJX^i_i$. The inversion problem then reduces to $O(\Nd^3\Na)$ in complexity,
 and either LM or GN optimization may be applied.
@@ -1011,14 +1044,14 @@ Note that for LM, the analogy is only approximate:
 since $\bmath{A}$ is only approximately diagonal.
 
 Following \citet{Stefcal}, we can expect to improve convergence by averaging every pair of updates together. 
-A variant of this approach, using GN optimization and a Stefcal-style solution averaging, has been 
+A variant of this approach, using GN optimization and a \StefCal-style solution averaging, has been 
 implemented as the {\sc CohJones} (complex half-Jacobian optimization for $n$-directional estimation) 
-algorithm\footnote{In fact it was the initial development of {\sc CohJones} by \citet{tasse:cohjones} that directly led to the
+algorithm\footnote{In fact it was the initial development of {\sc CohJones} by \citet{tasse-cohjones} that directly led to the
 present work.}, the results of which applied to simulated data are presented below.
 
 \subsubsection{ALLJONES: Separating all}
 
-Perhaps the biggest simplification available is to start with CDA or CAD ordering, and assume a Stefcal-style diagonal 
+Perhaps the biggest simplification available is to start with CDA or CAD ordering, and assume a \StefCal-style diagonal 
 approximation the entirety of $\JHJ$. The matrix then becomes purely diagonal, matrix inversion reduces to $O(\Nd\Na)$ in 
 complexity, and algorithmic cost becomes dominated by the $O(\Nd\Na^2)$ process of computing the diagonal elements of 
 $\JHJ$. The GN update step can then computed in direct analogy to Eq.~\ref{eq:stefcal}:
@@ -1039,7 +1072,7 @@ g_{p,k+1}^{(d)} =
 \subsection{Convergence and trade-offs}
 
 In the authors' experience \citep{OMS-Stefcal}, an LM implementation of the DI calibration problem converges in fewer steps 
-than Stefcal, but is almost always slower in terms of ``wall time'' due to the more expensive iterations. This is a 
+than \StefCal, but is almost always slower in terms of ``wall time'' due to the more expensive iterations. This is a 
 typical ``cheap--approximate'' versus ``expensive--accurate'' trade-off, consistent with the expected scaling properties 
 of these algorithms. The diagonal (separable by antenna) approximation makes for extremely cheap matrix inversions,
 but leads to less accurate steps.
@@ -1496,7 +1529,7 @@ for the GN update step:
 \left [ \sum\limits_{q\ne p} \YY_{pq} \YY^H_{pq}  \right ]^{-1}
 \end{equation}
 
-This is, once again, equivalent to the polarized {\sc StefCal} update step proposed by \citet{Stefcal}.
+This is, once again, equivalent to the polarized {\sc \StefCal} update step proposed by \citet{Stefcal}.
 
 
 % Note also that all 
@@ -1582,7 +1615,7 @@ The mathematical framework developed above (in particular, Eqs.~\ref{eq:JHJ:DD:p
 a general description of the polarized DD calibration problem. Practical implementations of this hinge around inversion of
 a very large $\JHJ$ matrix. The family of algorithms proposed in Sect.~\ref{sec:separability} takes different approaches
 to approximating this inversion. Their convergence properties are not yet well-understood; however we may note that 
-the {\sc StefCal} algorithm naturally emerges from this formulation as a specific case, and its convergence has been 
+the {\sc \StefCal} algorithm naturally emerges from this formulation as a specific case, and its convergence has been 
 established by \citet{Stefcal}. This is encouraging, but ought not be treated as anything more than a strong pointer for 
 the DD case. It is therefore well worth exploring other approximations to the problem. In this section we map out a few 
 such options.
@@ -1590,7 +1623,7 @@ such options.
 \subsection{Feed forward}
 \label{sec:feed-forward}
 
-\citet{Stefcal} propose variants of the Stefcal algorithm (``2-basic'' and ``2-relax'') where the results of the 
+\citet{Stefcal} propose variants of the \StefCal\ algorithm (``2-basic'' and ``2-relax'') where the results of the 
 update step (Eq.~\ref{eq:update:DI:diag:pol}, in essense) are computed sequentially per antenna, with updated
 values for $\GG_1,\dots,\GG_{k-1}$ fed forward into the equations for $\GG_k$. This is shown to 
 substantially improve convergence, at the cost of sacrificing the embarassing paralellism by antenna. This technique 
@@ -1713,15 +1746,17 @@ residual data level by a factor of $\sim30$.}
 \end{center}
 \end{figure*}
 
+\section{Implementation and real data}
+
 \input{../ArxivPaper/SimulData.tex}
 
-%% \section{Implementation and real data}
+%% 
 
 %% \subsection{Stefcal in MeqTrees}
 
-%% Some of the ideas above have already been implemented in the MeqTrees \citep{meqtrees} version of Stefcal 
+%% Some of the ideas above have already been implemented in the MeqTrees \citep{meqtrees} version of \StefCal\ 
 %% \citep{OMS-Stefcal}. In particular, the MeqTrees version uses peeling (Sect.~\ref{sec:peeling}) to deal with
-%% DD solutions, and implements polarized Stefcal with support for both solution intervals and time/frequency smoothing 
+%% DD solutions, and implements polarized \StefCal\ with support for both solution intervals and time/frequency smoothing 
 %% with a Gaussian kernel (as per Sect.~\ref{sec:DI:smooth}). This has already been applied to JVLA L-band data 
 %% to obtain what is (at time of writing) a world record dynamic range (3.2 million) image of the field 
 %% around 3C147 \citep{Perley-3C147}.
@@ -1794,8 +1829,8 @@ Using the numbering convention for $pq$ of 12, 13, 32, we obtain the following p
 (Eqs.~\ref{eq:Jk} and \ref{eq:Jbark}):
 
 \[
-\JJ_k = - \Matrix{ccc}{m_{12}\bar{g}_2 & 0 & 0 \\ m_{13}\bar{g}_3 & 0 & 0 \\ 0 & m_{23}\bar{g}_3 & 0 },
-\JJ_{\bar{k}} = - \Matrix{ccc}{0 & g_1 m_{12} & 0 \\ 0 & 0 & g_1 m_{13} \\ 0 & 0 & g_2 m_{23} }
+\JJ_k = \Matrix{ccc}{m_{12}\bar{g}_2 & 0 & 0 \\ m_{13}\bar{g}_3 & 0 & 0 \\ 0 & m_{23}\bar{g}_3 & 0 },
+\JJ_{\bar{k}} = \Matrix{ccc}{0 & g_1 m_{12} & 0 \\ 0 & 0 & g_1 m_{13} \\ 0 & 0 & g_2 m_{23} }
 \]
 
 We then get the following expression
@@ -1803,7 +1838,7 @@ for the full complex Jacobian $\JJ$ (Eq.~\ref{eq:JJ:di}):
 
 \begin{equation}
 \label{eq:JJ:3ant}
--\Matrix{cccccc}{
+\Matrix{cccccc}{
   m_{12}\bar{g}_2 & 0               & 0 &  0          & g_1 m_{12} & 0           \\
   m_{13}\bar{g}_3 & 0               & 0 &  0          & 0          & g_1 m_{13}  \\
   0               & m_{21}\bar{g}_1 & 0 &  g_2 m_{21} & 0          & 0  \\
