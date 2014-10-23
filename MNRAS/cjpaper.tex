@@ -816,8 +816,8 @@ Combining this approximation with GN optimization and using Eq.~\ref{eq:ghat}, w
 \end{equation}
 
 where $\bmath{X}_\UL$ designates the top left quadrant of matrix $\bmath{X}$. Note that this equation applies more
-generally than just to the diagonal approximation, and will hold for any other approximation where the top right and 
-bottom left quadrants of $\JHJ$ are assumed to be null.
+generally than just to the diagonal approximation, and will hold for any other approximation where the off-diagonal 
+quadrants of $\JHJ$ are assumed to be null.
 
 The per-element expression, in the diagonal approximation, is
 
@@ -1056,48 +1056,44 @@ Evaluating the gain update (e.g. as given by Eq.~\ref{eq:ghat}) involves a numbe
 \item Computing $\JHJ$,
 \item Inverting $\JHJ$,
 \item Computing the $\JJ^H\Dd$ vector,
-\item Multiplying the result of 2 and 3. 
+\item Multiplying the result of (ii) and (iii). 
 \end{enumerate}
 
-Each of these (except 3) will scale differently depending on the approximation in use. Table~\ref{tab:costs} 
-summarizes the scaling laws.
+Since each of the algorithms discussed above uses a different sparse approximation for $\JHJ$, each of these 
+steps will scale differently (except iii, which is $O(\Na^2\Nd)$ for all algorithms). Table~\ref{tab:costs} 
+summarizes the scaling behaviour. 
+An additional scaling factor is given by the number of iterations required to converge. This is harder
+to quantify. For example, in the authors' experience \citep{OMS-Stefcal}, an ``exact'' (LM) implementation of
+DI calibration problem converges in much fewer iterations than \StefCal\ (on the order of a few vs. a few tens), but is much 
+slower in terms of ``wall time'' due to the more expensive iterations ($\Na^3$ vs. $\Na$ scaling). This trade-off  
+between ``cheap--approximate'' and ``expensive--accurate'' is typical for iterative algorithms. 
+
+\COH\ accounts for interactions between directions, but ignores interactions between antennas. Early experience 
+indicates that it converges in a few tens of iterations. {\sc AllJones} uses the most approximative step of all,
+ignoring all interactions between parameters. Its convergence behaviour is untested at this time.
+
+It is clear that depending on $\Na$ and $\Nd$, and also on the structure of the problem, there will be 
+regimes where one or the other algorithm has a computational advantage. This should be investigated in a future work.
+
 
 \begin{table}
-\begin{tabular}{c||cccc}
+\begin{tabular}{c|ccc}
 algorithm & $\JHJ$ & invert & multiply \\
 \hline
-exact          & $O(\Na^2\Nd^2)$ & $O(\Na^3\Nd^3)$ &  $O(\Na^2\Nd^2)$ \\ 
-{\sc AllJones} & $O(\Na^2\Nd)$   & $O(\Na\Nd)$     &  $O(\Na\Nd)$ \\
-\COH           & $O(\Na^2\Nd^2)$ & $O(\Na\Nd^3)$   &  $O(\Na\Nd^2)$ \\
-DCA            & $O(\Na^2\Nd)$   & $O(\Na^3\Nd)$   &  $O(\Na^2\Nd)$ \\
+Exact          & $O(\Na^2\Nd^2)$ & $O(\Na^3\Nd^3)^\dagger$ &  $O(\Na^2\Nd^2)$ \\ 
+{\sc AllJones} & $O(\Na^2\Nd)^\dagger$   & $O(\Na\Nd)$     &  $O(\Na\Nd)$ \\
+\COH           & $O(\Na^2\Nd^2)^\dagger$ & $O(\Na\Nd^3)^\dagger$   &  $O(\Na\Nd^2)$ \\
+DCA            & $O(\Na^2\Nd)$   & $O(\Na^3\Nd)^\dagger$   &  $O(\Na^2\Nd)$ \\
 \hline
 \end{tabular}
-\caption{\label{tab:costs}The scaling of computational costs for the individual steps of the 
-four DD algorithms discussed in the text. Not shown is the cost of computing the 
-$\JJ^H\Dd$ vector, which is $O(\Na^2\Nd)$ for all algorithms.}
+\caption{\label{tab:costs}The scaling of computational costs for a single iteration of the 
+four DD calibration algorithms discussed in the text, broken down by computational step. 
+The dominant term(s) in each case are marked by ``$\dagger$''. Not shown is the cost of computing the $\JJ^H\Dd$ 
+vector, which is $O(\Na^2\Nd)$ for all algorithms. ``Exact'' refers to a naive implementation of GN or LM with exact 
+inversion of the $\JHJ$ term. Scaling laws for DI calibration algorithms may be obtained by assuming $\Nd=1$, in which
+case \COH\ or {\sc AllJones} become equivalent to \StefCal. 
+}
 \end{table}
-
-In the authors' experience \citep{OMS-Stefcal}, an LM implementation of the DI calibration problem converges in fewer steps 
-than \StefCal, but is almost always slower in terms of ``wall time'' due to the more expensive iterations. This is a 
-typical ``cheap--approximate'' versus ``expensive--accurate'' trade-off, consistent with the expected scaling properties 
-of these algorithms. The diagonal (separable by antenna) approximation makes for extremely cheap matrix inversions,
-but leads to less accurate steps.
-
-With the DD flavours described here, we now have even more ways of making the trade-off:
-
-\begin{itemize}
-\item Brute-force LM or GN comes at a cost of $O(\Na^3\Nd^3)$ for the matrix inversion, but (in the authors' experience) requires
-very few (on the order of 10) iterations to converge,
-\item The {\sc AllJones} algorithm is the cheapest, with $O(\Na^2\Nd)$ performance (dominated by matrix construction rather than inversion), but offers the least accurate update step, since interactions between antennas and directions 
-are completely ignored for the purposes of computing the update. This algorithm has not been tried in practice, and its convergence properties are unknown, but we can expect it to require very many iterations.
-\item The {\sc CohJones} algorithm offers $O(\Na^2\Nd+\Na\Nd^3)$ performance. It ignores interactions between antennas,
-but considers every direction at once. Practical experience has shown that the algorithm
-requires relatively few iterations to converge (see Sect.~\ref{sec:realdata}).
-\item The {\sc DCA} algorithm offers $O(\Na^3\Nd)$ performance. It ignores interactions between directions,
-but considers every antenna at once. This algorithm has not been tried in practice, and its convergence properties are unknown.
-\end{itemize}
-
-Depending on $\Na$ and $\Nd$, there may be regimes where one or the other algorithm has a computational advantage. This should be investigated in a future work.
 
 \subsection{Smoothing in time and frequency}
 \label{sec:DI:smooth}
@@ -1149,7 +1145,10 @@ then Eq.~\ref{eq:stefcal:w} corresponds to the ratio of two convolutions
 g_{p,k+1}(t,\nu) = \frac{w\circ \alpha_p}{w\circ\beta_p},
 \end{equation}
 
-sampled over a discrete $t,\nu$ grid.
+sampled over a discrete $t,\nu$ grid. Note that the formulation above also allows for different smoothing kernels per antenna.
+Iterating Eq.~\ref{eq:JHJ:diag:smooth} to convergence at every $t,\nu$ slot, we obtain per-antenna arrays of gain solutions 
+answrering Eq.~\ref{eq:cal:DI:smooth}. These solutions are smooth in frequency and time, with the degree of smoothness 
+constrained by the kernel $w$. 
 
 There is a very efficient way of implementing this in practice. Let's assume that $d_{pq}$ and $y_{pq}$ are loaded into memory 
 and computed for a large chunk of $t,\nu$ values simultaneously (any practical implementation will probably need to do this anyway, 
@@ -1157,15 +1156,24 @@ if only to take advantage of vectorized math operations on modern CPUs and GPUs)
 for a large chunk of $t,\nu$, as are the $\alpha_p$ and $\beta_p$ terms. We can then take advantage of highly optimized 
 implementations of convolution (e.g. via FFTs) that are available on most computing architectures. 
 
-Iterating Eq.~\ref{eq:JHJ:diag:smooth} to convergence at every $t,\nu$ slot, we obtain per-antenna arrays of gain solutions 
-answrering Eq.~\ref{eq:cal:DI:smooth}. These solutions are smooth in frequency and time, with the degree of smoothness 
-constrained by the kernel $w$. 
+Smoothing may also be trivially incorporated into the {\sc AllJones} algorithm, since its update step (Eq.~\ref{eq:stefcal:dd:unpol}) 
+has exactly the same structure. A different smoothing kernel may be employed per direction (for example, directions further from 
+the phase centre can employ a narrower kernel). 
+
+Since smoothing involves computing a $\vecg$ value at every $t,\nu$ point, rather than one value per
+solution interval, its computational costs are considerably higher. To put it another way, using solution intervals of 
+size $N_t\times N_\nu$ introduces a savings of $N_t\times N_\nu$ (in terms of the invert and multiply steps required, see 
+Table~\ref{tab:costs}) over solving the problem at every $t,\nu$ slot. In real implementations this extra cost is mitigated 
+by the fact that  the computation given by Eq.~\ref{eq:stefcal:dd:unpol} may be vectorized very efficiently over many $t,\nu$ slots.
+However, this vectorization is only straightforward because the matrix inversion in \StefCal\ or {\sc AllJones} reduces to simple 
+scalar division.  For \COH\ or DCA this is no longer the case, so while smoothing may be incorporated into these algorithms 
+in principle, it is not clear if this can be done efficiently in practice.
 
 \section{The Fully Polarized Case}
 \label{sec:pol}
 
-To incorporate polarization, let us start by rewriting the basic RIME of Eq.~\ref{eq:RIME:unpol} using $2\times 2$ matrices \citep[a full derivation
-may be found in][]{RRIME1}:
+To incorporate polarization, let us start by rewriting the basic RIME of Eq.~\ref{eq:RIME:unpol} using $2\times 2$ matrices 
+\citep[a full derivation may be found in][]{RRIME1}:
 
 \begin{equation}
 \label{eq:RIME:pol}
