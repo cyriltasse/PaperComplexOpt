@@ -112,9 +112,10 @@ ourselves specifically to calibration of the DI and DD gain terms.
 Gain calibration is a non-linear least squares (NLLS) problem, since the noise on observed visibilities is 
 almost always Gaussian \citep[though other treatments have been proposed by][]{Kazemi2013a}. Traditional approaches
 to NNLS problems involve various forms of gradient descent methods \citep[for an overview, see][]{Madsen-NLLS};
-histrocially, these have been restricted to real variables, since complex differentiation is tricky to define
-(in particular, $\partial\bar z/\partial z$ cannot be defined in the usual mathematical sense). Gains in radio
-interferometry are complex variables -- the traditional way out of this conundrum has been to recast the complex NLLS 
+historically, these have been restricted to real variables, since complex differentiation can be defined
+in only a very restricted sense (in particular, $\partial\bar z/\partial z$ does not exist in the usual 
+definition). Gains in radio interferometry are complex variables -- the traditional way out of this conundrum 
+has been to recast the complex NLLS 
 problem as a real problem by treating the real and imaginary parts of the gains as independent real variables.
 
 Recent developments in optimization theory have shown that using a formalism called the {\em Wirtinger complex 
