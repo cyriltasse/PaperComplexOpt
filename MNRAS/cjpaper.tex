@@ -15,9 +15,6 @@
 
 \usepackage{amssymb}
 \usepackage{amsmath}
-\usepackage{mathbbol}
-\usepackage{mathtools}
-\usepackage{bm}
 
 \newcommand{\Gcal}{\bmath{\mathcal{G}}}
 \newcommand{\Rcal}{\bmath{\mathcal{R}}}
@@ -840,9 +837,10 @@ diagonal, we can derive the following update equation instead:
 \label{eq:stefcal-lambda-average}
 \end{equation}
 
-which for $\lambda=1$ essentially becomes the basic average-update step of \StefCal. We should note that \citet{Stefcal} empirically 
-find better convergence when Eq.~\ref{eq:stefcal} is employed for odd $k$, and Eq.~\ref{eq:stefcal-lambda-average} for even $k$.
-In terms of the framework defined here, the basic \StefCal\ algorithm can be succinctly described as {\em complex optimization with a 
+which for $\lambda=1$ essentially becomes the basic average-update step of \StefCal. We should note that \citet{Stefcal}
+empirically find better convergence when Eq.~\ref{eq:stefcal-matrix} is employed for odd $k$, and 
+Eq.~\ref{eq:stefcal-lambda-average} for even $k$. In terms of the framework defined here, the basic \StefCal\ algorithm 
+can be succinctly described as {\em complex optimization with a 
 diagonally-approximated Jacobian, using GN for the odd steps, and LM ($\lambda=1$) for the even steps}.
 
 Establishing this equivalence is 
@@ -902,6 +900,7 @@ algorithm is defined by picking an ordering for $\Gg$, then examining the corres
 an approximate matrix inversion mechanism, then applying GN or LM optimization. Let us now work through a couple of examples.
 
 \subsubsection{DCA: separating by direction}
+\label{sec:dca}
 
 Let us first consider the DCA ordering (Fig.~\ref{fig:JHJ}g). The $\JHJ$ term can be split into $\Nd\times\Nd$ blocks:
 
@@ -1724,11 +1723,9 @@ more accurate iterations.
 \begin{center}
 \includegraphics[width=\textwidth]{\FigDir ConvergenceLog.pdf}
 %\includegraphics[width=\textwidth]{\FigDir ConvergenceLog.eps}
-\caption{\label{fig:Convergence} This plot shows the amplitude (top
-  panels) and
-  phase (bottom panels) of the difference between
-  the estimated gains and the true (random) gains in the different
-  directions for the different antenna (shaded greys full lines).}
+\caption{\label{fig:Convergence} Amplitude (top row) and phase (bottom row) of the difference between
+  the estimated and true gains, as a function of iteration. Columns correspond to directions.
+  Different lines correspond to different antennas.}
 \end{center}
 \end{figure*}
 
@@ -1736,10 +1733,9 @@ more accurate iterations.
 \begin{center}
 \includegraphics[width=\columnwidth]{\FigDir NewHalfJHJ.pdf}
 \caption{\label{fig:HalfJHJ} This figure shows amplitude (left panel)
-  and phase (right panel) of the block-diagonal matrix $\JVg^H\JVg$
-  for the dataset described in the text. Each block corresponds to the
-different directions for each specific antenna. Its block structure
-make it easily invertible.}
+  and phase (right panel) of the block-diagonal matrix $(\JHJ)_\UL$
+  for the dataset described in the text. Each block corresponds to one antenna;
+  the pixels within a block correspond to directions.}
 \end{center}
 \end{figure}
 
@@ -1749,33 +1745,94 @@ make it easily invertible.}
 %\includegraphics[width=\textwidth]{residSim.eps}
 %\includegraphics[width=\textwidth]{\FigDir residSimZoom2.eps}
 \includegraphics[width=\textwidth]{\FigDir Pealed.pdf}
-\caption{\label{fig:resid} This figure shows the comparison between
-  the deconvoled image
-  (left), the residuals data after simple skymodel subtractions
-  (center), and the residuals data after subtracting the
-  sky model corrupted by the direction-dependent \COH~estimated solution
-  (right). The color scale is the same in all panels. In this
-  simulation, \COH~reduces the
-residual data level by a factor of $\sim30$.}
+\caption{\label{fig:resid}Simulation with time-variable DD gains. We show a deconvolved image (left) where
+  no DD solutions have been applied, a residual image (centre) made by subtracting the sky model (in the visibility 
+  plane) without any DD corrections, and a residual image (right) made by subtracting the sky model with \COH-estimated 
+  DD gain solutions (right). The color scale is the same in all panels. In this simulation, applying \COH\ for DD calibration reduces the residual rms level by a factor of $\sim30$.}
 \end{center}
 \end{figure*}
 
-\section{Implementation and real data}
+\begin{figure}
+\begin{center}
+\includegraphics[width=\columnwidth]{\FigDir Tessel.pdf}
+\caption{\label{fig:tessel} In order to conduct direction-dependent calibration, sources are clustered using a 
+Voronoi tessellation algorithm. Each cluster has its own DD gain solution.}
+\end{center}
+\end{figure}
 
-\input{../ArxivPaper/SimulData.tex}
 
-%% 
 
-%% \subsection{Stefcal in MeqTrees}
+\section{Implementations}
 
-%% Some of the ideas above have already been implemented in the MeqTrees \citep{meqtrees} version of \StefCal\ 
-%% \citep{OMS-Stefcal}. In particular, the MeqTrees version uses peeling (Sect.~\ref{sec:peeling}) to deal with
-%% DD solutions, and implements polarized \StefCal\ with support for both solution intervals and time/frequency smoothing 
-%% with a Gaussian kernel (as per Sect.~\ref{sec:DI:smooth}). This has already been applied to JVLA L-band data 
-%% to obtain what is (at time of writing) a world record dynamic range (3.2 million) image of the field 
-%% around 3C147 \citep{Perley-3C147}.
+\subsection{\StefCal\ in MeqTrees}
 
-%% \subsection{COHJONES}
+Some of the ideas above have already been implemented in the MeqTrees \citep{meqtrees} version of \StefCal\ 
+\citep{OMS-Stefcal}. In particular, the MeqTrees version uses peeling (Sect.~\ref{sec:peeling}) to deal with
+DD solutions, and implements fully polarized \StefCal\ with support for both solution intervals and time/frequency smoothing with a Gaussian kernel (as per Sect.~\ref{sec:DI:smooth}). This has already been applied to JVLA L-band data 
+to obtain what is (at time of writing) a world record dynamic range (3.2 million) image of the field 
+around 3C147 \citep{Perley-3C147}.
+
+\subsection{\COH\ tests with simulated data}
+
+The \COH\ algorithm, in the unpolarized version, has been implemented as a standalone Python script that uses 
+{\tt pyrap}\footnote{{\tt https://code.google.com/p/pyrap}} and 
+{\tt casacore}\footnote{{\tt https://code.google.com/p/casacore}} to interface to Measurement Sets. 
+This section reports on tests of our implementation with simulated Low Frequency Array (LOFAR) data.
+
+For the tests, we build a dataset using a LOFAR layout with 40 antennas. The phase center is located at
+$\delta=+52^\circ$, the observing frequency is set to $50$ MHz
+(single channel), and the integrations are 10s. We simulate 20 minutes of data.
+
+For the first test, we use constant direction-dependent gains. We then run \COH\ with a single solution interval 
+corresponding to the entire 20 minutes. This scenario is essentially just a test of convergence.
+For the second test, we simulate a physically realistic time-variable ionosphere to derive the simulated DD
+gains.
+
+\subsubsection{Constant DD gains}
+\label{sec:SimpleSimul}
+
+To generate the visibilities for this test, we use a sky model containing five
+sources in an ``+'' shape, separated by $1^\circ$. The gains
+for each antenna $p$, direction $d$ are
+constant in time, and are taken at random along a normal distribution
+$g^{(d)}_{p}\sim\mathcal{N}\left(0,1\right)+i\mathcal{N}\left(0,1\right)$. The
+data vector $\Dd$ is then built from all baselines, and the full $20$ minutes of data.
+The solution interval is set to the full 20 minutes, so a single solution per direction, per antenna is 
+obtained.
+
+The corresponding matrix $(\JHJ)_\UL$ is shown in Fig.~\ref{fig:HalfJHJ}. It is block diagonal, each block having size
+$\Nd\times\Nd$. The convergence of gain solutions as a function of direction is shown in Fig.~\ref{fig:Convergence}. 
+It is important to note that the problem becomes better conditioned (and \COH\ converges faster) 
+as the blocks of $(\JHJ)_\UL$ become more diagonally-dominated (equivalently, as the sky model components
+become more orthogonal). As discussed in Sect.~\ref{sec:dca}, this happens (i) when more visibilities are taken into account (larger solution intervals) or (ii) if the directions are further away from each other.
+
+\subsubsection{Time-variable DD gains}
+\label{sec:VarSimul}
+
+To simulate a more realistic dataset, we use a sky model composed of 100 point sources of random (uniformly distributed) flux density. We also add noise to the visibilities, at a level of about $1\%$ of the total flux. We also simulate
+(scalar) DD gains, using an ionospheric model consisting of a simple phase screen (an infinitesimally thin layer at a height of 100 km). The total electron content (TEC) values at the set of sample points are generated using Karhunen-Loeve decomposition \citep[the spatial correlation is given by Kolmogorov turbulence, see][]{Tol09}. 
+
+For calibration purposes, the sources are clustered in 10 directions using Voronoi tesselation (Fig.~\ref{fig:tessel}),
+and a separate gain solution is obtained per each direction. Fig. \ref{fig:resid} shows images generated from
+the residual visibilities, where the best-fitting model is subtracted in the visibility domain.  The rms residuals
+after \COH\ has been applied are a factor of $\sim30$ lower than without DD solutions.
+
+
+
+%% \begin{figure*}
+%% \begin{center}
+%% %\hspace*{-1.3cm}
+%% \includegraphics[width=\textwidth]{resid}
+%% \includegraphics[width=\textwidth]{residZoom}
+%% \caption{\label{fig:resid} This figure shows compares the image
+%%   (left), the residuals data after simple skymodel substraction
+%%   (center), and the residuals data after substracting the
+%%   sky model corrupted by the direction-dependent solution (right).}
+%% \end{center}
+%% \end{figure*}
+
+
+
 
 
 
@@ -1893,7 +1950,7 @@ y_{31} \bar{r}_{31} + y_{32} \bar{r}_{32}   \\
 }.
 \end{equation}
 
-\section{Jacobian-based optimization algorithms}
+\section{Gradient-based optimization algorithms}
 \label{sec:algs}
 
 This appendix documents the various standard least-squares optimization algorithms 
