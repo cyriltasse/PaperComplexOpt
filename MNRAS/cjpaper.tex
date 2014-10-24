@@ -58,9 +58,14 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\title[Radio interferometeric calibration as a complex optimization problem]{Radio interferometeric calibration as a complex optimization problem}
-\author[N. Bourbaki]{N. Bourbaki$^1$\thanks{E-mail: nbourbaki@pantheon.fr}\\ 
-$^1$Institute For The Advancement Of Complex Chicken Recipes}
+\title[Radio interferometeric gain calibration as a complex optimization problem]{Radio interferometeric gain calibration as a complex optimization problem}
+
+\author[O.M.~Smirnov \& C.~Tasse]{O.M.~Smirnov$^{12}$\thanks{E-mail: o.smirnov@ru.ac.za}, C.~Tasse$^{31}$\\
+$^1$Department of Physics and Electronics, Rhodes University, PO Box 94, Grahamstown, 6140, South Africa\\
+$^2$SKA South Africa, 3rd Floor, The Park, Park Road, Pinelands, 7405, South Africa\\
+$^3$Institute For The Advancement Of Complex Chicken Recipes}
+
+
 \begin{document}
 
 \date{in original form 2014 February 2}
@@ -73,12 +78,13 @@ $^1$Institute For The Advancement Of Complex Chicken Recipes}
 
 \begin{abstract}
 Recent developments in optimization theory have extended some traditional algorithms for least-squares optimization of 
-real-valued functions (Gauss-Newton, Levenberg-Marquardt, etc.) into the domain of complex functions of a complex variable. This
-employs a formalism called the Wirtinger derivative, and derives a full-complex Jacobian counterpart to the conventional 
-real Jacobian. We apply these developments to the problem of radio interferometric gain calibration, and show how the 
-general complex Jacobian formalism, when combined with conventional optimization approaches, yields a whole new family 
-of calibration algorithms, including those for the polarized and direction-dependent gain regime. We further extend the Wirtinger 
-calculus to an operator-based matrix calculus for describing the polarized calibration regime. Using approximate matrix 
+real-valued functions (Gauss-Newton, Levenberg-Marquardt, etc.) into the domain of complex functions of a complex 
+variable. This employs a formalism called the Wirtinger derivative, and derives a full-complex Jacobian counterpart 
+to the conventional real Jacobian. We apply these developments to the problem of radio interferometric gain 
+calibration, and show how the general complex Jacobian formalism, when combined with conventional optimization 
+approaches, yields a whole new family of calibration algorithms, including those for the polarized and 
+direction-dependent gain regime. We further extend the Wirtinger calculus to an operator-based matrix calculus 
+for describing the polarized calibration regime. Using approximate matrix 
 inversion results in computationally efficient implementations; we show that some recently proposed calibration algorithms 
 such as {\sc \StefCal} and peeling can be understood as special cases of this, and place them in the context of the general 
 formalism. Finally, we present an implementation and some applied results of {\sc CohJones}, another specialized 
@@ -90,11 +96,34 @@ direction-dependent calibration algorithm derived from the formalism.
 Instrumentation: interferometers, Methods: analytical, Methods: numerical, Techniques: interferometric
 \end{keywords}
 
-\section{Introduction}
+\section*{Introduction}
 
-Chicken chicken chicken. Chicken chicken? Chicken\footnote{Chicken chicken!} chicken, chicken (Chicken \& Chicken 2014).
+In radio interferometry, gain calibration consists of solving for the unknown complex antenna gains,
+using a known (prior, or iteratively constructed) model of the sky. Traditional (second generation, or 2GC)
+calibration employs an instrumental model with a single direction-independent (DI) gain term (which
+can be a scalar complex gain, or $2\times2$ complex-valued {\em Jones matrix}) per antenna, per some 
+time/frequency interval. Third-generation (3GC) calibration also addresses direction-dependent (DD) effects, which can be 
+represented by independently solvable DD gain terms, or by some parameterized instrumental 
+model (e.g. primary beams, pointing offsets, ionospheric screens). Different approaches to 
+this have been proposed and implemented, mostly in the framework of the radio interferometry measurement equation
+\citep[RIME, see][]{ME1}; \citet{RRIME1,RRIME2,RRIME3} provides a recent overview. In this work we will restrict 
+ourselves specifically to calibration of the DI and DD gain terms.
 
-\section{Prior work}
+Gain calibration is a non-linear least squares (NLLS) problem, since the noise on observed visibilities is 
+almost always Gaussian \citep[though other treatments have been proposed by][]{Kazemi2013a}. Traditional approaches
+to NNLS problems involve various forms of gradient descent methods \citep[for an overview, see][]{Madsen-NLLS};
+histrocially, these have been restricted to real variables, since complex differentiation is tricky to define
+(in particular, $\partial\bar z/\partial z$ cannot be defined in the usual mathematical sense). Gains in radio
+interferometry are complex variables -- the traditional way out of this conundrum has been to recast the complex NLLS 
+problem as a real problem by treating the real and imaginary parts of the gains as independent real variables.
+
+Recent developments in optimization theory have shown that using a formalism called the {\em Wirtinger complex 
+derivative} allows for a mathematically robust definition of the gradient operator for functions of complex variables. This
+operator can then be used to construct a {\em complex Jacobian}, and reformulate the traditional optimization 
+algorithms for the complex variable case. We summarize these developments and introduce basic notation 
+in Sect.~\ref{sec:Wirtinger}, and Oleg continues this wonderfully flowing introduction on Monday.
+
+
 
 \newcommand{\Matrix}[2]{\left [ \begin{array}{@{}#1@{}}#2\end{array} \right ]}
 \newcommand{\Stack}[1]{\begin{array}{@{}c@{}}#1\end{array}}
@@ -162,7 +191,8 @@ $\searrow,\nearrow,\downarrow$ & repeated matrix block \\
 \end{tabular}
 \end{table}
 
-\subsection{Complex optimization \& Wirtinger calculus}
+\section{Complex least-squares \& Wirtinger calculus}
+\label{sec:Wirtinger}
 
 The traditional approach to optimizing a function of $n$ complex variables $f(\zz),$ $\zz\in\COMPLEX^n$ is
 to treat the real and imaginary parts $\zz=\bmath{x}+i\bmath{y}$ independently, turning $f$ into a function
