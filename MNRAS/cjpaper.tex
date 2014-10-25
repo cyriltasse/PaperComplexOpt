@@ -224,7 +224,7 @@ $\searrow,\nearrow,\downarrow$ & repeated matrix block \\
 \end{tabular}
 \end{table}
 
-\section{Complex least-squares \& Wirtinger calculus}
+\section{Wirtinger calculus \& complex least-squares}
 \label{sec:Wirtinger}
 
 The traditional approach to optimizing a function of $n$ complex variables $f(\zz),$ $\zz\in\COMPLEX^n$ is
@@ -233,7 +233,7 @@ of $2n$ real variables $f(\bmath{x},\bmath{y})$, and the problem into an optimiz
 
 \citet{ComplexOpt} have developed an alternative approach to the problem based on Wirtinger calculus. The central idea
 of Wirtinger calculus is to treat $\zz$ and $\bar{\zz}$ as independent variables, and optimize $f(\zz,\bar{\zz})$
-using the Wirtinger derivatives 
+using the {\em Wirtinger derivatives} 
 
 \[
 \frac{\partial}{\partial z} = \frac{1}{2}\left ( \frac{\partial}{\partial x} - i\frac{\partial}{\partial y} \right),~~
@@ -254,11 +254,10 @@ it is straightforward to define the \emph{complex gradient} operator
 
 from which definitions of the complex Jacobian and complex Hessians naturally follow. The authors then show 
 that various optimization techniques developed for real functions can be reformulated using 
-complex Jacobians and Hessians, and applied to the complex optimization problem. Of particular interest to 
-us, they generalize the Gauss-Newton (GN) and Levenberg-Marquardt (LM) methods for solving the non-linear 
-least squares (LS) problem
-
-
+complex Jacobians and Hessians, and applied to the complex optimization problem. In particular, they generalize 
+the Gauss-Newton (GN) and Levenberg-Marquardt (LM) methods for solving the non-linear least squares (NLLS) 
+problem\footnote{It should be stressed that Wirtinger calculus can be applied to a broader range of 
+optimization problems than just LS.}
 
 \begin{equation}
 \label{eq:LSmin}
@@ -270,7 +269,7 @@ refers to LS fitting of the parameterized model $\bmath{v}$ to observed data $\b
 in the context of radio interferometry.
 
 Complex optimization is done as follows. Let us formally treat $\zz$ and $\zzc$ as independent variables, 
-define an {\em augmented parameter vector} containing both, 
+define an {\em augmented parameter vector} containing both,
 
 
 
@@ -372,7 +371,8 @@ Instead, let us keep using $pq$ as a single ``compound index'', with the implici
 subscript corresponds to a single index from 1 to $\Nbl$ using \emph{some} fixed enumeration convention. 
 Where necessary, we'll write $pq$ in square brackets (e.g. $a_{[pq],i}$) to emphasize this.
 
-Now consider the corresponding partial Jacobian $\JJ_k$ matrix (Eq.~\ref{eq:Jkrk}). This is of shape $\Nbl\times\Na$. We can write the
+Now consider the corresponding partial Jacobian $\JJ_k$ matrix (Eq.~\ref{eq:Jkrk}). This is of shape $\Nbl\times\Na$. 
+Using the Wirtinger derivative, we can write the
 partial Jacobian in terms of its value at row $[pq]$ and column $j$ as 
 
 \[
@@ -384,7 +384,7 @@ partial Jacobian in terms of its value at row $[pq]$ and column $j$ as
 \right .
 \]
 
-In other words, within each column $j$, $J_k$ is only non-zero at rows corresponding to baselines $[jq]$. We can express 
+In other words, within each column $j$, $\JJ_k$ is only non-zero at rows corresponding to baselines $[jq]$. We can express 
 this more compactly using the Kronecker delta:
 
 
@@ -595,7 +595,7 @@ we have
 \]
 
 Consequently, the updated gain values at each iteration can be derived directly from the data, thus obviating the need
-for computing residuals. Addiitonally, since the bottom half of the equations is simply the conjugate of the top, we only 
+for computing residuals. Additionally, since the bottom half of the equations is simply the conjugate of the top, we only 
 need to evaluate the top half:
 
 \begin{equation}
@@ -853,7 +853,7 @@ In this section we investigate approaches to simplifying the inversion problem b
 $\JJ^H\JJ$ by some form of (block-)diagonal matrix. Such approximation is equivalent to separating
 the optimization problem into subsets of parameters that are treated as independent. We will show 
 that some of these approximations are similar to or even fully equivalent to previously proposed 
-algorithms, while others produce new algorthmic variations.
+algorithms, while others produce new algorithmic variations.
 
 \subsection{Diagonal approximation and \StefCal}
 \label{sec:DI:stefcal}
@@ -883,7 +883,7 @@ The per-element expression, in the diagonal approximation, is
 
 \begin{equation}
 \label{eq:stefcal}
-g_{p,k+1} = \big( \sum\limits_{q\ne p} \bar{y}_{pq} y_{pq} \big)^{-1} \sum\limits_{q\ne p} \bar{y}_{pq} r_{pq}.
+g_{p,k+1} = \big( \sum\limits_{q\ne p} \bar{y}_{pq} y_{pq} \big)^{-1} \sum\limits_{q\ne p} \bar{y}_{pq} d_{pq}.
 \end{equation}
 
 Equation~\ref{eq:stefcal} 
@@ -1093,7 +1093,7 @@ present work.}, the results of which applied to simulated data are presented bel
 \subsubsection{ALLJONES: Separating all}
 
 Perhaps the biggest simplification available is to start with CDA or CAD ordering, and assume a \StefCal-style diagonal 
-approximation the entirety of $\JHJ$. The matrix then becomes purely diagonal, matrix inversion reduces to $O(\Nd\Na)$ in 
+approximation for the entirety of $\JHJ$. The matrix then becomes purely diagonal, matrix inversion reduces to $O(\Nd\Na)$ in 
 complexity, and algorithmic cost becomes dominated by the $O(\Nd\Na^2)$ process of computing the diagonal elements of 
 $\JHJ$. The GN update step can then computed in direct analogy to Eq.~\ref{eq:stefcal}:
 
@@ -1703,11 +1703,11 @@ such options.
 \citet{Stefcal} propose variants of the \StefCal\ algorithm (``2-basic'' and ``2-relax'') where the results of the 
 update step (Eq.~\ref{eq:update:DI:diag:pol}, in essense) are computed sequentially per antenna, with updated
 values for $\GG_1,\dots,\GG_{k-1}$ fed forward into the equations for $\GG_k$. This is shown to 
-substantially improve convergence, at the cost of sacrificing the embarassing paralellism by antenna. This technique 
+substantially improve convergence, at the cost of sacrificing the embarassing parallellism by antenna. This technique 
 is directly applicable to both the {\sc AllJones} and {\sc CohJones} algorithms. 
 
 The {\sc CohJones} algorithm considers all directions simultaneously, but could still implement feed-forward by antenna.
-The {\sc ALlJones} algorithm (Eq.~\ref{eq:update:DD:diag:pol}) could implement feed-forward by both antenna and direction. 
+The {\sc AllJones} algorithm (Eq.~\ref{eq:update:DD:diag:pol}) could implement feed-forward by both antenna and direction. 
 The optimal order for this, as well as whether in practice this actually improves convergence to justify the extra 
 complexity, is an open issue that remains to be investigated.
 
@@ -1772,7 +1772,7 @@ occasionally been misappropriated to describe other schemes, e.g. simultaneous i
 misuse: both the original formulation by \citet{JEN:peeling}, and the word ``peeling'' itself, strongly implies dealing with 
 one direction at a time.}.
 
-Within the framework above, peeling can be considered as the ultimate feed forward approach. Peeling is essentially feed-forward by direction, except rather than taking one step over each direction in turn, each direction is iterated to full convergence before moving on to the next direction. The procedure can then be repeated beginning with the brightest source again, a second cycle tends to improve the solutions. 
+Within the framework above, peeling can be considered as the ultimate feed forward approach. Peeling is essentially feed-forward by direction, except rather than taking one step over each direction in turn, each direction is iterated to full convergence before moving on to the next direction. The procedure can then be repeated beginning with the brightest source again, since a second cycle tends to improve the solutions. 
 
 \subsection{Exact matrix inversion}
 
@@ -1840,8 +1840,8 @@ around 3C147 \citep{Perley-3C147}.
 \subsection{\COH\ tests with simulated data}
 
 The \COH\ algorithm, in the unpolarized version, has been implemented as a standalone Python script that uses 
-{\tt pyrap}\footnote{{\tt https://code.google.com/p/pyrap}} and 
-{\tt casacore}\footnote{{\tt https://code.google.com/p/casacore}} to interface to Measurement Sets. 
+the {\tt pyrap}\footnote{{\tt https://code.google.com/p/pyrap}} and 
+{\tt casacore}\footnote{{\tt https://code.google.com/p/casacore}} libraries to interface to Measurement Sets. 
 This section reports on tests of our implementation with simulated Low Frequency Array (LOFAR) data.
 
 For the tests, we build a dataset using a LOFAR layout with 40 antennas. The phase center is located at
@@ -1942,15 +1942,30 @@ after \COH\ has been applied are a factor of $\sim30$ lower than without DD solu
 
 \section*{Conclusions}
 
-Other ways of inverting the matrix (someone clever may find one?)
+Recent developments in optimization theory have extended traditional NLLS optimization approaches
+to functions of complex variables. We have applied this to radio interferometric gain calibration, 
+and shown that the use of complex Jacobians allow for new insights into the problem, leading
+to the formulation of a whole new family of DI and DD calibration algorithms. These algorithms hinge around
+different sparse approximations of the $\JHJ$ matrix; we show that some recent algorithmic 
+developments, notably \StefCal, naturally fit into this framework as a particular special case
+of sparse (specifically, diagonal) approximation. 
 
-Complexity $O(\mathrm{chicken}).$ Chicken!
+The proposed algorithms have different scaling properties depending on the selected matrix approximation
+-- in all cases better than the cubic scaling of brute-force GN or LM methods -- and may therefore exhibit 
+different computational advantages depending on the dimensionality of the problem (number of antennas,
+number of directions). We also demonstrate an implementation of one particular algorithm for DD gain
+calibration, \COH.
 
-Embarassingly parallel. GPU. Chicken!
+The use of complex Jacobians results in relatively compact and simple equations, and the resulting algorithms
+tend to be embarassingly parallel, which makes them particularly amenable to implementation on new
+massively-parallel computing architectures such as GPUs. 
 
-Many variations possible, describes previous algorithms as special cases (approximations). Chicken!
+Other approximations or fast ways of inverting the complex $\JHJ$ matrix may exist, and future work can 
+potentially yield new and faster algorithms within the same unifying mathematical framework. This flexibility 
+is particularly important for addressing the computational needs of the new generation of the 
+so-called ``SKA pathfinder'' telescopes, as well as the SKA itself.
 
-Unifying framework? Chicken!
+
 
 \bibliographystyle{mn2e}
 \bibliography{cjpaper}
