@@ -145,10 +145,10 @@ and imaginary parts of the gains as independent real variables.
 
 Recent developments in optimization theory \citep{ComplexOpt} have shown that using a formalism 
 called the {\em Wirtinger complex derivative} allows for a mathematically robust definition of a 
-complex gradient operator. This leads to the construction of a {\em complex Jacobian} $\JJ$, which in turn allows for traditional 
+complex gradient operator. This leads to the construction of a {\em complex Jacobian}  $\JJ$, which in turn allows for traditional 
 NLLS algorithms to be directly applied to the complex variable case. We summarize these developments and 
-introduce basic notation in Sect.~\ref{sec:Wirtinger}. In Sect.~\ref{sec:unpol}, we apply 
-the theory to the RIME, and derive complex Jacobians for (unpolarized) DI and DD gain calibration.
+introduce basic notation in Sect.~\ref{sec:Wirtinger}. In Sect.~\ref{sec:unpol}, we follow on from \citet{Tasse-cohjones}
+to apply this theory to the RIME, and derive complex Jacobians for (unpolarized) DI and DD gain calibration.
 
 In principle, the use of Wirtinger calculus and complex Jacobians ultimately results in the same system of LS 
 equations as the real/imaginary approach. It does offer two important advantages: (i) equations with complex variables 
@@ -169,7 +169,7 @@ different sparse approximations to $\JHJ$ with conventional GN and LM methods.  
 that \StefCal, a fast DI calibration algorithm recently proposed by \citet{Stefcal},
 can be straightforwardly derived from a diagonal approximation to a complex $\JHJ$. We show that the 
 complex Jacobian approach naturally extends to the DD case, and that other sparse approximations yield a whole family
-of DD calibration algorithms with different scaling properties. One such algorithm, \COH, has been implemented 
+of DD calibration algorithms with different scaling properties. One such algorithm, \COH\ \citep{tasse-cohjones}, has been implemented 
 and successfully applied to simulated LOFAR data: this is discussed in Sect.~\ref{sec:implementations}.
 
 In Sect.~\ref{sec:pol} we extend this approach to the fully polarized case, by developing a Wirtinger-like 
@@ -1103,22 +1103,26 @@ For GN, the update step may be computed in direct analogy to Eq.~\ref{eq:stefcal
 holds):
 
 \[
-\bmath{g}_{k+1} = \HHa_\UL^{-1} \JJ_\LEFT^{~~H} \Dd.
+\bmath{g}_{k+1} = \HHa_\UL^{-1} \JJ_\LEFT^{~H} \Dd.
 \]
 
 We may note in passing that for LM, the analogy is only approximate:
 
 \[
-\Gg_{k+1} \approx \frac{\lambda}{1+\lambda}\Gg_k + \frac{1}{1+\lambda} \HHa_\UL^{-1} \JJ_\LEFT^{~~H} \Dd,
+\Gg_{k+1} \approx \frac{\lambda}{1+\lambda}\Gg_k + \frac{1}{1+\lambda} \HHa_\UL^{-1} \JJ_\LEFT^{~H} \Dd,
 \]
 
 since $\HHa$ is only approximately diagonal.
 
-Following \citet{Stefcal}, we can expect to improve convergence by averaging every pair of updates together. 
-A variant of this approach, using GN optimization and a \StefCal-style solution averaging, has been 
-implemented as the {\sc CohJones} (complex half-Jacobian optimization for $n$-directional estimation) 
+This approach has been implemented as the {\sc CohJones} (complex half-Jacobian optimization for $n$-directional estimation) 
 algorithm\footnote{In fact it was the initial development of {\sc CohJones} by \citet{tasse-cohjones} that directly led to the
 present work.}, the results of which applied to simulated data are presented below.
+
+% Following \citet{Stefcal}, we can expect to improve convergence by averaging every pair of updates together. 
+% A variant of this approach, using GN optimization and a \StefCal-style solution averaging, has been 
+% implemented as the {\sc CohJones} (complex half-Jacobian optimization for $n$-directional estimation) 
+% algorithm\footnote{In fact it was the initial development of {\sc CohJones} by \citet{tasse-cohjones} that directly led to the
+% present work.}, the results of which applied to simulated data are presented below.
 
 \subsubsection{ALLJONES: Separating all}
 
@@ -1634,8 +1638,9 @@ for the GN update step:
 
 \begin{equation}
 \label{eq:update:DI:diag:pol}
-\GG_{p,k+1} = \left [ \sum\limits_{q\ne p} \YY_{pq} \YY^H_{pq}  \right ]^{-1} 
+\GG_{p,k+1} =  
 \left [ \sum\limits_{q\ne p} \YY^H_{pq} \DD_{pq} \right ] 
+\left [ \sum\limits_{q\ne p} \YY_{pq} \YY^H_{pq}  \right ]^{-1}
 \end{equation}
 
 This is, once again, equivalent to the polarized {\sc \StefCal} update step proposed by \citet{Stefcal}.
@@ -1698,8 +1703,9 @@ the $\HHa$ matrix is fully diagonal in operator form, and the GN update step can
 
 \begin{equation}
 \label{eq:update:DD:diag:pol}
-\delta \GGd_{p,k+1} = \left [ \sum\limits_{q\ne p,s} \YYd_{pqs} \YYdH_{pqs}  \right ]^{-1} 
-\left [ \sum\limits_{q\ne p,s} \YYdH_{pqs} \RR_{pqs} \right ].
+\delta \GGd_{p,k+1} = 
+\left [ \sum\limits_{q\ne p,s} \YYdH_{pqs} \RR_{pqs} \right ]
+\left [ \sum\limits_{q\ne p,s} \YYd_{pqs} \YYdH_{pqs}  \right ]^{-1} 
 \end{equation}
 
 Note that in this case (as in the unpolarized {\sc AllJones} version) the condition of Eq.~\ref{eq:ghat:precise}
