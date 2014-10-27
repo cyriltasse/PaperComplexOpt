@@ -19,13 +19,12 @@
 \SetWatermarkScale{7}
 \SetWatermarkLightness{.95}
 
-<<<<<<< HEAD
 \usepackage{amssymb}
 \usepackage{amsmath}
 %\usepackage{draftcopy}
 %\usepackage{draftwatermark}
-=======
->>>>>>> 37b1f9606e2c1bc7cbcc1f6e5234d12317c9169a
+
+
 
 \newcommand{\Gcal}{\bmath{\mathcal{G}}}
 \newcommand{\Rcal}{\bmath{\mathcal{R}}}
@@ -1863,11 +1862,12 @@ more accurate iterations.
 %\hspace*{-1.3cm}
 %\includegraphics[width=\textwidth]{residSim.eps}
 %\includegraphics[width=\textwidth]{\FigDir residSimZoom2.eps}
-\includegraphics[width=\textwidth]{\FigDir Pealed.pdf}
+%\includegraphics[width=\textwidth]{\FigDir Pealed.pdf}
+\includegraphics[width=\textwidth]{\FigDir ResidSimimage.pdf}
 \caption{\label{fig:resid}Simulation with time-variable DD gains. We show a deconvolved image (left) where
   no DD solutions have been applied, a residual image (centre) made by subtracting the sky model (in the visibility 
   plane) without any DD corrections, and a residual image (right) made by subtracting the sky model with \COH-estimated 
-  DD gain solutions (right). The color scale is the same in all panels. In this simulation, applying \COH\ for DD calibration reduces the residual rms level by a factor of $\sim30$.}
+  DD gain solutions (right). The color scale is the same in all panels. In this simulation, applying \COH\ for DD calibration reduces the residual rms level by a factor of $\sim4$.}
 \end{center}
 \end{figure*}
 
@@ -1929,27 +1929,25 @@ become more orthogonal). As discussed in Sect.~\ref{sec:dca}, this happens (i) w
 \subsubsection{Time-variable DD gains}
 \label{sec:VarSimul}
 
-To simulate a more realistic dataset, we use a sky model composed of 100 point sources of random (uniformly distributed) flux density. We also add noise to the visibilities, at a level of about $1\%$ of the total flux. We also simulate
-(scalar) DD gains, using an ionospheric model consisting of a simple phase screen (an infinitesimally thin layer at a height of 100 km). The total electron content (TEC) values at the set of sample points are generated using Karhunen-Loeve decomposition \citep[the spatial correlation is given by Kolmogorov turbulence, see][]{Tol09}. 
+\begin{figure}
+\begin{center}
+%\hspace*{-1.3cm}
+%\includegraphics[width=\textwidth]{resid}
+\includegraphics[width=\columnwidth]{\FigDir PhaseSim.pdf}
+\caption{\label{fig:PhaseSim} This figure show the phases of the scalar Jones matrices for all antennas and a single direction for the time-variable TEC screen (Sec. \ref{sec:VarSimul}).}
+\end{center}
+\end{figure}
 
-For calibration purposes, the sources are clustered in 10 directions using Voronoi tesselation (Fig.~\ref{fig:tessel}),
+To simulate a more realistic dataset, we use a sky model composed of 100 point sources of random (uniformly distributed) flux density. We also add noise to the visibilities, at a level of about $1\%$ of the total flux. We also simulate
+(scalar) DD gains, using an ionospheric model consisting of a simple phase screen (an infinitesimally thin layer at a height of 100 km). The total electron content (TEC) values at the set of sample points are generated using Karhunen-Loeve decomposition \citep[the spatial correlation is given by Kolmogorov turbulence, see][]{Tol09}. The constructed TEC-screen has an amplitude of $\sim0.07$ TEC-Unit, and the corresponding scalar Jones matrices are plotted in Fig. \ref{fig:PhaseSim}.
+
+For calibration purposes, the sources are clustered in 10 directions using Voronoi tesselation (Fig.~\ref{fig:tessel}). The solution time-interval is set to $4$ minutes, 
 and a separate gain solution is obtained per each direction. Fig. \ref{fig:resid} shows images generated from
 the residual visibilities, where the best-fitting model is subtracted in the visibility domain.  The rms residuals
-after \COH\ has been applied are a factor of $\sim30$ lower than without DD solutions.
+after \COH\ has been applied are a factor of $\sim4$ lower than without DD solutions.
 
 
 
-%% \begin{figure*}
-%% \begin{center}
-%% %\hspace*{-1.3cm}
-%% \includegraphics[width=\textwidth]{resid}
-%% \includegraphics[width=\textwidth]{residZoom}
-%% \caption{\label{fig:resid} This figure shows compares the image
-%%   (left), the residuals data after simple skymodel substraction
-%%   (center), and the residuals data after substracting the
-%%   sky model corrupted by the direction-dependent solution (right).}
-%% \end{center}
-%% \end{figure*}
 
 
 
