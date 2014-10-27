@@ -37,6 +37,8 @@
 \newcommand{\mat}[1]{{\bmath{#1}}}
 
 \newcommand{\JJ}{\mat{J}} % \bmath{\mathcal{J}}}
+\newcommand{\HH}{\mat{H}} % \bmath{\mathcal{J}}}
+\newcommand{\HHa}{\mat{\tilde{H}}} % \bmath{\mathcal{J}}}
 \newcommand{\JVg}{\bm{J}}
 \newcommand{\DD}{\mat{D}}
 \newcommand{\MM}{\mat{M}}
@@ -173,10 +175,10 @@ our framework, \COH, and show some results with simulated LOFAR data.
 \newcommand{\RRr}{\AUGx{R}}
 \newcommand{\DDd}{\AUGx{D}}
 \newcommand{\VVv}{\AUGx{V}}
-\newcommand{\TOP}{\mathrm{Th}}
-\newcommand{\LEFT}{\mathrm{Lh}}
-\newcommand{\RIGHT}{\mathrm{Rh}}
-\newcommand{\UL}{\mathrm{TLq}}
+\newcommand{\TOP}{\mathrm{U}}% \mathbb{t}}
+\newcommand{\LEFT}{\mathrm{L}}
+\newcommand{\RIGHT}{\mathrm{R}}
+\newcommand{\UL}{\mathrm{UL}}%\mathcal{ur}}
 \newcommand{\Rop}[1]{\mathcal{R}_{{#1}}}
 \newcommand{\Lop}[1]{\mathcal{L}_{{#1}}}
 
@@ -199,11 +201,10 @@ $(\cdot)^T$ & transpose \\
 $(\cdot)^H$ & Hermitian transpose \\
 $\bmath{\bar x},\bmath{\bar X}$ & element-by-element complex conjugate of $\bmath{x}$, $\bmath{X}$  \\
 $\AUG{x}, \AUGx{X}$ & augmented vectors $\AUG{x} = \Matrix{c}{\bmath{x} \\ \bmath{\bar x}},~~\AUGx{X}=\Matrix{c}{\bmath{X}_i \\ \bmath{X}^H_i}$ \\
-$\TOP\,\bmath{X}, \bmath{X}_\TOP$ & top half of matrix $\bmath{X}$\\
-$\LEFT\,\bmath{X}, \bmath{X}_\LEFT$ & left half of matrix $\bmath{X}$ \\
-$\RIGHT\,\bmath{X}, \bmath{X}_\RIGHT$ & right half of matrix $\bmath{X}$\\
-$\UL\,\bmath{X}, \bmath{X}_\UL$ & top left quadrant of matrix $\bmath{X}$\\
-& order of operations is $\bmath{X}^Y_\TOP = \bmath{X}^{~~~Y}_\TOP = (\bmath{X}_\TOP)^Y$, \\
+$\bmath{X}_\TOP$ & upper half of matrix $\bmath{X}$\\
+$\bmath{X}_\LEFT, \bmath{X}_\RIGHT$ & left, right half of matrix $\bmath{X}$ \\
+$\bmath{X}_\UL$ & upper left quadrant of matrix $\bmath{X}$\\
+& order of operations is $\bmath{X}^Y_\TOP = \bmath{X}^{~~Y}_\TOP = (\bmath{X}_\TOP)^Y$, \\
 & or $\bmath{X}^Y_{~~\TOP} = (\bmath{X}^Y)_\TOP$ \\
 $\bmath{d},\bmath{v},\bmath{r}, \bmath{g}, \bmath{m} $ & data, model, residuals, gains, sky coherency\\
 $(\cdot)_k$ & value associated with iteration $k$ \\
@@ -212,6 +213,7 @@ $(\cdot)^{(d)}$ & value associated with direction $d$\\
 $\bmath{W}$ & matrix of weights \\
 $\JJ$ & full complex Jacobian \\
 $\JJ_k~~[\JJ_{\bar k}]$ & [conjugate] partial Jacobian at iteration $k$\\
+$\bmath{H}, \bmath{\tilde{H}}$ & $\JHJ$ and its approximation \\
 $\mathrm{vec}\,\bmath{X}$ & vectorization operator \\
 $\Rop{A}$ & right-multiply by $\bmath{A}$ operator (Sect.~\ref{sec:pol}) \\
 $\Lop{A}$ & left-multiply by $\bmath{A}$ operator (Sect.~\ref{sec:pol}) \\
@@ -603,7 +605,29 @@ need to evaluate the top half:
 \vecg_{k+1} = \vecg_k + \delta\vecg = (\JHJ)^{-1}_{~~~\TOP} \JJ^H \Dd,
 \end{equation}
 
-where $\bmath{X}_\TOP$ designates the top half of matrix $\bmath{X}$. Skipping the residual calculation can represent substantial algorithmic savings, and we will return to the idea again.
+where $\bmath{X}_\TOP$ designates the upper half of matrix $\bmath{X}$. 
+
+The derivation above assumes an exact inversion of $\HH=\JHJ$. In practice, this large matrix can be costly to invert, 
+so the algorithms below will substitute it with some cheaper-to-invert approximation $\HHa$. Using approximate inversion 
+for the update step, we find instead:
+
+\begin{equation}
+\label{eq:ghat:approx}
+\vecg_{k+1} = \HHa^{-1}_{~~~\TOP} \JJ^H \Dd + (\II - \HHa^{-1}_{~~~\TOP} \HH_\LEFT )\vecg_k,
+\end{equation}
+
+which means that when an approximate $\JHJ$ is in use, the shortcut of Eq.~\ref{eq:ghat} only applies when 
+
+\begin{equation}
+\label{eq:ghat:precise}
+\HHa^{-1}_{~~~\TOP} \HH_\LEFT=\II.
+\end{equation}
+
+We will see examples of both conditions below, so it is worth stressing the difference: Eq.~\ref{eq:ghat}
+allows us to compute updated solutions directly from the data vector, bypassing the residuals. This is a 
+substantial computational shortcut, however, when an approximate inverse for $\HH$ is in use, it 
+does not necessarily apply (or at least is not exact). Under the condition of Eq.~\ref{eq:ghat:precise}, however, 
+such a shortcut is exact.
 
 
 \subsection{Time/frequency solution intervals}
@@ -850,7 +874,7 @@ real/imaginary, antenna; (d) antenna, real/imaginary, direction. The bottom row 
 
 
 In this section we investigate approaches to simplifying the inversion problem by approximating
-$\JJ^H\JJ$ by some form of (block-)diagonal matrix. Such approximation is equivalent to separating
+$\HH=\JJ^H\JJ$ by some form of (block-)diagonal matrix $\HHa$. Such approximation is equivalent to separating
 the optimization problem into subsets of parameters that are treated as independent. We will show 
 that some of these approximations are similar to or even fully equivalent to previously proposed 
 algorithms, while others produce new algorithmic variations.
@@ -863,21 +887,30 @@ dominant (especially for larger $\Na$), as each diagonal element is a coherent s
 while the off-diagonal elements are either zero or a product of two $y$ terms. This is graphically illustrated in 
 Fig.~\ref{fig:JHJ}(f). It is therefore not unreasonable 
 to approximate $\JHJ$ with a diagonal matrix for purposes of inversion (or equivalently, making the assumption that 
-the problem is separable per antenna). This makes the costs of matrix inversion negligible -- $O(\Na)$ operations, as 
-compared to the $O(\Na^2)$ cost 
+the problem is separable per antenna):
+
+\[
+\HHa = \Matrix{cc}{\bmath{A}&0\\0&\bmath{A}}
+\]
+
+This makes the costs of matrix inversion negligible -- $O(\Na)$ operations, as compared to the $O(\Na^2)$ cost 
 of computing the diagonal elements of the Jacobian in the first place. The price of using an approximate inverse for 
 $\JHJ$ is a less accurate update step, so we can expect to require more iterations before convergence is reached.
 
-Combining this approximation with GN optimization and using Eq.~\ref{eq:ghat}, we may write out the GN update step as:
+Combining this approximation with GN optimization and using Eq.~\ref{eq:ghat:approx}, we find the following expression
+for the GN update step:
 
 \begin{equation}
 \label{eq:stefcal-matrix}
-\vecg_{k+1} = (\JHJ)^{-1}_{~~~\UL} \JJ_\LEFT^{~~~H} \Dd,
+\vecg_{k+1} = \HHa^{-1}_{\UL} \JJ_\LEFT^{~H} \Dd,
 \end{equation}
 
-where $\bmath{X}_\UL$ designates the top left quadrant of matrix $\bmath{X}$. Note that this equation applies more
-generally than just to the diagonal approximation, and will hold for any other approximation where the off-diagonal 
-quadrants of $\JHJ$ are assumed to be null.
+where $\bmath{X}_\UL$ designates the top left quadrant of matrix $\bmath{X}$. Note that the condition of 
+Eq.~\ref{eq:ghat:precise} is met: $\HHa^{-1}_{~~~\TOP} \HH_\LEFT=\bmath{A}^{-1}\bmath{A}=\II$, i.e. writing 
+out the update step in terms of $\Dd$ does not make an extra approximation. This comes about due to
+(i) the off-diagonal block of $\HHa$ being null, which masks out the bottom half of $\HH_\LEFT$, and 
+(ii) the on-diagonal block of $\HHa$ being inverted exactly. In other algorithms suggested below, the second
+condition particularly is not the case.
 
 The per-element expression, in the diagonal approximation, is
 
@@ -892,11 +925,11 @@ direction, by treating Eq.~\ref{eq:cal:DI} as a function of $\bmath{g}$ only, an
 The resulting complex Jacobian (Eq.~\ref{eq:JJ:di:basic}) then has null off-diagonal blocks, and $\JJ^H\JJ$ becomes 
 diagonal.
 
-Interestingly, applying the same idea to LM optimization (Eq.~\ref{eq:LM1}), and remembering that $\JHJ$ is 
+Interestingly, applying the same idea to LM optimization (Eq.~\ref{eq:LM1}), and remembering that $\HHa$ is 
 diagonal, we can derive the following update equation instead:
 
 \begin{equation}
-\bmath{g}_{k+1} = \frac{\lambda}{1+\lambda}\bmath{g}_k + \frac{1}{1+\lambda} (\JHJ)_{~~\UL}^{-1} \JJ_\LEFT^{~~H} \Dd,
+\bmath{g}_{k+1} = \frac{\lambda}{1+\lambda}\bmath{g}_k + \frac{1}{1+\lambda} \HHa_{\UL}^{-1} \JJ_\LEFT^{~H} \Dd,
 \label{eq:stefcal-lambda-average}
 \end{equation}
 
@@ -1031,12 +1064,12 @@ over longer time and frequency intervals.
 
 If we now assume that the sky model components are orthogonal or near-orthogonal, then 
 we may treat the ``cross-direction'' blocks of the $\JHJ$ matrix in Eq.~\ref{eq:JHJ:DD:blocked} as null. The problem is 
-then separable by direction, and $\JHJ$ becomes block-diagonal:
+then separable by direction, and $\JHJ$ is approximated by a block-diagonal matrix:
 
 
 \begin{equation}
 \label{eq:JHJ:DD:block-diag}
-\JHJ \approx \Matrix{ccc}{\JJJ^1_1 &  & 0 \\
+\HHa = \Matrix{ccc}{\JJJ^1_1 &  & 0 \\
 & \ddots &  \\
 0 & & \JJJ_{\Nd}^{\Nd} },
 \end{equation}
@@ -1056,7 +1089,7 @@ The top half of $\JHJ$ then has the following block structure (and the bottom ha
 
 \begin{equation}
 \label{eq:JHJ:DD:blocked-ant}
-\Matrix{cccccc}{\JJX^1_1 &  & 0 & \JJY^1_1 & \dots & \JJY^{\Na}_1 \\
+\HH_\TOP = \Matrix{cccccc}{\JJX^1_1 &  & 0 & \JJY^1_1 & \dots & \JJY^{\Na}_1 \\
  & \ddots &  & \vdots & & \vdots \\
 0 &  & \JJX_{\Na}^{\Na} & \JJY_{\Na}^1 & \dots & \JJY_{\Na}^{\Na} },
 \end{equation}
@@ -1066,23 +1099,24 @@ from Eq.~\ref{eq:JHJ:DD:unpol}), while its right half consists of elements of th
 Eq.~\ref{eq:JHJ:DD:crossterms}. 
 
 By analogy with the \StefCal\ approach, we may assume $\JJY^i_j \approx 0$, i.e. treat the problem as
-separable by antenna. The $\JHJ$ matrix then becomes block-diagonal, and we only need to compute the 
+separable by antenna. The $\HHa$ matrix then becomes block-diagonal, and we only need to compute the 
 true matrix inverse of each $\JJX^i_i$. The inversion problem then reduces to $O(\Nd^3\Na)$ in complexity,
 and either LM or GN optimization may be applied.
 
-For GN, the update step may be computed in direct analogy to Eq.~\ref{eq:stefcal}:
+For GN, the update step may be computed in direct analogy to Eq.~\ref{eq:stefcal} (noting that Eq.~\ref{eq:ghat:precise}
+holds):
 
 \[
-\bmath{g}_{k+1} = \bmath{A}^{-1} \JJ_\LEFT^{~~H} \Dd.
+\bmath{g}_{k+1} = \HHa_\UL^{-1} \JJ_\LEFT^{~~H} \Dd.
 \]
 
-We note in passing that for LM, the analogy is only approximate:
+We may note in passing that for LM, the analogy is only approximate:
 
 \[
-\Gg_{k+1} \approx \frac{\lambda}{1+\lambda}\Gg_k + \frac{1}{1+\lambda} \bmath{A}^{-1} \JJ_\LEFT^{~~H} \Dd,
+\Gg_{k+1} \approx \frac{\lambda}{1+\lambda}\Gg_k + \frac{1}{1+\lambda} \HHa_\UL^{-1} \JJ_\LEFT^{~~H} \Dd,
 \]
 
-since $\bmath{A}$ is only approximately diagonal.
+since $\HHa$ is only approximately diagonal.
 
 Following \citet{Stefcal}, we can expect to improve convergence by averaging every pair of updates together. 
 A variant of this approach, using GN optimization and a \StefCal-style solution averaging, has been 
@@ -1095,19 +1129,19 @@ present work.}, the results of which applied to simulated data are presented bel
 Perhaps the biggest simplification available is to start with CDA or CAD ordering, and assume a \StefCal-style diagonal 
 approximation for the entirety of $\JHJ$. The matrix then becomes purely diagonal, matrix inversion reduces to $O(\Nd\Na)$ in 
 complexity, and algorithmic cost becomes dominated by the $O(\Nd\Na^2)$ process of computing the diagonal elements of 
-$\JHJ$. The GN update step can then computed in direct analogy to Eq.~\ref{eq:stefcal}:
+$\JHJ$. Note that Eq.~\ref{eq:ghat:precise} no longer holds, and the GN update step must be computed via the residuals:
 
 \[
-\bmath{g}_{k+1} = (\JHJ)^{-1}_{~~\UL} \JJ^{~~H}_\LEFT \Dd,
+\bmath{g}_{k+1} = \bmath{g}_k + \HHa^{-1}_\UL \JJ^{~H}_\LEFT \Rr,
 \]
 
-and the per-element expression is 
+with the per-element expression being 
 
 \begin{equation}
 \label{eq:stefcal:dd:unpol}
-g_{p,k+1}^{(d)} = 
+g_{p,k+1}^{(d)} = g_{p,k}^{(d)} + 
 \big( \sum\limits_{q\ne p,s} \bar{y}^{(d)}_{pqs} y^{(d)}_{pqs} \big)^{-1}
-\sum\limits_{q\ne p,s} \bar{y}^{(d)}_{pqs} d_{pqs}.
+\sum\limits_{q\ne p,s} \bar{y}^{(d)}_{pqs} r_{pqs}.
 \end{equation}
 
 \subsection{Convergence and algorithmic cost}
@@ -1115,8 +1149,8 @@ g_{p,k+1}^{(d)} =
 Evaluating the gain update (e.g. as given by Eq.~\ref{eq:ghat}) involves a number of computational steps:
 
 \begin{enumerate}
-\item Computing $\JHJ$,
-\item Inverting $\JHJ$,
+\item Computing $\HHa \approx \JHJ$,
+\item Inverting $\HHa$,
 \item Computing the $\JJ^H\Dd$ vector,
 \item Multiplying the result of (ii) and (iii). 
 \end{enumerate}
@@ -1140,7 +1174,7 @@ regimes where one or the other algorithm has a computational advantage. This sho
 
 \begin{table}
 \begin{tabular}{c|ccc}
-algorithm & $\JHJ$ & invert & multiply \\
+algorithm & $\HHa$ & $\HHa^{-1}$ & multiply \\
 \hline
 Exact          & $O(\Na^2\Nd^2)$ & $O(\Na^3\Nd^3)^\dagger$ &  $O(\Na^2\Nd^2)$ \\ 
 {\sc AllJones} & $O(\Na^2\Nd)^\dagger$   & $O(\Na\Nd)$     &  $O(\Na\Nd)$ \\
@@ -1427,7 +1461,7 @@ $[pq]$ will represent a single index running through $M$ values (i.e. enumeratin
 \begin{array}{r@{~}cc@{~}cc}
   & \overbrace{~~~~~~~~}^{j=1\dots \Na} & \overbrace{~~~~~~~~}^{j=1\dots \Na} \\
 
-\JJ_\mathrm{top} = \big [ & 
+\JJ_\TOP = \big [ & 
 \Rop{ \MM_{pq}\GG^H_q }\delta^j_p & 
 \Lop{ \GG_p \MM_{pq}  }\delta^j_q 
 & \big ] ~~ \} \scriptstyle [pq]=1\dots \Nbl~(p<q)
@@ -1438,13 +1472,14 @@ $[pq]$ will represent a single index running through $M$ values (i.e. enumeratin
 \end{array}
 \end{equation}
 
-Note that there are two fully equivalent ways to read the above equation. In operator notation, it specifies a linear operator $\JJ_\mathrm{top}$
+Note that there are two fully equivalent ways to read the above equation. In operator notation, it specifies a linear operator 
+$\JJ_\TOP$
 that maps a $2\Na$-vector of $2\times2$ matrices to an $\Nbl$-vector of $2\times2$ matrices. In conventional matrix notation, 
-$\JJ_\mathrm{top}$ is just a $4\Nbl\times8\Na$ matrix; the above equation then specifies the structure of this matrix in terms
+$\JJ_\TOP$ is just a $4\Nbl\times8\Na$ matrix; the above equation then specifies the structure of this matrix in terms
 of $4\times4$ blocks, where each block is the matrix equivalent of the appropriate $\mathcal{R}$ or $\mathcal{L}$ operator.
 
 Consider now the bottom half of the Jacobian. In Eq.~\ref{eq:JJ}, this corresponds to the derivatives of the conjugate residual
-vector $\rrc_k$, and can be constructed by conjugating and mirroring $\JJ_\mathrm{top}$. Let us modify this construction 
+vector $\rrc_k$, and can be constructed by conjugating and mirroring $\JJ_\TOP$. Let us modify this construction 
 by taking the derivative of the Hermitian transpose of the residuals. We construct the augmented residual vector of matrices
 as:
 
@@ -1473,7 +1508,7 @@ Now, since $\VV^H_{pq}=\GG_q \MM^H_{pq} \GG^H_p,$ we have
 \frac{\partial\VV^H_{pq}}{\partial\GG^H_p} = \Lop{\GG_q \MM^H_{pq}},
 \end{equation}
 
-and we may write out the complete complex Jacobian as
+and we may write out the full complex Jacobian as
 
 \[
 \JJ = - \Matrix{cc}{ 
@@ -1552,7 +1587,7 @@ operators, as:
 $\Lop{\mat{A}}\Lop{\mat{B}}=\Lop{\mat{AB}}$.) Compare this result to Eq.~\ref{eq:JHJ:DI}.
 
 For the $\JJ^H\RRr$ term, we can directly apply the linear operators appearing in $\JJ^H$ 
-to the matrices in $\Rr$:
+to the matrices in $\RRr$:
 
 \begin{equation}
 \JJ^H\RRr = \Matrix{c}{ 
@@ -1583,12 +1618,14 @@ data and model vectors of matrices as
 \DDd = [ \DD_{pq} ],~~\VVv = [ \GG_p \MM_{pq} \GG_q^H ],
 \]
 
-then $\VVv = -\JJ \GGg$ holds, and the GN update step can be written as
+then $\VVv = \JJ_\LEFT \GGg$ holds, and the GN update step can be written as
 
-\[
-\GGg_{k+1} = - (\JHJ)^{-1} \JJ^H \DDd.
-\]
+\begin{equation}
+\label{eq:ghat:matrix}
+\GGg_{k+1} = (\JHJ)^{-1} \JJ^H \DDd.
+\end{equation}
 
+By analogy with Eq.~\ref{eq:ghat}, this equation also holds when $\JHJ$ is approximated, but only if the condition of Eq.~\ref{eq:ghat:precise} is met.
 
 To actually implement GN or LM optimization, we still need to invert the  $\JHJ$ matrix that is represented in operator form 
 by Eq.~\ref{eq:JHJ:pol}. We have two options here. The brute-force numerical approach is to substitute the 
@@ -1601,8 +1638,8 @@ for the GN update step:
 
 \begin{equation}
 \label{eq:update:DI:diag:pol}
-\GG_{p,k+1} = \left [ \sum\limits_{q\ne p} \YY^H_{pq} \DD_{pq} \right ] 
-\left [ \sum\limits_{q\ne p} \YY_{pq} \YY^H_{pq}  \right ]^{-1}
+\GG_{p,k+1} = \left [ \sum\limits_{q\ne p} \YY_{pq} \YY^H_{pq}  \right ]^{-1} 
+\left [ \sum\limits_{q\ne p} \YY^H_{pq} \DD_{pq} \right ] 
 \end{equation}
 
 This is, once again, equivalent to the polarized {\sc \StefCal} update step proposed by \citet{Stefcal}.
@@ -1661,16 +1698,20 @@ algorithms referenced therein may be reformulated for the fully polarized case. 
 \begin{itemize} 
 
 \item If we assume separability by both direction and antenna, as in the {\sc AllJones} algorithm, then
-the $\JHJ$ matrix is fully diagonal in operator form, and the GN update step can be directly computed as
+the $\HHa$ matrix is fully diagonal in operator form, and the GN update step can be computed as
 
 \begin{equation}
 \label{eq:update:DD:diag:pol}
-\GGd_{p,k+1} = \left [ \sum\limits_{q\ne p,s} \YYdH_{pqs} \DD_{pqs} \right ] 
-\left [ \sum\limits_{q\ne p,s} \YYd_{pqs} \YYdH_{pqs}  \right ]^{-1}
+\delta \GGd_{p,k+1} = \left [ \sum\limits_{q\ne p,s} \YYd_{pqs} \YYdH_{pqs}  \right ]^{-1} 
+\left [ \sum\limits_{q\ne p,s} \YYdH_{pqs} \RR_{pqs} \right ].
 \end{equation}
 
-\item If we only assume separability by antenna, as in the {\sc CohJones} algorithm, then the $\JHJ$ matrix 
-becomes $4\Nd\times4\Nd$-block-diagonal.
+Note that in this case (as in the unpolarized {\sc AllJones} version) the condition of Eq.~\ref{eq:ghat:precise}
+is not met, so we must use the residuals and compute $\delta\GG$.
+
+\item If we only assume separability by antenna, as in the {\sc CohJones} algorithm, then the $\HHa$ matrix 
+becomes $4\Nd\times4\Nd$-block-diagonal, and may be inverted exactly at a cost of $O(\Nd^3\Na)$. The condition 
+of Eq.~\ref{eq:ghat:precise} is met.
 \end{itemize}
 
 It is also straightfoward to add weights and/or sliding window averging to this formulation, as per 
@@ -1681,7 +1722,7 @@ They provide the necessary ingredients for implementing GN or LM methods for DD 
 fully complex optimization problem. The equations may be combined and approximated in different 
 ways to produce different types of calibration algorithms. 
 
-Another interesting note is that Eq.~\ref{eq:update:DD:diag:pol} is embarassingly parallel, since the update step is 
+Another interesting note is that Eq.~\ref{eq:update:DD:diag:pol} and its ilk are embarassingly parallel, since the update step is 
 completely separated by direction and antenna. This makes it particularly well-suited to implementation on massively 
 parallel architectures such as GPUs.
 
@@ -1702,14 +1743,15 @@ such options.
 
 \citet{Stefcal} propose variants of the \StefCal\ algorithm (``2-basic'' and ``2-relax'') where the results of the 
 update step (Eq.~\ref{eq:update:DI:diag:pol}, in essense) are computed sequentially per antenna, with updated
-values for $\GG_1,\dots,\GG_{k-1}$ fed forward into the equations for $\GG_k$. This is shown to 
+values for $\GG_1\dots\GG_{k-1}$ fed forward into the equations for $\GG_k$ (via the appropriate $\YY$ terms). This is shown to 
 substantially improve convergence, at the cost of sacrificing the embarassing parallellism by antenna. This technique 
 is directly applicable to both the {\sc AllJones} and {\sc CohJones} algorithms. 
 
 The {\sc CohJones} algorithm considers all directions simultaneously, but could still implement feed-forward by antenna.
-The {\sc AllJones} algorithm (Eq.~\ref{eq:update:DD:diag:pol}) could implement feed-forward by both antenna and direction. 
-The optimal order for this, as well as whether in practice this actually improves convergence to justify the extra 
-complexity, is an open issue that remains to be investigated.
+The {\sc AllJones} algorithm (Eq.~\ref{eq:update:DD:diag:pol}) could implement feed-forward by both antenna (via $\YY$) and 
+by direction -- by recomputing the residuals $\RR$ to take into account the updated solutions for $\GG^{(1)}\dots\GG^{(d-1)}$ before
+evaluating the solution for $\GG^{(d)}$.  The optimal order for this, as well as whether in practice this actually 
+improves convergence to justify the extra complexity, is an open issue that remains to be investigated.
 
 \subsection{Triangular approximation}
 
@@ -1718,7 +1760,7 @@ solution for $k$. A related approach is to approximate the $\JHJ$ matrix as bloc
 
 \begin{equation}
 \label{eq:JHJ:DD:block-triag}
-\JHJ \approx \Matrix{cccc}{
+\HHa = \Matrix{cccc}{
 \JJJ^1_1 & 0 & \cdots & 0 \\
 \JJJ^1_2 & \JJJ^2_2 & \cdots & 0 \\
 \vdots & & \ddots &  \vdots \\
@@ -1730,7 +1772,7 @@ solution for $k$. A related approach is to approximate the $\JHJ$ matrix as bloc
 The inverse of this is also block triangular:
 \begin{equation}
 \label{eq:JHJ:DD:block-triag-inv}
-(\JHJ)^{-1} \approx \Matrix{cccc}{
+\HHa^{-1} = \Matrix{cccc}{
 \KKK^1_1 & 0 & \cdots & 0 \\
 \KKK^1_2 & \KKK^2_2 & \cdots & 0 \\
 \vdots & & \ddots &  \vdots \\
