@@ -1,5 +1,10 @@
 \documentclass[useAMS,usenatbib]{mn2e}
 
+\usepackage[a4paper]{geometry}
+\usepackage{draftwatermark}
+\SetWatermarkScale{8}
+\SetWatermarkLightness{0.9}
+
 %%%%% AUTHORS - PLACE YOUR OWN MACROS HERE %%%%%
 \newcommand{\conj}[1]{\overline{#1}}
 \newcounter{NameOfTheNewCounter}
@@ -171,7 +176,7 @@ different sparse approximations to $\JHJ$ with conventional GN and LM methods.  
 that \StefCal, a fast DI calibration algorithm recently proposed by \citet{Stefcal},
 can be straightforwardly derived from a diagonal approximation to a complex $\JHJ$. We show that the 
 complex Jacobian approach naturally extends to the DD case, and that other sparse approximations yield a whole family
-of DD calibration algorithms with different scaling properties. One such algorithm, \COH\ \citep{tasse-cohjones}, has been implemented 
+of DD calibration algorithms with different scaling properties. One such algorithm, \COH\ \citep{Tasse-cohjones}, has been implemented 
 and successfully applied to simulated LOFAR data: this is discussed in Sect.~\ref{sec:implementations}.
 
 In Sect.~\ref{sec:pol} we extend this approach to the fully polarized case, by developing a Wirtinger-like 
@@ -578,7 +583,7 @@ using the compound index $[pq]$ $(p\ne q)$:
 \Dd = [ d_{pq} ],~~\Vv = [ g_p m_{pq} \bar{g}_q ],~~\Rr =\Dd-\Vv
 \]
 
-As noted by \citet{tasse-cohjones}, we have the wonderful properties that
+As noted by \citet{Tasse-cohjones}, we have the wonderful properties that
 
 \begin{equation}
 \label{eq:v_Jg}
@@ -1117,7 +1122,7 @@ We may note in passing that for LM, the analogy is only approximate:
 since $\HHa$ is only approximately diagonal.
 
 This approach has been implemented as the {\sc CohJones} (complex half-Jacobian optimization for $n$-directional estimation) 
-algorithm\footnote{In fact it was the initial development of {\sc CohJones} by \citet{tasse-cohjones} that directly led to the
+algorithm\footnote{In fact it was the initial development of {\sc CohJones} by \citet{Tasse-cohjones} that directly led to the
 present work.}, the results of which applied to simulated data are presented below.
 
 % Following \citet{Stefcal}, we can expect to improve convergence by averaging every pair of updates together. 
@@ -1707,7 +1712,7 @@ the $\HHa$ matrix is fully diagonal in operator form, and the GN update step can
 \label{eq:update:DD:diag:pol}
 \delta \GGd_{p,k+1} = 
 \left [ \sum\limits_{q\ne p,s} \YYdH_{pqs} \RR_{pqs} \right ]
-\left [ \sum\limits_{q\ne p,s} \YYd_{pqs} \YYdH_{pqs}  \right ]^{-1} 
+\left [ \sum\limits_{q\ne p,s} \YYd_{pqs} \YYdH_{pqs}  \right ]^{-1}.
 \end{equation}
 
 Note that in this case (as in the unpolarized {\sc AllJones} version) the condition of Eq.~\ref{eq:ghat:precise}
