@@ -1934,12 +1934,17 @@ become more orthogonal). As discussed in Sect.~\ref{sec:dca}, this happens (i) w
 %\hspace*{-1.3cm}
 %\includegraphics[width=\textwidth]{resid}
 \includegraphics[width=\columnwidth]{\FigDir PhaseSim.pdf}
-\caption{\label{fig:PhaseSim} This figure show the phases of the scalar Jones matrices for all antennas and a single direction for the time-variable TEC screen (Sec. \ref{sec:VarSimul}).}
+\caption{\label{fig:PhaseSim} The complex phases of the DD gain terms (for all antennas and a single direction) derived from the 
+time-variable TEC screen used in Sect.~\ref{sec:VarSimul}.}
 \end{center}
 \end{figure}
 
-To simulate a more realistic dataset, we use a sky model composed of 100 point sources of random (uniformly distributed) flux density. We also add noise to the visibilities, at a level of about $1\%$ of the total flux. We also simulate
-(scalar) DD gains, using an ionospheric model consisting of a simple phase screen (an infinitesimally thin layer at a height of 100 km). The total electron content (TEC) values at the set of sample points are generated using Karhunen-Loeve decomposition \citep[the spatial correlation is given by Kolmogorov turbulence, see][]{Tol09}. The constructed TEC-screen has an amplitude of $\sim0.07$ TEC-Unit, and the corresponding scalar Jones matrices are plotted in Fig. \ref{fig:PhaseSim}.
+To simulate a more realistic dataset, we use a sky model composed of 100 point sources of random (uniformly distributed) flux density. 
+We also add noise to the visibilities, at a level of about $1\%$ of the total flux. We simulate
+(scalar, phase-only) DD gains, using an ionospheric model consisting of a simple phase screen (an infinitesimally thin layer at a 
+height of 100 km). The total electron content (TEC) values at the set of sample points are generated using Karhunen-Loeve 
+decomposition \citep[the spatial correlation is given by Kolmogorov turbulence, see][]{Tol09}. The constructed TEC-screen has an 
+amplitude of $\sim0.07$ TEC-Unit, and the corresponding DD phase terms are plotted in Fig.~\ref{fig:PhaseSim}.
 
 For calibration purposes, the sources are clustered in 10 directions using Voronoi tesselation (Fig.~\ref{fig:tessel}). The solution time-interval is set to $4$ minutes, 
 and a separate gain solution is obtained per each direction. Fig. \ref{fig:resid} shows images generated from
