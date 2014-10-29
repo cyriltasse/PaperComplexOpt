@@ -299,7 +299,7 @@ and designate its value at step $k$ by $\Zz_k$. Then, define
 
 We'll call the $m\times n$ matrices $\JJ_k$ and $\JJ_{\bar{k}}$ the \emph{partial} and \emph{partial conjugate 
 Jacobian}\footnote{\citet{ComplexOpt} define the Jacobian via $\partial\rr$ rather than
-$\partial\vv$. This yields a Jacobian of the opposite sign, and introduces a minus sign to 
+$\partial\vv$. This yields a Jacobian of the opposite sign, and introduces a minus sign into 
 Eqs.~\ref{eq:GN} and \ref{eq:LM}. In this paper we use the $\partial\vv$ convention, as is more common in the
 context of radio interferometric calibration.}
 respectively, 
@@ -586,7 +586,7 @@ using the compound index $[pq]$ $(p\ne q)$:
 \Dd = [ d_{pq} ],~~\Vv = [ g_p m_{pq} \bar{g}_q ],~~\Rr =\Dd-\Vv
 \]
 
-As noted by \citet{Tasse-cohjones}, we have the wonderful properties that
+As noted by \citet{Tasse-cohjones}, we have the wonderful property that
 
 \begin{equation}
 \label{eq:v_Jg}
@@ -614,8 +614,8 @@ need to evaluate the top half:
 where $\bmath{X}_\TOP$ designates the upper half of matrix $\bmath{X}$. 
 
 The derivation above assumes an exact inversion of $\HH=\JHJ$. In practice, this large matrix can be costly to invert, 
-so the algorithms below will substitute it with some cheaper-to-invert approximation $\HHa$. Using approximate inversion 
-for the update step, we find instead:
+so the algorithms below will substitute it with some cheaper-to-invert approximation $\HHa$. Using the approximate
+matrix in the GN update equation, we find instead:
 
 \begin{equation}
 \label{eq:ghat:approx}
@@ -912,10 +912,10 @@ for the GN update step:
 \end{equation}
 
 where $\bmath{X}_\UL$ designates the top left quadrant of matrix $\bmath{X}$. Note that the condition of 
-Eq.~\ref{eq:ghat:precise} is met: $\HHa^{-1}_{~~~\TOP} \HH_\LEFT=\bmath{A}^{-1}\bmath{A}=\II$, i.e. writing 
-out the update step in terms of $\Dd$ does not make an extra approximation. This comes about due to
-(i) the off-diagonal block of $\HHa$ being null, which masks out the bottom half of $\HH_\LEFT$, and 
-(ii) the on-diagonal block of $\HHa$ being inverted exactly. In other algorithms suggested below, the second
+Eq.~\ref{eq:ghat:precise} is met: $\HHa^{-1}_{~~~\TOP} \HH_\LEFT=\bmath{A}^{-1}\bmath{A}=\II$, i.e. the
+GN update can be written in terms of $\Dd$. This comes about due to
+(i) the off-diagonal blocks of $\HHa$ being null, which masks out the bottom half of $\HH_\LEFT$, and 
+(ii) the on-diagonal blocks of $\HHa$ being an exact inverse. In other algorithms suggested below, the second
 condition particularly is not the case.
 
 The per-element expression, in the diagonal approximation, is
@@ -943,13 +943,12 @@ which for $\lambda=1$ essentially becomes the basic average-update step of \Stef
 empirically find better convergence when Eq.~\ref{eq:stefcal-matrix} is employed for odd $k$, and 
 Eq.~\ref{eq:stefcal-lambda-average} for even $k$. In terms of the framework defined here, the basic \StefCal\ algorithm 
 can be succinctly described as {\em complex optimization with a 
-diagonally-approximated Jacobian, using GN for the odd steps, and LM ($\lambda=1$) for the even steps}.
+diagonally-approximated $\JHJ$, using GN for the odd steps, and LM ($\lambda=1$) for the even steps}.
 
 Establishing this equivalence is 
 very useful for our purposes, since the convergence properties of \StefCal\ have been thoroughly explored 
 by \citet{Stefcal}, and we can therefore hope to apply these lessons here. In particular, these authors have shown 
-that a direct application of GN produces very slow (oscillating) convergence, whereas averaging every pair of 
-updates leads to faster convergence. They also propose a number of variations of the algorithm, all of which are 
+that a direct application of GN produces very slow (oscillating) convergence, whereas combining GN and LM leads to faster convergence. They also propose a number of variations of the algorithm, all of which are 
 directly applicable to the above.
 
 Finally, let us note in passing that the update step of Eq.~\ref{eq:stefcal} is embarassingly parallel, in the sense 
@@ -1267,9 +1266,10 @@ has exactly the same structure. A different smoothing kernel may be employed per
 the phase centre can employ a narrower kernel). 
 
 Since smoothing involves computing a $\vecg$ value at every $t,\nu$ point, rather than one value per
-solution interval, its computational costs are considerably higher. To put it another way, using solution intervals of 
-size $N_t\times N_\nu$ introduces a savings of $N_t\times N_\nu$ (in terms of the invert and multiply steps required, see 
-Table~\ref{tab:costs}) over solving the problem at every $t,\nu$ slot. In real implementations this extra cost is mitigated 
+solution interval, its computational costs are correspondingly higher. To put it another way, using solution intervals of 
+size $N_t\times N_\nu$ introduces a savings of $N_t\times N_\nu$ (in terms of the number of invert and multiply steps required, see 
+Table~\ref{tab:costs}) over solving the problem at every $t,\nu$ slot; using smoothing foregoes these savings.
+In real implementations, this extra cost is mitigated 
 by the fact that  the computation given by Eq.~\ref{eq:stefcal:dd:unpol} may be vectorized very efficiently over many $t,\nu$ slots.
 However, this vectorization is only straightforward because the matrix inversion in \StefCal\ or {\sc AllJones} reduces to simple 
 scalar division.  For \COH\ or DCA this is no longer the case, so while smoothing may be incorporated into these algorithms 
