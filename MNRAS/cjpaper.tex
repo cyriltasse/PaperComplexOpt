@@ -1,20 +1,36 @@
 \documentclass[useAMS,usenatbib]{mn2e}
 
+%\geometry{height=11truein,width=8.5truein}
+
 %%%%% AUTHORS - PLACE YOUR OWN MACROS HERE %%%%%
-\newcommand{\conj}[1]{\overline{#1}}
-\newcounter{NameOfTheNewCounter}
-\setcounter{NameOfTheNewCounter}{1}
-\newtheorem{theorem}{Theorem}[NameOfTheNewCounter]
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{proposition}[theorem]{Proposition}
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem{conjecture}[theorem]{Conjecture}
+
 \usepackage{graphicx}
 \usepackage{amsfonts}
+% \usepackage{amssymb}
+% \usepackage{amsmath}
+
+
+%\usepackage[a4paper]{geometry}
+%\usepackage{geometry}
+% \paperwidth=210mm
+% \paperheight=297mm
+
+% \usepackage{draftwatermark}
+% \SetWatermarkScale{7}
+% \SetWatermarkLightness{.95}
 
 \usepackage{amssymb}
 \usepackage{amsmath}
+\usepackage[T1]{fontenc}
+\usepackage{aecompl} 
+
+\pdfminorversion=5 
+
+
+%\usepackage{draftcopy}
+%\usepackage{draftwatermark}
+
+
 
 \newcommand{\Gcal}{\bmath{\mathcal{G}}}
 \newcommand{\Rcal}{\bmath{\mathcal{R}}}
@@ -39,7 +55,6 @@
 \newcommand{\JJ}{\mat{J}} % \bmath{\mathcal{J}}}
 \newcommand{\HH}{\mat{H}} % \bmath{\mathcal{J}}}
 \newcommand{\HHa}{\mat{\tilde{H}}} % \bmath{\mathcal{J}}}
-\newcommand{\JVg}{\bm{J}}
 \newcommand{\DD}{\mat{D}}
 \newcommand{\MM}{\mat{M}}
 \newcommand{\RR}{\mat{R}}
@@ -49,12 +64,36 @@
 \newcommand{\GG}{\mat{G}}
 \newcommand{\JHJ}{\JJ^H\JJ} % \bmath{\mathcal{J}}}
 
+\newcommand{\Matrix}[2]{\left [ \begin{array}{@{}#1@{}}#2\end{array} \right ]}
+\newcommand{\Stack}[1]{\begin{array}{@{}c@{}}#1\end{array}}
+
+\newcommand{\AUGx}[1]{\mathbf{\breve{#1}}}
+\newcommand{\AUG}[1]{\bmath{\breve{#1}}}
+
+\newcommand{\Zz}{\AUG{z}}
+\newcommand{\Gg}{\AUG{g}}
+\newcommand{\Rr}{\AUG{r}}
+\newcommand{\Dd}{\AUG{d}}
+\newcommand{\Vv}{\AUG{v}}
+\newcommand{\GGg}{\AUGx{G}}
+\newcommand{\RRr}{\AUGx{R}}
+\newcommand{\DDd}{\AUGx{D}}
+\newcommand{\VVv}{\AUGx{V}}
+\newcommand{\TOP}{\mathrm{U}}% \mathbb{t}}
+\newcommand{\LEFT}{\mathrm{L}}
+\newcommand{\RIGHT}{\mathrm{R}}
+\newcommand{\UL}{\mathrm{UL}}%\mathcal{ur}}
+\newcommand{\Rop}[1]{\mathcal{R}_{{#1}}}
+\newcommand{\Lop}[1]{\mathcal{L}_{{#1}}}
+
+
 \newcommand{\aaps}{A\&AS}
 \newcommand{\aap}{A\&A}
 \newcommand{\mnras}{MNRAS}
 \newcommand{\nat}{Nature}
 \newcommand{\physrep}{Phys. Rep.}
-\newcommand{\FigDir}{../Figures/}
+%\newcommand{\FigDir}{../Figures/}
+\newcommand{\FigDir}{./}
 \newcommand{\COH}{{\sc CohJones}}
 \newcommand{\StefCal}{{\sc StefCal}}
 
@@ -63,14 +102,15 @@
 \title[Radio interferometeric gain calibration as a complex optimization problem]{Radio interferometeric gain calibration as a complex optimization problem}
 
 \author[O.M.~Smirnov \& C.~Tasse]{O.M.~Smirnov$^{12}$\thanks{E-mail: o.smirnov@ru.ac.za}, C.~Tasse$^{31}$\\
-$^1$Department of Physics and Electronics, Rhodes University, PO Box 94, Grahamstown, 6140, South Africa\\
-$^2$SKA South Africa, 3rd Floor, The Park, Park Road, Pinelands, 7405, South Africa\\
-$^3$Institute For The Advancement Of Complex Chicken Recipes}
+$^1$Department of Physics and Electronics, Rhodes University, PO Box 94, Grahamstown, 6140 South Africa\\
+$^2$SKA South Africa, 3rd Floor, The Park, Park Road, Pinelands, 7405 South Africa\\
+$^3$GEPI, Observatoire de Paris, CNRS, Universit\'e Paris Diderot,
+5 place Jules Janssen, 92190 Meudon, France}
 
 
 \begin{document}
 
-\date{in original form 2014 February 2}
+\date{in original form 2014 October 30}
 
 \pagerange{\pageref{firstpage}--\pageref{lastpage}} \pubyear{2014}
 
@@ -109,36 +149,35 @@ represented by independently solvable DD gain terms, or by some parameterized in
 model (e.g. primary beams, pointing offsets, ionospheric screens). Different approaches to 
 this have been proposed and implemented, mostly in the framework of the radio interferometry measurement equation
 \citep[RIME, see][]{ME1}; \citet{RRIME1,RRIME2,RRIME3} provides a recent overview. In this work we will restrict 
-ourselves specifically to calibration of the DI and DD gain terms.
+ourselves specifically to calibration of the DI and DD gains terms (the latter in the sense of being solved independently
+per direction).
 
 Gain calibration is a non-linear least squares (NLLS) problem, since the noise on observed visibilities is 
 almost always Gaussian \citep[though other treatments have been proposed by][]{Kazemi2013a}. Traditional approaches
-to NNLS problems involve various gradient-based techniques \citep[for an overview, see][]{Madsen-NLLS}, such as 
-Gauss-Newton (GN) and Levenberg-Marquardt (LM); historically, these have been restricted to real variables, 
+to NLLS problems involve various gradient-based techniques \citep[for an overview, see][]{Madsen-NLLS}, such as 
+Gauss-Newton (GN) and Levenberg-Marquardt (LM). These have been restricted to functions of real variables, 
 since complex differentiation can be defined in only a very restricted sense (in particular, $\partial\bar z/\partial z$
-does not exist in the usual definition). Gains in radio interferometry are complex variables -- the traditional 
+does not exist in the usual definition). Gains in radio interferometry are complex variables: the traditional 
 way out of this conundrum has been to recast the complex NLLS problem as a real problem by treating the real 
 and imaginary parts of the gains as independent real variables.
 
-
-
 Recent developments in optimization theory \citep{CR-Calculus,ComplexOpt} have shown that using a formalism 
-called the {\em Wirtinger complex derivative} allows for a mathematically robust definition of a 
-complex gradient. This leads to the construction of a {\em complex Jacobian} $\JJ$, which in turn allows for traditional 
+called the {\em Wirtinger complex derivative} \citep{WirtingerDeriv} allows for a mathematically robust definition of a 
+complex gradient operator. This leads to the construction of a {\em complex Jacobian}  $\JJ$, which in turn allows for traditional 
 NLLS algorithms to be directly applied to the complex variable case. We summarize these developments and 
-introduce basic notation in Sect.~\ref{sec:Wirtinger}. In Sect.~\ref{sec:unpol}, we apply 
-the theory to the RIME, and derive complex Jacobians for (unpolarized) DI and DD gain calibration.
+introduce basic notation in Sect.~\ref{sec:Wirtinger}. In Sect.~\ref{sec:unpol}, we follow on from \citet{Tasse-cohjones}
+to apply this theory to the RIME, and derive complex Jacobians for (unpolarized) DI and DD gain calibration.
 
 In principle, the use of Wirtinger calculus and complex Jacobians ultimately results in the same system of LS 
 equations as the real/imaginary approach. It does offer two important advantages: (i) equations with complex variables 
-can often be easier to derive and analyze than their real/imaginary counterparts, and (ii) the structure of the
+are more compact, and are more natural to derive and analyze than their real/imaginary counterparts, and (ii) the structure of the
 complex Jacobian can yield new and valuable insights into the problem. This is graphically illustrated in 
 Fig.~\ref{fig:JHJ} (in fact, this figure may be considered the central insight of this paper). Methods such as 
 GN and LM hinge around a large matrix -- $\JHJ$ -- with dimensions corresponding to the number of 
 free parameters; construction and/or inversion of this matrix is often the dominant algorithmic cost. If $\JHJ$ can
 be treated as (perhaps approximately) sparse, these costs can be reduced, often drastically. Figure~\ref{fig:JHJ} 
 shows the structure of an example $\JHJ$ matrix for a DD gain calibration problem. The top row shows versions of
-$\JHJ$ constructed via the real/imaginary approach, for four different orderings of the gain parameters. None of
+$\JHJ$ constructed via the real/imaginary approach, for four different orderings of the solvable parameters. None of
 the orderings yield a matrix that is particularly sparse or easily invertable. The bottom row shows a 
 complex $\JHJ$ for the same orderings. Panel (f) reveals sparsity that is not apparent in the real/imaginary 
 approach. This sparsity forms the basis of a new fast DD calibration algorithm discussed later in the paper.
@@ -148,7 +187,8 @@ different sparse approximations to $\JHJ$ with conventional GN and LM methods.  
 that \StefCal, a fast DI calibration algorithm recently proposed by \citet{Stefcal},
 can be straightforwardly derived from a diagonal approximation to a complex $\JHJ$. We show that the 
 complex Jacobian approach naturally extends to the DD case, and that other sparse approximations yield a whole family
-of DD calibration algorithms with different scaling properties.
+of DD calibration algorithms with different scaling properties. One such algorithm, \COH\ \citep{Tasse-cohjones}, has been implemented 
+and successfully applied to simulated LOFAR data: this is discussed in Sect.~\ref{sec:implementations}.
 
 In Sect.~\ref{sec:pol} we extend this approach to the fully polarized case, by developing a Wirtinger-like 
 operator calculus in which the polarization problem can be formulated succinctly. This naturally yields 
@@ -156,32 +196,8 @@ fully polarized counterparts to the calibration algorithms defined previously. I
 we discuss other algortihmic variations, and make connections to older DD calibration techniques such as 
 peeling \citep{JEN:peeling}. 
 
-Finally, in Sect.~\ref{sec:implementations} we present one specific fast DD calibration algorithm derived from
-our framework, \COH, and show some results with simulated LOFAR data.
-
-
-\newcommand{\Matrix}[2]{\left [ \begin{array}{@{}#1@{}}#2\end{array} \right ]}
-\newcommand{\Stack}[1]{\begin{array}{@{}c@{}}#1\end{array}}
-
-\newcommand{\AUGx}[1]{\mathbf{\breve{#1}}}
-\newcommand{\AUG}[1]{\bmath{\breve{#1}}}
-
-\newcommand{\Zz}{\AUG{z}}
-\newcommand{\Gg}{\AUG{g}}
-\newcommand{\Rr}{\AUG{r}}
-\newcommand{\Dd}{\AUG{d}}
-\newcommand{\Vv}{\AUG{v}}
-\newcommand{\GGg}{\AUGx{G}}
-\newcommand{\RRr}{\AUGx{R}}
-\newcommand{\DDd}{\AUGx{D}}
-\newcommand{\VVv}{\AUGx{V}}
-\newcommand{\TOP}{\mathrm{U}}% \mathbb{t}}
-\newcommand{\LEFT}{\mathrm{L}}
-\newcommand{\RIGHT}{\mathrm{R}}
-\newcommand{\UL}{\mathrm{UL}}%\mathcal{ur}}
-\newcommand{\Rop}[1]{\mathcal{R}_{{#1}}}
-\newcommand{\Lop}[1]{\mathcal{L}_{{#1}}}
-
+While the scope of this work is restricted to LS solutions to the DI and DD gain calibration problem, the potential 
+applicability of complex optimization to radio interferometry is perhaps broader. We will return to this in the conclusions.
 
 
 \begin{table}
@@ -205,7 +221,7 @@ $\bmath{X}_\TOP$ & upper half of matrix $\bmath{X}$\\
 $\bmath{X}_\LEFT, \bmath{X}_\RIGHT$ & left, right half of matrix $\bmath{X}$ \\
 $\bmath{X}_\UL$ & upper left quadrant of matrix $\bmath{X}$\\
 & order of operations is $\bmath{X}^Y_\TOP = \bmath{X}^{~~Y}_\TOP = (\bmath{X}_\TOP)^Y$, \\
-& or $\bmath{X}^Y_{~~\TOP} = (\bmath{X}^Y)_\TOP$ \\
+& or $\bmath{X}^Y_{~\TOP} = (\bmath{X}^Y)_\TOP$ \\
 $\bmath{d},\bmath{v},\bmath{r}, \bmath{g}, \bmath{m} $ & data, model, residuals, gains, sky coherency\\
 $(\cdot)_k$ & value associated with iteration $k$ \\
 $(\cdot)_{p,k}$ & value associated with antenna $p$, iteration $k$ \\
@@ -233,8 +249,8 @@ The traditional approach to optimizing a function of $n$ complex variables $f(\z
 to treat the real and imaginary parts $\zz=\bmath{x}+i\bmath{y}$ independently, turning $f$ into a function
 of $2n$ real variables $f(\bmath{x},\bmath{y})$, and the problem into an optimization over $\REAL^{2n}$.
 
-\citet{ComplexOpt} have developed an alternative approach to the problem based on Wirtinger calculus. The central idea
-of Wirtinger calculus is to treat $\zz$ and $\bar{\zz}$ as independent variables, and optimize $f(\zz,\bar{\zz})$
+\citet{CR-Calculus} and \citet{ComplexOpt} propose an alternative approach to the problem based on \citet{WirtingerDeriv} calculus. 
+The central idea of Wirtinger calculus is to treat $\zz$ and $\bar{\zz}$ as independent variables, and optimize $f(\zz,\bar{\zz})$
 using the {\em Wirtinger derivatives} 
 
 \[
@@ -270,7 +286,7 @@ where $\bmath{r},\bmath{d},\bmath{v}$ have values in $\COMPLEX^m$, and $||\cdot|
 refers to LS fitting of the parameterized model $\bmath{v}$ to observed data $\bmath{d}$, and is the preferred formulation
 in the context of radio interferometry.
 
-Complex optimization is done as follows. Let us formally treat $\zz$ and $\zzc$ as independent variables, 
+Complex NLLS is implemented as follows. Let us formally treat $\zz$ and $\zzc$ as independent variables, 
 define an {\em augmented parameter vector} containing both,
 
 
@@ -291,8 +307,8 @@ and designate its value at step $k$ by $\Zz_k$. Then, define
 
 We'll call the $m\times n$ matrices $\JJ_k$ and $\JJ_{\bar{k}}$ the \emph{partial} and \emph{partial conjugate 
 Jacobian}\footnote{\citet{ComplexOpt} define the Jacobian via $\partial\rr$ rather than
-$\partial\vv$. This yields the same Jacobian with a minus sign, and adds a minus sign to 
-Eqs.~\ref{eq:LM} and \ref{eq:LM1}. In this paper we use the $\partial\vv$ convention, as is common in the
+$\partial\vv$. This yields a Jacobian of the opposite sign, and introduces a minus sign into 
+Eqs.~\ref{eq:GN} and \ref{eq:LM}. In this paper we use the $\partial\vv$ convention, as is more common in the
 context of radio interferometric calibration.}
 respectively, 
 and the $2m$-vector $\Rr_k$ the \emph{augmented residual vector}. The \emph{complex Jacobian} 
@@ -303,30 +319,28 @@ of the model $\vv$ can then be written (in block matrix form) as
 \JJ = \Matrix{cc}{J_k & J_{\bar{k}} \\ \bar{J}_{\bar{k}} & \bar{J}_k },
 \end{equation}
 
-Note that this is a $2m \times 2n$ matrix. The LM parameter update step is then defined as
+Note that this is a $2m \times 2n$ matrix. The GN update step is defined as
+
+\begin{equation}
+\label{eq:GN}
+\delta\Zz = \Matrix{c}{\delta \zz \\ \delta \bar{\zz}} = (\JJ^H \JJ)^{-1}\JJ^H \Rr_k,
+\end{equation}
+
+The LM approach is similar, but introduces a {\em damping parameter} $\lambda$:
 
 \begin{equation}
 \label{eq:LM}
-\delta\Zz = \Matrix{c}{\delta \zz \\ \delta \bar{\zz}} = (\JJ^H \JJ + \lambda\II)^{-1}\JJ^H \Rr_k,
+\delta\Zz = \Matrix{c}{\delta \zz \\ \delta \bar{\zz}} = (\JJ^H \JJ + \lambda\DD)^{-1}\JJ^H \Rr_k,
 \end{equation}
 
-where $\II$ is the identity matrix, and $\lambda$ is the LM damping parameter. When $\lambda=0$ this becomes 
-equivalent to the Gauss-Newton (GN) method; with $\lambda\to\infty$ this corresponds to steepest descent (SD) with ever smaller steps.
-
-An alternative version of LM is formulated as
-
-\begin{equation}
-\label{eq:LM1}
-\delta\Zz = (\JJ^H \JJ + \lambda \DD)^{-1}\JJ^H \Rr_k,
-\end{equation}
-
-where $\DD$ is the diagonalized version of $\JJ^H\JJ$.
+where $\DD$ is the diagonalized version of $\JJ^H\JJ$. With $\lambda=0$ this becomes equivalent to GN,
+with $\lambda\to\infty$ this corresponds to steepest descent (SD) with ever smaller steps.
 
 Note that while $\delta\zz$ and $\delta \bar{\zz}$ are formally computed independently, the structure of the equations 
 ensures that the results are consistent, i.e. that $\overline{\delta\zz} = \delta \bar{\zz}$. In practice this 
 redundancy usually means that only half the calculations need to be performed.
 
-\citet{ComplexOpt} show that Eq.~\ref{eq:LM} yields exactly the same system of LS equations as would have 
+\citet{ComplexOpt} show that Eqs.~\ref{eq:GN} and \ref{eq:LM} yield exactly the same system of LS equations as would have 
 been produced had we treated $\rr(\zz)$ as a function of real and imaginary parts $\rr(\bmath{x},\bmath{y})$, 
 and taken ordinary derivatives in $\REAL^{2n}$. However, the complex Jacobian may be easier and more elegant 
 to derive analytically, as we'll see below in the case of radio interferometric calibration.
@@ -580,7 +594,7 @@ using the compound index $[pq]$ $(p\ne q)$:
 \Dd = [ d_{pq} ],~~\Vv = [ g_p m_{pq} \bar{g}_q ],~~\Rr =\Dd-\Vv
 \]
 
-As noted by \citet{tasse-cohjones}, we have the wonderful properties that
+As noted by \citet{Tasse-cohjones}, we have the wonderful property that
 
 \begin{equation}
 \label{eq:v_Jg}
@@ -608,8 +622,8 @@ need to evaluate the top half:
 where $\bmath{X}_\TOP$ designates the upper half of matrix $\bmath{X}$. 
 
 The derivation above assumes an exact inversion of $\HH=\JHJ$. In practice, this large matrix can be costly to invert, 
-so the algorithms below will substitute it with some cheaper-to-invert approximation $\HHa$. Using approximate inversion 
-for the update step, we find instead:
+so the algorithms below will substitute it with some cheaper-to-invert approximation $\HHa$. Using the approximate
+matrix in the GN update equation, we find instead:
 
 \begin{equation}
 \label{eq:ghat:approx}
@@ -856,12 +870,7 @@ cost of inversion.
 
 \begin{figure*}
 \begin{center}
-% <<<<<<< cjpaper0.tex
-% \includegraphics[width=\textwidth]{FourOrderJhJ}
-% =======
-%\includegraphics[width=\textwidth]{ThreeJhJ.eps}
-\includegraphics[width=\textwidth]{\FigDir FourOrderJhJ.pdf}
-% >>>>>>> cjpaper.tex
+\includegraphics[width=\textwidth]{\FigDir FourOrderJhJ}
 \caption{\label{fig:JHJ}A graphical representation of $\JHJ$ for a case of 
 40 antennas and 5 directions. Each pixel represents the amplitude of a single matrix element.
 The top row (a--d) shows conventional real-only Jacobians constructed by taking the partial derivatives w.r.t. 
@@ -906,10 +915,10 @@ for the GN update step:
 \end{equation}
 
 where $\bmath{X}_\UL$ designates the top left quadrant of matrix $\bmath{X}$. Note that the condition of 
-Eq.~\ref{eq:ghat:precise} is met: $\HHa^{-1}_{~~~\TOP} \HH_\LEFT=\bmath{A}^{-1}\bmath{A}=\II$, i.e. writing 
-out the update step in terms of $\Dd$ does not make an extra approximation. This comes about due to
-(i) the off-diagonal block of $\HHa$ being null, which masks out the bottom half of $\HH_\LEFT$, and 
-(ii) the on-diagonal block of $\HHa$ being inverted exactly. In other algorithms suggested below, the second
+Eq.~\ref{eq:ghat:precise} is met: $\HHa^{-1}_{~~~\TOP} \HH_\LEFT=\bmath{A}^{-1}\bmath{A}=\II$, i.e. the
+GN update can be written in terms of $\Dd$. This comes about due to
+(i) the off-diagonal blocks of $\HHa$ being null, which masks out the bottom half of $\HH_\LEFT$, and 
+(ii) the on-diagonal blocks of $\HHa$ being an exact inverse. In other algorithms suggested below, the second
 condition particularly is not the case.
 
 The per-element expression, in the diagonal approximation, is
@@ -925,7 +934,7 @@ direction, by treating Eq.~\ref{eq:cal:DI} as a function of $\bmath{g}$ only, an
 The resulting complex Jacobian (Eq.~\ref{eq:JJ:di:basic}) then has null off-diagonal blocks, and $\JJ^H\JJ$ becomes 
 diagonal.
 
-Interestingly, applying the same idea to LM optimization (Eq.~\ref{eq:LM1}), and remembering that $\HHa$ is 
+Interestingly, applying the same idea to LM optimization (Eq.~\ref{eq:LM}), and remembering that $\HHa$ is 
 diagonal, we can derive the following update equation instead:
 
 \begin{equation}
@@ -937,13 +946,12 @@ which for $\lambda=1$ essentially becomes the basic average-update step of \Stef
 empirically find better convergence when Eq.~\ref{eq:stefcal-matrix} is employed for odd $k$, and 
 Eq.~\ref{eq:stefcal-lambda-average} for even $k$. In terms of the framework defined here, the basic \StefCal\ algorithm 
 can be succinctly described as {\em complex optimization with a 
-diagonally-approximated Jacobian, using GN for the odd steps, and LM ($\lambda=1$) for the even steps}.
+diagonally-approximated $\JHJ$, using GN for the odd steps, and LM ($\lambda=1$) for the even steps}.
 
 Establishing this equivalence is 
 very useful for our purposes, since the convergence properties of \StefCal\ have been thoroughly explored 
 by \citet{Stefcal}, and we can therefore hope to apply these lessons here. In particular, these authors have shown 
-that a direct application of GN produces very slow (oscillating) convergence, whereas averaging every pair of 
-updates leads to faster convergence. They also propose a number of variations of the algorithm, all of which are 
+that a direct application of GN produces very slow (oscillating) convergence, whereas combining GN and LM leads to faster convergence. They also propose a number of variations of the algorithm, all of which are 
 directly applicable to the above.
 
 Finally, let us note in passing that the update step of Eq.~\ref{eq:stefcal} is embarassingly parallel, in the sense 
@@ -1107,22 +1115,26 @@ For GN, the update step may be computed in direct analogy to Eq.~\ref{eq:stefcal
 holds):
 
 \[
-\bmath{g}_{k+1} = \HHa_\UL^{-1} \JJ_\LEFT^{~~H} \Dd.
+\bmath{g}_{k+1} = \HHa_\UL^{-1} \JJ_\LEFT^{~H} \Dd.
 \]
 
 We may note in passing that for LM, the analogy is only approximate:
 
 \[
-\Gg_{k+1} \approx \frac{\lambda}{1+\lambda}\Gg_k + \frac{1}{1+\lambda} \HHa_\UL^{-1} \JJ_\LEFT^{~~H} \Dd,
+\Gg_{k+1} \approx \frac{\lambda}{1+\lambda}\Gg_k + \frac{1}{1+\lambda} \HHa_\UL^{-1} \JJ_\LEFT^{~H} \Dd,
 \]
 
 since $\HHa$ is only approximately diagonal.
 
-Following \citet{Stefcal}, we can expect to improve convergence by averaging every pair of updates together. 
-A variant of this approach, using GN optimization and a \StefCal-style solution averaging, has been 
-implemented as the {\sc CohJones} (complex half-Jacobian optimization for $n$-directional estimation) 
-algorithm\footnote{In fact it was the initial development of {\sc CohJones} by \citet{tasse-cohjones} that directly led to the
+This approach has been implemented as the {\sc CohJones} (complex half-Jacobian optimization for $n$-directional estimation) 
+algorithm\footnote{In fact it was the initial development of {\sc CohJones} by \citet{Tasse-cohjones} that directly led to the
 present work.}, the results of which applied to simulated data are presented below.
+
+% Following \citet{Stefcal}, we can expect to improve convergence by averaging every pair of updates together. 
+% A variant of this approach, using GN optimization and a \StefCal-style solution averaging, has been 
+% implemented as the {\sc CohJones} (complex half-Jacobian optimization for $n$-directional estimation) 
+% algorithm\footnote{In fact it was the initial development of {\sc CohJones} by \citet{tasse-cohjones} that directly led to the
+% present work.}, the results of which applied to simulated data are presented below.
 
 \subsubsection{ALLJONES: Separating all}
 
@@ -1257,9 +1269,10 @@ has exactly the same structure. A different smoothing kernel may be employed per
 the phase centre can employ a narrower kernel). 
 
 Since smoothing involves computing a $\vecg$ value at every $t,\nu$ point, rather than one value per
-solution interval, its computational costs are considerably higher. To put it another way, using solution intervals of 
-size $N_t\times N_\nu$ introduces a savings of $N_t\times N_\nu$ (in terms of the invert and multiply steps required, see 
-Table~\ref{tab:costs}) over solving the problem at every $t,\nu$ slot. In real implementations this extra cost is mitigated 
+solution interval, its computational costs are correspondingly higher. To put it another way, using solution intervals of 
+size $N_t\times N_\nu$ introduces a savings of $N_t\times N_\nu$ (in terms of the number of invert and multiply steps required, see 
+Table~\ref{tab:costs}) over solving the problem at every $t,\nu$ slot; using smoothing foregoes these savings.
+In real implementations, this extra cost is mitigated 
 by the fact that  the computation given by Eq.~\ref{eq:stefcal:dd:unpol} may be vectorized very efficiently over many $t,\nu$ slots.
 However, this vectorization is only straightforward because the matrix inversion in \StefCal\ or {\sc AllJones} reduces to simple 
 scalar division.  For \COH\ or DCA this is no longer the case, so while smoothing may be incorporated into these algorithms 
@@ -1638,8 +1651,9 @@ for the GN update step:
 
 \begin{equation}
 \label{eq:update:DI:diag:pol}
-\GG_{p,k+1} = \left [ \sum\limits_{q\ne p} \YY_{pq} \YY^H_{pq}  \right ]^{-1} 
+\GG_{p,k+1} =  
 \left [ \sum\limits_{q\ne p} \YY^H_{pq} \DD_{pq} \right ] 
+\left [ \sum\limits_{q\ne p} \YY_{pq} \YY^H_{pq}  \right ]^{-1}
 \end{equation}
 
 This is, once again, equivalent to the polarized {\sc \StefCal} update step proposed by \citet{OMS-Stefcal} and \citet{Stefcal}.
@@ -1702,8 +1716,9 @@ the $\HHa$ matrix is fully diagonal in operator form, and the GN update step can
 
 \begin{equation}
 \label{eq:update:DD:diag:pol}
-\delta \GGd_{p,k+1} = \left [ \sum\limits_{q\ne p,s} \YYd_{pqs} \YYdH_{pqs}  \right ]^{-1} 
-\left [ \sum\limits_{q\ne p,s} \YYdH_{pqs} \RR_{pqs} \right ].
+\delta \GGd_{p,k+1} = 
+\left [ \sum\limits_{q\ne p,s} \YYdH_{pqs} \RR_{pqs} \right ]
+\left [ \sum\limits_{q\ne p,s} \YYd_{pqs} \YYdH_{pqs}  \right ]^{-1}.
 \end{equation}
 
 Note that in this case (as in the unpolarized {\sc AllJones} version) the condition of Eq.~\ref{eq:ghat:precise}
@@ -1827,8 +1842,8 @@ more accurate iterations.
 
 \begin{figure*}
 \begin{center}
-\includegraphics[width=\textwidth]{\FigDir ConvergenceLog.pdf}
-%\includegraphics[width=\textwidth]{\FigDir ConvergenceLog.eps}
+%\includegraphics[width=\textwidth]{\FigDir ConvergenceLog}
+\includegraphics[width=\textwidth]{\FigDir ConvergenceLog}
 \caption{\label{fig:Convergence} Amplitude (top row) and phase (bottom row) of the difference between
   the estimated and true gains, as a function of iteration. Columns correspond to directions.
   Different lines correspond to different antennas.}
@@ -1837,8 +1852,9 @@ more accurate iterations.
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=\columnwidth]{\FigDir NewHalfJHJ.pdf}
-\caption{\label{fig:HalfJHJ} This figure shows amplitude (left panel)
+%\includegraphics[width=\columnwidth]{\FigDir NewHalfJHJ}
+\includegraphics[width=\columnwidth]{\FigDir NewHalfJHJ}
+\caption{\label{fig:HalfJHJ} Amplitude (left panel)
   and phase (right panel) of the block-diagonal matrix $(\JHJ)_\UL$
   for the dataset described in the text. Each block corresponds to one antenna;
   the pixels within a block correspond to directions.}
@@ -1850,17 +1866,18 @@ more accurate iterations.
 %\hspace*{-1.3cm}
 %\includegraphics[width=\textwidth]{residSim.eps}
 %\includegraphics[width=\textwidth]{\FigDir residSimZoom2.eps}
-\includegraphics[width=\textwidth]{\FigDir Pealed.pdf}
+%\includegraphics[width=\textwidth]{\FigDir Pealed.pdf}
+\includegraphics[width=\textwidth]{\FigDir ResidSimimage}
 \caption{\label{fig:resid}Simulation with time-variable DD gains. We show a deconvolved image (left) where
   no DD solutions have been applied, a residual image (centre) made by subtracting the sky model (in the visibility 
   plane) without any DD corrections, and a residual image (right) made by subtracting the sky model with \COH-estimated 
-  DD gain solutions (right). The color scale is the same in all panels. In this simulation, applying \COH\ for DD calibration reduces the residual rms level by a factor of $\sim30$.}
+  DD gain solutions (right). The color scale is the same in all panels. In this simulation, applying \COH\ for DD calibration reduces the residual rms level by a factor of $\sim4$.}
 \end{center}
 \end{figure*}
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=\columnwidth]{\FigDir Tessel.pdf}
+\includegraphics[width=\columnwidth]{\FigDir Tessel}
 \caption{\label{fig:tessel} In order to conduct direction-dependent calibration, sources are clustered using a 
 Voronoi tessellation algorithm. Each cluster has its own DD gain solution.}
 \end{center}
@@ -1916,27 +1933,30 @@ become more orthogonal). As discussed in Sect.~\ref{sec:dca}, this happens (i) w
 \subsubsection{Time-variable DD gains}
 \label{sec:VarSimul}
 
-To simulate a more realistic dataset, we use a sky model composed of 100 point sources of random (uniformly distributed) flux density. We also add noise to the visibilities, at a level of about $1\%$ of the total flux. We also simulate
-(scalar) DD gains, using an ionospheric model consisting of a simple phase screen (an infinitesimally thin layer at a height of 100 km). The total electron content (TEC) values at the set of sample points are generated using Karhunen-Loeve decomposition \citep[the spatial correlation is given by Kolmogorov turbulence, see][]{Tol09}. 
+\begin{figure}
+\begin{center}
+%\hspace*{-1.3cm}
+%\includegraphics[width=\textwidth]{resid}
+\includegraphics[width=\columnwidth]{\FigDir PhaseSim}
+\caption{\label{fig:PhaseSim} The complex phases of the DD gain terms (for all antennas and a single direction) derived from the 
+time-variable TEC screen used in Sect.~\ref{sec:VarSimul}.}
+\end{center}
+\end{figure}
 
-For calibration purposes, the sources are clustered in 10 directions using Voronoi tesselation (Fig.~\ref{fig:tessel}),
+To simulate a more realistic dataset, we use a sky model composed of 100 point sources of random (uniformly distributed) flux density. 
+We also add noise to the visibilities, at a level of about $1\%$ of the total flux. We simulate
+(scalar, phase-only) DD gains, using an ionospheric model consisting of a simple phase screen (an infinitesimally thin layer at a 
+height of 100 km). The total electron content (TEC) values at the set of sample points are generated using Karhunen-Loeve 
+decomposition \citep[the spatial correlation is given by Kolmogorov turbulence, see][]{Tol09}. The constructed TEC-screen has an 
+amplitude of $\sim0.07$ TEC-Unit, and the corresponding DD phase terms are plotted in Fig.~\ref{fig:PhaseSim}.
+
+For calibration purposes, the sources are clustered in 10 directions using Voronoi tesselation (Fig.~\ref{fig:tessel}). The solution time-interval is set to $4$ minutes, 
 and a separate gain solution is obtained per each direction. Fig. \ref{fig:resid} shows images generated from
 the residual visibilities, where the best-fitting model is subtracted in the visibility domain.  The rms residuals
-after \COH\ has been applied are a factor of $\sim30$ lower than without DD solutions.
+after \COH\ has been applied are a factor of $\sim4$ lower than without DD solutions.
 
 
 
-%% \begin{figure*}
-%% \begin{center}
-%% %\hspace*{-1.3cm}
-%% \includegraphics[width=\textwidth]{resid}
-%% \includegraphics[width=\textwidth]{residZoom}
-%% \caption{\label{fig:resid} This figure shows compares the image
-%%   (left), the residuals data after simple skymodel substraction
-%%   (center), and the residuals data after substracting the
-%%   sky model corrupted by the direction-dependent solution (right).}
-%% \end{center}
-%% \end{figure*}
 
 
 
@@ -2002,12 +2022,24 @@ The use of complex Jacobians results in relatively compact and simple equations,
 tend to be embarassingly parallel, which makes them particularly amenable to implementation on new
 massively-parallel computing architectures such as GPUs. 
 
+Complex optimization is applicable to a broader range of problems. Solving for a large number of independent DD gain
+parameters is not always desirable, as it potentially makes the problem under-constrained, and can lead to artefacts 
+such as ghosts and source suppression. The alternative is solving for DD effect models that employ [a smaller set of]
+physical parameters, such as parameters of the primary beam and ionosphere. If these parameters are complex, then
+the complex Jacobian approach applies. Finally, although this paper only treats the NLLS problem (thus implicitly
+assuming Gaussian statistics), the approach is valid for the general optimization problem as well.
+
 Other approximations or fast ways of inverting the complex $\JHJ$ matrix may exist, and future work can 
 potentially yield new and faster algorithms within the same unifying mathematical framework. This flexibility 
 is particularly important for addressing the computational needs of the new generation of the 
 so-called ``SKA pathfinder'' telescopes, as well as the SKA itself.
 
 
+\section*{Acknowledgments}
+
+This work is based upon research supported by the South African Research Chairs Initiative of the Department of 
+Science and Technology and National Research Foundation. Dr. Trienko Grobler originally pointed us in the direction
+of Wirtinger derivatives.
 
 \bibliographystyle{mn2e}
 \bibliography{cjpaper}
@@ -2114,7 +2146,7 @@ for the damping parameter, e.g. $\lambda=1$;
 \item If $\chi^2_k\ge\chi^2_{k-1}$ (unsuccessful step), reset $\zz_k=\zz_{k-1}$, and set $\lambda=\lambda K$ (where typically $K=10$);
 \item Otherwise (successful step) set $\lambda=\lambda/K$;
 \item Compute the Jacobian $\JJ=\JJ(\Zz_k)$;
-\item Compute the parameter update $\delta\Zz_k$ using Eq.~\ref{eq:LM} or \ref{eq:LM1} (note that only the top half of the vector actually needs to be computed);
+\item Compute the parameter update $\delta\Zz_k$ using Eq.~\ref{eq:LM} (note that only the top half of the vector actually needs to be computed);
 \item If not converged, set $\bmath{z}_{k+1}=\bmath{z}_k+\delta\zz$, and go back to step (ii).
 \end{enumerate}
 
