@@ -122,7 +122,7 @@ and imaginary parts of the gains as independent real variables.
 
 
 
-Recent developments in optimization theory \citep{ComplexOpt} have shown that using a formalism 
+Recent developments in optimization theory \citep{CR-Calculus,ComplexOpt} have shown that using a formalism 
 called the {\em Wirtinger complex derivative} allows for a mathematically robust definition of a 
 complex gradient. This leads to the construction of a {\em complex Jacobian} $\JJ$, which in turn allows for traditional 
 NLLS algorithms to be directly applied to the complex variable case. We summarize these developments and 
@@ -1642,7 +1642,7 @@ for the GN update step:
 \left [ \sum\limits_{q\ne p} \YY^H_{pq} \DD_{pq} \right ] 
 \end{equation}
 
-This is, once again, equivalent to the polarized {\sc \StefCal} update step proposed by \citet{Stefcal}.
+This is, once again, equivalent to the polarized {\sc \StefCal} update step proposed by \citet{OMS-Stefcal} and \citet{Stefcal}.
 
 
 % Note also that all 
@@ -1741,7 +1741,7 @@ such options.
 \subsection{Feed forward}
 \label{sec:feed-forward}
 
-\citet{Stefcal} propose variants of the \StefCal\ algorithm (``2-basic'' and ``2-relax'') where the results of the 
+\citet{Stefcal-URSI} propose variants of the \StefCal\ algorithm (``2-basic'' and ``2-relax'') where the results of the 
 update step (Eq.~\ref{eq:update:DI:diag:pol}, in essense) are computed sequentially per antenna, with updated
 values for $\GG_1\dots\GG_{k-1}$ fed forward into the equations for $\GG_k$ (via the appropriate $\YY$ terms). This is shown to 
 substantially improve convergence, at the cost of sacrificing the embarassing parallellism by antenna. This technique 
