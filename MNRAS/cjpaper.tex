@@ -178,9 +178,9 @@ Fig.~\ref{fig:JHJ} (in fact, this figure may be considered the central insight o
 GN and LM hinge around a large matrix -- $\JHJ$ -- with dimensions corresponding to the number of 
 free parameters; construction and/or inversion of this matrix is often the dominant algorithmic cost. If $\JHJ$ can
 be treated as (perhaps approximately) sparse, these costs can be reduced, often drastically. Figure~\ref{fig:JHJ} 
-shows the structure of an example $\JHJ$ matrix for a DD gain calibration problem. The top row shows versions of
+shows the structure of an example $\JHJ$ matrix for a DD gain calibration problem. The left column row shows versions of
 $\JHJ$ constructed via the real/imaginary approach, for four different orderings of the solvable parameters. None of
-the orderings yield a matrix that is particularly sparse or easily invertable. The bottom row shows a 
+the orderings yield a matrix that is particularly sparse or easily invertable. The right column shows a 
 complex $\JHJ$ for the same orderings. Panel (f) reveals sparsity that is not apparent in the real/imaginary 
 approach. This sparsity forms the basis of a new fast DD calibration algorithm discussed later in the paper.
 
@@ -1062,7 +1062,15 @@ regimes where one or the other algorithm has a computational advantage. This sho
 
 
 \begin{table}
+\caption{\label{tab:costs}The scaling of computational costs for a single iteration of the 
+four DD calibration algorithms discussed in the text, broken down by computational step. 
+The dominant term(s) in each case are marked by ``$\dagger$''. Not shown is the cost of computing the $\JJ^H\Dd$ 
+vector, which is $O(\Na^2\Nd)$ for all algorithms. ``Exact'' refers to a naive implementation of GN or LM with exact 
+inversion of the $\JHJ$ term. Scaling laws for DI calibration algorithms may be obtained by assuming $\Nd=1$, in which
+case \COH\ or {\sc AllJones} become equivalent to \StefCal. 
+}
 \begin{tabular}{c|ccc}
+\hline
 algorithm & $\HHa$ & $\HHa^{-1}$ & multiply \\
 \hline
 Exact          & $O(\Na^2\Nd^2)$ & $O(\Na^3\Nd^3)^\dagger$ &  $O(\Na^2\Nd^2)$ \\ 
@@ -1071,13 +1079,6 @@ Exact          & $O(\Na^2\Nd^2)$ & $O(\Na^3\Nd^3)^\dagger$ &  $O(\Na^2\Nd^2)$ \\
 DCA            & $O(\Na^2\Nd)$   & $O(\Na^3\Nd)^\dagger$   &  $O(\Na^2\Nd)$ \\
 \hline
 \end{tabular}
-\caption{\label{tab:costs}The scaling of computational costs for a single iteration of the 
-four DD calibration algorithms discussed in the text, broken down by computational step. 
-The dominant term(s) in each case are marked by ``$\dagger$''. Not shown is the cost of computing the $\JJ^H\Dd$ 
-vector, which is $O(\Na^2\Nd)$ for all algorithms. ``Exact'' refers to a naive implementation of GN or LM with exact 
-inversion of the $\JHJ$ term. Scaling laws for DI calibration algorithms may be obtained by assuming $\Nd=1$, in which
-case \COH\ or {\sc AllJones} become equivalent to \StefCal. 
-}
 \end{table}
 
 \subsection{Smoothing in time and frequency}
@@ -1254,14 +1255,23 @@ $\Delta\mat{G}$
 to an increment $\Delta\mat{F}$. This is more than just a formal definition: thanks to the isomorphism, the operators 
 given by Eq.~\ref{eq:def:dF:dG}  are Wirtinger derivatives in exactly the same sense that the Jacobians of 
 Eq.~\ref{eq:Jk-fg} are Wirtinger derivatives, the former are simply the $\COMPLEX^{2\times2}$ manifestation of
-the $\COMPLEX^4$ gradients. This is important becuse it allows us to write the larger Jacobians below 
-in terms of matrices composed of operators.
+the gradient operators in $\COMPLEX^4$, as defined in Sect.~\ref{sec:Wirtinger}. However, operating in 
+$\COMPLEX^{2\times2}$ space allows us to write the larger Jacobians below in terms of simpler matrices composed 
+of operators, with a structure that completely conforms to the scalar derivation.
 
-It is easy to see (just from considering the corresponding $4\times4$ matrices, see Appendix~\ref{app:4x4}) that
+It is easy to see that
 \begin{equation}
 \frac{\partial(\mat{GA})}{\partial{\mat{G}}} = \Rop{A},~~~~\frac{\partial(\mat{AG^H})}{\partial{\mat{G^H}}} = \Lop{A},
 \end{equation}
-(which makes it explicit that a matrix derivative is an operator on a matrix).
+in the operator sense, since in $\COMPLEX^4$ space the corresponding operation is simply multiplication of 
+a vector by a $\Rop{A}$ or $\Lop{A}$ matrix. Note that this calculus also offers a natural way of taking more
+complicated matrix derivatives. For example,
+\begin{equation}
+\frac{\partial(\mat{AGB})}{\partial{\mat{G}}} = \Lop{A}\Rop{B},
+\end{equation}
+which is a straightforward manifestation of the chain rule: $\mat{AGB}=\mat{A}(\mat{GB})$.
+
+
 
 \subsection{Complex Jacobians for the polarized RIME}
 
@@ -1808,7 +1818,7 @@ so-called ``SKA pathfinder'' telescopes, as well as the SKA itself.
 
 \section*{Acknowledgments}
 
-We would like to thank the referee, Johan Hamaker for valuable comments that improved the paper.
+We would like to thank the referee, Johan Hamaker, for extremely valuable comments that improved the paper.
 This work is based upon research supported by the South African Research Chairs Initiative of the Department of 
 Science and Technology and National Research Foundation. Trienko Grobler originally pointed us in the direction
 of Wirtinger derivatives.
