@@ -6,6 +6,9 @@
 
 \usepackage{graphicx}
 \usepackage{amsfonts}
+%DIF 9a9
+\usepackage{bm} %DIF > 
+%DIF -------
 % \usepackage{amssymb}
 % \usepackage{amsmath}
 
@@ -99,20 +102,16 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%DIF 102c102
-%DIF < \title[Radio interferometeric gain calibration as a complex optimization problem]{Radio interferometeric gain calibration as a complex optimization problem}
-%DIF -------
-\title[Radio interferometric gain calibration as a complex optimization problem]{Radio interferometric gain calibration as a complex optimization problem} %DIF > 
-%DIF -------
+\title[Radio interferometric gain calibration as a complex optimization problem]{Radio interferometric gain calibration as a complex optimization problem}
 
 \author[O.M.~Smirnov \& C.~Tasse]{O.M.~Smirnov$^{12}$\thanks{E-mail: o.smirnov@ru.ac.za}, C.~Tasse$^{31}$\\
 $^1$Department of Physics and Electronics, Rhodes University, PO Box 94, Grahamstown, 6140 South Africa\\
 $^2$SKA South Africa, 3rd Floor, The Park, Park Road, Pinelands, 7405 South Africa\\
 $^3$GEPI, Observatoire de Paris, CNRS, Universit\'e Paris Diderot,
 5 place Jules Janssen, 92190 Meudon, France}
- %DIF > 
- %DIF > 
-\numberwithin{equation}{section} %DIF > 
+
+
+\numberwithin{equation}{section}
 %DIF PREAMBLE EXTENSION ADDED BY LATEXDIFF
 %DIF UNDERLINE PREAMBLE %DIF PREAMBLE
 \RequirePackage[normalem]{ulem} %DIF PREAMBLE
@@ -186,8 +185,7 @@ does not exist in the usual definition). Gains in radio interferometry are compl
 way out of this conundrum has been to recast the complex NLLS problem as a real problem by treating the real 
 and imaginary parts of the gains as independent real variables.
 
-Recent developments in optimization theory \DIFdelbegin %DIFDELCMD < \citep{ComplexOpt} %%%
-\DIFdelend \DIFaddbegin \citep{CR-Calculus,ComplexOpt} \DIFaddend have shown that using a formalism 
+Recent developments in optimization theory \citep{CR-Calculus,ComplexOpt} have shown that using a formalism 
 called the {\em Wirtinger complex derivative} \citep{WirtingerDeriv} allows for a mathematically robust definition of a 
 complex gradient operator. This leads to the construction of a {\em complex Jacobian}  $\JJ$, which in turn allows for traditional 
 NLLS algorithms to be directly applied to the complex variable case. We summarize these developments and 
@@ -202,9 +200,9 @@ Fig.~\ref{fig:JHJ} (in fact, this figure may be considered the central insight o
 GN and LM hinge around a large matrix -- $\JHJ$ -- with dimensions corresponding to the number of 
 free parameters; construction and/or inversion of this matrix is often the dominant algorithmic cost. If $\JHJ$ can
 be treated as (perhaps approximately) sparse, these costs can be reduced, often drastically. Figure~\ref{fig:JHJ} 
-shows the structure of an example $\JHJ$ matrix for a DD gain calibration problem. The \DIFdelbegin \DIFdel{top }\DIFdelend \DIFaddbegin \DIFadd{left column }\DIFaddend row shows versions of
+shows the structure of an example $\JHJ$ matrix for a DD gain calibration problem. The left column row shows versions of
 $\JHJ$ constructed via the real/imaginary approach, for four different orderings of the solvable parameters. None of
-the orderings yield a matrix that is particularly sparse or easily invertable. The \DIFdelbegin \DIFdel{bottom row }\DIFdelend \DIFaddbegin \DIFadd{right column }\DIFaddend shows a 
+the orderings yield a matrix that is particularly sparse or easily invertable. The right column shows a 
 complex $\JHJ$ for the same orderings. Panel (f) reveals sparsity that is not apparent in the real/imaginary 
 approach. This sparsity forms the basis of a new fast DD calibration algorithm discussed later in the paper.
 
@@ -231,8 +229,8 @@ applicability of complex optimization to radio interferometry is perhaps broader
 \begin{tabular}{ll}
 \hline\\
 $x$        & scalar value $x$    \\
-\DIFaddbeginFL \DIFaddFL{$\bar{x}$        }& \DIFaddFL{complex conjugate    }\\
-\DIFaddendFL $\bmath{x}$  & vector $\bmath{x}$  \\
+$\bar{x}$        & complex conjugate    \\
+$\bmath{x}$  & vector $\bmath{x}$  \\
 $\bmath{X}$  & matrix $\bmath{X}$ \\
 $\mathbf{X}$  & vector of $2\times2$ matrices $\mathbf{X}=[\bmath{X}_i]$ (Sect.~\ref{sec:pol})  \\
 $\REAL$ & space of real numbers \\
@@ -242,8 +240,8 @@ $\mathrm{diag}\,\bmath{x}$ & diagonal matrix formed from $\bmath{x}$\\
 $||\cdot||_F$ & Frobenius norm \\
 $(\cdot)^T$ & transpose \\
 $(\cdot)^H$ & Hermitian transpose \\
-\DIFaddbeginFL \DIFaddFL{$\otimes$ }& \DIFaddFL{outer product}\\
-\DIFaddendFL $\bmath{\bar x},\bmath{\bar X}$ & element-by-element complex conjugate of $\bmath{x}$, $\bmath{X}$  \\
+$\otimes$ & outer product \DIFaddbeginFL \DIFaddFL{a.k.a. Kronecker product}\DIFaddendFL \\
+$\bmath{\bar x},\bmath{\bar X}$ & element-by-element complex conjugate of $\bmath{x}$, $\bmath{X}$  \\
 $\AUG{x}, \AUGx{X}$ & augmented vectors $\AUG{x} = \Matrix{c}{\bmath{x} \\ \bmath{\bar x}},~~\AUGx{X}=\Matrix{c}{\bmath{X}_i \\ \bmath{X}^H_i}$ \\
 $\bmath{X}_\TOP$ & upper half of matrix $\bmath{X}$\\
 $\bmath{X}_\LEFT, \bmath{X}_\RIGHT$ & left, right half of matrix $\bmath{X}$ \\
@@ -255,14 +253,9 @@ $(\cdot)_k$ & value associated with iteration $k$ \\
 $(\cdot)_{p,k}$ & value associated with antenna $p$, iteration $k$ \\
 $(\cdot)^{(d)}$ & value associated with direction $d$\\
 $\bmath{W}$ & matrix of weights \\
-\DIFdelbeginFL \DIFdelFL{$\JJ$ }%DIFDELCMD < & %%%
-\DIFdelFL{full complex Jacobian }%DIFDELCMD < \\
-%DIFDELCMD < %%%
-\DIFdelFL{$\JJ_k~~[\JJ_{\bar k}]$ }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{$\JJ_k, \JJ_{k^*}$ }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < [%%%
-\DIFdelFL{conjugate }%DIFDELCMD < ] %%%
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{partial, conjugate }\DIFaddendFL partial Jacobian at iteration $k$\\
-\DIFaddbeginFL \DIFaddFL{$\JJ$ }& \DIFaddFL{full complex Jacobian }\\
-\DIFaddendFL $\bmath{H}, \bmath{\tilde{H}}$ & $\JHJ$ and its approximation \\
+$\JJ_k, \JJ_{k^*}$ & partial, conjugate partial Jacobian at iteration $k$\\
+$\JJ$ & full complex Jacobian \\
+$\bmath{H}, \bmath{\tilde{H}}$ & $\JHJ$ and its approximation \\
 $\mathrm{vec}\,\bmath{X}$ & vectorization operator \\
 $\Rop{A}$ & right-multiply by $\bmath{A}$ operator (Sect.~\ref{sec:pol}) \\
 $\Lop{A}$ & left-multiply by $\bmath{A}$ operator (Sect.~\ref{sec:pol}) \\
@@ -282,97 +275,50 @@ The traditional approach to optimizing a function of $n$ complex variables $f(\z
 to treat the real and imaginary parts $\zz=\bmath{x}+i\bmath{y}$ independently, turning $f$ into a function
 of $2n$ real variables $f(\bmath{x},\bmath{y})$, and the problem into an optimization over $\REAL^{2n}$.
 
-\DIFaddbegin \citet{CR-Calculus} \DIFadd{and }\DIFaddend \citet{ComplexOpt} \DIFdelbegin \DIFdel{have developed }\DIFdelend \DIFaddbegin \DIFadd{propose }\DIFaddend an alternative approach to the problem based on \DIFdelbegin \DIFdel{Wirtinger calculus}%DIFDELCMD < \citep{WirtingerDeriv}%%%
-\DIFdelend \DIFaddbegin \citet{WirtingerDeriv} \DIFadd{calculus}\DIFaddend . 
+\citet{CR-Calculus} and \citet{ComplexOpt} propose an alternative approach to the problem based on \citet{WirtingerDeriv} calculus. 
 The central idea of Wirtinger calculus is to treat $\zz$ and $\bar{\zz}$ as independent variables, and optimize $f(\zz,\bar{\zz})$
 using the {\em Wirtinger derivatives} 
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < \[
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \begin{equation}
-\DIFaddend \frac{\partial}{\partial z} = \frac{1}{2}\left ( \frac{\partial}{\partial x} - i\frac{\partial}{\partial y} \right),~~
+\begin{equation}
+\frac{\partial}{\partial z} = \frac{1}{2}\left ( \frac{\partial}{\partial x} - i\frac{\partial}{\partial y} \right),~~
 \frac{\partial}{\partial \bar{z}} = \frac{1}{2}\left ( \frac{\partial}{\partial x} + i\frac{\partial}{\partial y} \right),
-\DIFdelbegin %DIFDELCMD < \]
-\end{equation}%DIFAUXCMD
-%DIFDELCMD < %%%
-\begin{equation}%DIFAUXCMD
-\DIFdelend \DIFaddbegin \end{equation}
-\DIFaddend where $z=x+iy$. It is easy to see that  
-\DIFdelbegin %DIFDELCMD < \[
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \begin{equation}
-\DIFaddend \frac{\partial \bar z}{\partial z} = 
+\end{equation}
+where $z=x+iy$. It is easy to see that  
+\begin{equation}
+\frac{\partial \bar z}{\partial z} = 
 \frac{\partial z}{\partial \bar z} = 0,
-\DIFdelbegin %DIFDELCMD < \]
-\end{equation}%DIFAUXCMD
-%DIFDELCMD < %%%
-\begin{equation}%DIFAUXCMD
-\DIFdelend \DIFaddbegin \end{equation}
-\DIFaddend i.e. that $\bar z$ ($z$) is treated as constant when taking the derivative with respect to $z$ ($\bar z$). From this 
+\end{equation}
+i.e. that $\bar z$ ($z$) is treated as constant when taking the derivative with respect to $z$ ($\bar z$). From this 
 it is straightforward to define the \emph{complex gradient} operator 
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < \[
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \begin{equation}
-\DIFaddend \frac{\partial}{\partial^C \zz} = \left [ \frac{\partial}{\partial \zz}\DIFaddbegin \DIFadd{, }\DIFaddend \frac{\partial}{\partial \bar{\zz}} \right ] = \left [ \frac{\partial}{\partial z_1}\DIFdelbegin \DIFdel{\cdots \frac{\partial}{\partial z_n}\frac{\partial}{\partial \bar{z}_1} \cdots }\DIFdelend \DIFaddbegin \DIFadd{, }\dots\DIFadd{, \frac{\partial}{\partial z_n},
-\frac{\partial}{\partial \bar{z}_1}, }\dots\DIFadd{, }\DIFaddend \frac{\partial}{\partial \bar{z}_n} \right ],
-\DIFdelbegin %DIFDELCMD < \]
-\end{equation}%DIFAUXCMD
-%DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\begin{equation}%DIFAUXCMD
-\DIFdelend \DIFaddbegin \end{equation}
-\DIFaddend from which definitions of the complex Jacobian and complex Hessians naturally follow. The authors then show 
+\begin{equation}
+\frac{\partial}{\partial^C \zz} = \left [ \frac{\partial}{\partial \zz}, \frac{\partial}{\partial \bar{\zz}} \right ] = \left [ \frac{\partial}{\partial z_1}, \dots, \frac{\partial}{\partial z_n},
+\frac{\partial}{\partial \bar{z}_1}, \dots, \frac{\partial}{\partial \bar{z}_n} \right ],
+\end{equation}
+from which definitions of the complex Jacobian and complex Hessians naturally follow. The authors then show 
 that various optimization techniques developed for real functions can be reformulated using 
 complex Jacobians and Hessians, and applied to the complex optimization problem. In particular, they generalize 
 the Gauss-Newton (GN) and Levenberg-Marquardt (LM) methods for solving the non-linear least squares (NLLS) 
 problem\footnote{It should be stressed that Wirtinger calculus can be applied to a broader range of 
 optimization problems than just LS.}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
 \label{eq:LSmin}
 \min_{\bmath{z}} ||\bmath{r}(\zz,\zzc)||_F,~~~\mathrm{or}~\min_{\bmath{z}} ||\bmath{d}-\bmath{v}(\zz,\zzc)||_F
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend where $\bmath{r},\bmath{d},\bmath{v}$ have values in $\COMPLEX^m$, and $||\cdot||_F$ is the Frobenius norm. The latter form 
+where $\bmath{r},\bmath{d},\bmath{v}$ have values in $\COMPLEX^m$, and $||\cdot||_F$ is the Frobenius norm. The latter form 
 refers to LS fitting of the parameterized model $\bmath{v}$ to observed data $\bmath{d}$, and is the preferred formulation
 in the context of radio interferometry.
 
 Complex NLLS is implemented as follows. Let us formally treat $\zz$ and $\zzc$ as independent variables, 
 define an {\em augmented parameter vector} containing both,
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < \[
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \begin{equation}
-\DIFaddend \Zz = \Matrix{c}{\zz \\ \zzc}
-\DIFdelbegin %DIFDELCMD < \]
-\end{equation}%DIFAUXCMD
-%DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\begin{equation}%DIFAUXCMD
-\DIFdelend \DIFaddbegin \end{equation}
-\DIFaddend and designate its value at step $k$ by $\Zz_k$. Then, define
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
+\Zz = \Matrix{c}{\zz \\ \zzc}
+\end{equation}
+and designate its value at step $k$ by $\Zz_k$. Then, define
+\begin{equation}
 \label{eq:Jkrk}
-\JJ_k=\frac{\partial \vv}{\partial \zz} (\Zz_k), ~\JJ\DIFdelbegin \DIFdel{_{\bar{k}}}\DIFdelend \DIFaddbegin \DIFadd{_k^*}\DIFaddend =\frac{\partial \vv}{\partial \bar{\zz}}(\Zz_k),~
+\JJ_k=\frac{\partial \vv}{\partial \zz} (\Zz_k), ~\JJ_{k^*}=\frac{\partial \vv}{\partial \bar{\zz}}(\Zz_k),~
 \Rr_k=\Matrix{c}{\rr(\Zz_k)\\\bar{\rr}(\Zz_k)}
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend We'll call the $m\times n$ matrices $\JJ_k$ and \DIFdelbegin \DIFdel{$\JJ_{\bar{k}}$ }\DIFdelend \DIFaddbegin \DIFadd{$\JJ_k^*$ }\DIFaddend the \emph{partial} and \emph{partial conjugate 
+We'll call the $m\times n$ matrices $\JJ_k$ and \DIFdelbegin \DIFdel{$\JJ_k^*$ }\DIFdelend \DIFaddbegin \DIFadd{$\JJ_{k^*}$ }\DIFaddend the \emph{partial} and \emph{partial conjugate 
 Jacobian}\footnote{\citet{ComplexOpt} define the Jacobian via $\partial\rr$ rather than
 $\partial\vv$. This yields a Jacobian of the opposite sign, and introduces a minus sign into 
 Eqs.~\ref{eq:GN} and \ref{eq:LM}. In this paper we use the $\partial\vv$ convention, as is more common in the
@@ -380,53 +326,42 @@ context of radio interferometric calibration.}
 respectively, 
 and the $2m$-vector $\Rr_k$ the \emph{augmented residual vector}. The \emph{complex Jacobian} 
 of the model $\vv$ can then be written (in block matrix form) as
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
 \label{eq:JJ}
-\JJ = \DIFdelbegin %DIFDELCMD < \Matrix{cc}{J_k & J_{\bar{k}} \\ \bar{J}_{\bar{k}} & \bar{J}_k }%%%
-\DIFdelend \DIFaddbegin \Matrix{cc}{\JJ_k & \JJ^*_k \\ \bar{\JJ^*_k} & \bar{\JJ_k} }\DIFaddend ,
+\JJ = %DIFDELCMD < \Matrix{cc}{\JJ_k & \JJ^*_k \\ \bar{\JJ^*_k} & \bar{\JJ_k} }%%%
+\Matrix{cc}{\JJ_k & \JJ_{k^*} \\ \bar{\JJ}_{k^*} & \bar{\JJ}_{k} },
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdel{Note that this }\DIFdelend \DIFaddbegin {\bf \DIFadd{with the bottom two blocks being element-by-element conjugated versions of the top two. Note that $\JJ$ }\DIFaddend is a $2m \times 2n$ matrix.\DIFaddbegin } \DIFaddend The GN update step is defined as
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\DIFdelbegin %DIFDELCMD < {\bf %%%
+\DIFdelend with the bottom two blocks being element-by-element conjugated versions of the top two. Note \DIFdelbegin \DIFdel{that }\DIFdelend \DIFaddbegin \DIFadd{the use of $\bar{\JJ}$ to
+indicate element-by-element conjugation -- not to be confused with the Hermitian conjugate which we'll invoke later. 
+}\DIFaddend $\JJ$ is a $2m \times 2n$ matrix. \DIFdelbegin %DIFDELCMD < } %%%
+\DIFdelend The GN update step is defined as
+\begin{equation}
 \label{eq:GN}
 \delta\Zz = \Matrix{c}{\delta \zz \\ \delta \bar{\zz}} = (\JJ^H \JJ)^{-1}\JJ^H \Rr_k,
 \end{equation}
 
 The LM approach is similar, but introduces a {\em damping parameter} $\lambda$:
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
 \label{eq:LM}
 \delta\Zz = \Matrix{c}{\delta \zz \\ \delta \bar{\zz}} = (\JJ^H \JJ + \lambda\DD)^{-1}\JJ^H \Rr_k,
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend where $\DD$ is the diagonalized version of $\JJ^H\JJ$. With $\lambda=0$ this becomes equivalent to GN,
+where $\DD$ is the diagonalized version of $\JJ^H\JJ$. With $\lambda=0$ this becomes equivalent to GN,
 with $\lambda\to\infty$ this corresponds to steepest descent (SD) with ever smaller steps.
 
 Note that while $\delta\zz$ and $\delta \bar{\zz}$ are formally computed independently, the structure of the equations 
-ensures that the results are consistent, i.e. that $\overline{\delta\zz} = \delta \bar{\zz}$. In practice this 
-redundancy usually means that only half the calculations need to be performed.
+\DIFdelbegin \DIFdel{ensures that the results are consistent, i.e.}\DIFdelend \DIFaddbegin \DIFadd{is symmetric (since the function being minimized -- the Frobenius norm -- is real and symmetric w.r.t. $\zz$ and $\bar{\zz}$),
+which ensures }\DIFaddend that $\overline{\delta\zz} = \delta \bar{\zz}$. In practice this  redundancy usually means that only half the calculations need to be performed.
 
 \citet{ComplexOpt} show that Eqs.~\ref{eq:GN} and \ref{eq:LM} yield exactly the same system of LS equations as would have 
 been produced had we treated $\rr(\zz)$ as a function of real and imaginary parts $\rr(\bmath{x},\bmath{y})$, 
 and taken ordinary derivatives in $\REAL^{2n}$. However, the complex Jacobian may be easier and more elegant 
 to derive analytically, as we'll see below in the case of radio interferometric calibration.
 
-\section{Unpolarized calibration}
+\section{\DIFdelbegin \DIFdel{Unpolarized }\DIFdelend \DIFaddbegin \DIFadd{Scalar (unpolarized) }\DIFaddend calibration}
 \label{sec:unpol}
 
-In this section we will apply the formalism above to the simpler case of unpolarized calibration. 
+In this section we will apply the formalism above to the \DIFdelbegin \DIFdel{simpler case}\DIFdelend \DIFaddbegin \DIFadd{scalar case, i.e. that }\DIFaddend of unpolarized calibration. 
 This will then be extended to the fully polarized case in Sect.~\ref{sec:pol}.
 
 \subsection{Direction-independent calibration}
@@ -439,37 +374,28 @@ This will then be extended to the fully polarized case in Sect.~\ref{sec:pol}.
 Let us first explore the simplest case of direction-independent (DI) calibration. Consider an interferometer
 array of $\Na$ antennas measuring $\Nbl=\Na(\Na-1)/2$ pairwise visibilities. Each antenna pair
 $pq$ ($1\leq p<q\leq \Na$) 
-measures the visibility\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin {\bf\footnote{\DIFadd{In principle, the }{\em \DIFadd{autocorrelation}} \DIFadd{terms $pp$, corresponding to the
+measures the visibility\DIFdelbegin %DIFDELCMD < {\bf%%%
+\DIFdelend \footnote{In principle, the {\em autocorrelation} terms $pp$, corresponding to the
 total power in the field, are also measured, and may be incorporated into the equations here. 
 It is, however, common practice to omit autocorrelations from the interferometric
 calibration problem due to their much higher noise, as well as technical difficulties in modelling the
 total intensity contribution. The derivations below are equally valid for $p\leq q$; we use $p<q$ for consistency
-with practice.}}} 
-\DIFaddend \begin{equation}
+with practice.}
+\DIFdelbegin %DIFDELCMD < } 
+%DIFDELCMD < %%%
+\DIFdelend \begin{equation}
 \label{eq:RIME:unpol}
 g_p m_{pq} \bar{g}_q + n_{pq},
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend where $m_{pq}$ is the (assumed known) sky coherency, $g_p$ is the (unknown) complex gain parameter 
+where $m_{pq}$ is the (assumed known) sky coherency, $g_p$ is the (unknown) complex gain parameter 
 associated with antenna $p$, and $n_{pq}$ is a complex noise term that is Gaussian with a mean of 0 in the real and 
 imaginary parts. The calibration problem then consists of estimating the complex antenna gains $\bmath{g}$ by
 minimizing residuals in the LS sense:
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
 \label{eq:cal:DI}
 \min_{\bmath{g}}\sum_{pq}|r_{pq}|^2,~~~r_{pq}=d_{pq}-g_p m_{pq} \bar{g}_q, 
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend where $d_{pq}$ are the observed visibilities. Treating this as a complex optimization problem as per the above, 
+where $d_{pq}$ are the observed visibilities. Treating this as a complex optimization problem as per the above, 
 let us write out the complex Jacobian. 
 With a vector of $\Na$ complex parameters $\bmath{g}$ and $\Nbl$ measurements $d_{pq}$, we'll have a full complex
 Jacobian of shape $2\Nbl\times2\Na$. It is conventional
@@ -482,54 +408,33 @@ Where necessary, we'll write $pq$ in square brackets (e.g. $a_{[pq],i}$) to emph
 Now consider the corresponding partial Jacobian $\JJ_k$ matrix (Eq.~\ref{eq:Jkrk}). This is of shape $\Nbl\times\Na$. 
 Using the Wirtinger derivative, we can write the
 partial Jacobian in terms of its value at row $[pq]$ and column $j$ as 
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < \[
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \begin{equation}
-\DIFaddend [ \JJ_k ]_{[pq],j} = \left \{  
+\begin{equation}
+[ \JJ_k ]_{[pq],j} = \left \{  
   \begin{array}{ll} 
   m_{pq}\bar{g}_q,& j=p, \\
   0, & \mathrm{otherwise.}
   \end{array}
 \right .
-\DIFdelbegin %DIFDELCMD < \]
-\end{equation}%DIFAUXCMD
-%DIFDELCMD < %%%
-\begin{equation}%DIFAUXCMD
-\DIFdelend \DIFaddbegin \end{equation}
-\DIFaddend 
+\end{equation}
 
 In other words, within each column $j$, $\JJ_k$ is only non-zero at rows corresponding to baselines $[jq]$. We can express 
 this more compactly using the Kronecker delta:
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
 \label{eq:Jk}
-J_k = \overbrace{ \Matrix{c}{ m_{pq}\bar{g}_q\delta^{j}_p } } ^{j=1\dots \Na} \big \}{\scriptstyle [pq]=1\dots \Nbl~(p<q)}
-\DIFdelbegin \DIFdel{v}\DIFdelend \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
+J_k = \overbrace{ \Matrix{c}{ m_{pq}\bar{g}_q\delta^{j}_p } } ^{j=1\dots \Na} %DIFDELCMD < \big \}{\scriptstyle [pq]=1\dots \Nbl~(p<q)}
 %DIFDELCMD < %%%
-\DIFdelend Likewise, the conjugate partial Jacobian \DIFdelbegin \DIFdel{$\JJ_{\bar{k}}$ }\DIFdelend \DIFaddbegin \DIFadd{$J_{k^*}$ }\DIFaddend may be written as
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
-\label{eq:Jbark}
-J_{\DIFdelbegin %DIFDELCMD < \bar{k}%%%
-\DIFdelend \DIFaddbegin \DIFadd{k^*}\DIFaddend } = \overbrace{ \Matrix{c}{ g_p m_{pq} \delta^{j}_q } } ^{j=1\dots \Na} \big \}{\scriptstyle [pq]=1\dots \Nbl~(p<q)}
+\bm{ \}} {\scriptstyle [pq]=1\dots \Nbl~(p<q)}
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
+Likewise, the conjugate partial Jacobian $J_{k^*}$ may be written as
+\begin{equation}
+\label{eq:Jbark}
+J_{k^*} = \overbrace{ \Matrix{c}{ g_p m_{pq} \delta^{j}_q } } ^{j=1\dots \Na} %DIFDELCMD < \big \}{\scriptstyle [pq]=1\dots \Nbl~(p<q)}
 %DIFDELCMD < %%%
-\DIFdelend A specific example is provided in Appendix~\ref{sec:3ant}. The full complex Jacobian (Eq.~\ref{eq:JJ}) then 
+\bm{ \}} {\scriptstyle [pq]=1\dots \Nbl~(p<q)}
+\end{equation}
+A specific example is provided in Appendix~\ref{sec:3ant}. The full complex Jacobian (Eq.~\ref{eq:JJ}) then 
 becomes, in block matrix notation,
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
 \label{eq:JJ:di:basic}
 \begin{array}{r@{~}cc@{~}cc}
                 & \overbrace{~~~~~~~~}^{j=1\dots \Na} & \overbrace{~~~~~~~~}^{j=1\dots \Na} \\
@@ -537,84 +442,51 @@ becomes, in block matrix notation,
   \Stack{ m_{pq}\bar{g}_q\delta^{j}_p \\ \bar{m}_{pq} \bar{g}_p \delta^{j}_q } &
   \Stack{ g_p m_{pq} \delta^{j}_q \\ g_q \bar{m}_{pq} \delta^{j}_p }  
 & \bigg ] &
-\Stack{ \} {\scriptstyle [pq]=1\dots \Nbl}~(p<q) \\ \} {\scriptstyle [pq]=1\dots \Nbl}~(p<q) }
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \end{array}
+%DIFDELCMD < \Stack{ \} %%%
+\Stack{ \bm{\}} {\scriptstyle [pq]=1\dots \Nbl}~(p<q) \\ %DIFDELCMD < \} %%%
+\bm{\}} {\scriptstyle [pq]=1\dots \Nbl}~(p<q) }
+\end{array}
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend where the $[pq]~(p<q)$ and $j$ subscripts within each block span the full range of $1\dots \Nbl$ and 
+where the $[pq]~(p<q)$ and $j$ subscripts within each block span the full range of $1\dots \Nbl$ and 
 $1\dots \Na$. Now, since $d_{pq} = \bar{d}_{qp}$ and $m_{pq} = \bar{m}_{qp}$, we may notice
 that the bottom half of the augumented residuals vector $\Rr$ corresponds to the conjugate baselines 
 $qp$ ($q>p$):
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < \[
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \begin{equation}
-\DIFaddend \Rr = \Matrix{c}{ r_{pq} \\ \bar{r}_{pq} } = \Matrix{c}{d_{pq}-g_p m_{pq}\bar{g}_q\\ \bar{d}_{pq}-\bar{g}_p \bar{m}_{pq}g_q} = 
+\begin{equation}
+\Rr = \Matrix{c}{ r_{pq} \\ \bar{r}_{pq} } = \Matrix{c}{d_{pq}-g_p m_{pq}\bar{g}_q\\ \bar{d}_{pq}-\bar{g}_p \bar{m}_{pq}g_q} = 
 \Matrix{c}{ r_{pq} \\ r_{qp} }~~ 
-\Stack{ \} \scriptstyle [pq]=1\dots \Nbl~(p<q) \\ \} \scriptstyle [pq]=1\dots \Nbl~(p<q) }
-\DIFdelbegin %DIFDELCMD < \]
-\end{equation}%DIFAUXCMD
-%DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\begin{equation}%DIFAUXCMD
-\DIFdelend \DIFaddbegin \end{equation}
-\DIFaddend as does the bottom half of $\JJ$ in Eq.~\ref{eq:JJ:di:basic}. Note that we are free to reorder the rows of $\JJ$ and $\Rr$ 
+%DIFDELCMD < \Stack{ \} %%%
+\Stack{ \bm{\}} \scriptstyle [pq]=1\dots \Nbl~(p<q) \\ %DIFDELCMD < \} %%%
+\bm{\}} \scriptstyle [pq]=1\dots \Nbl~(p<q) }
+\end{equation}
+as does the bottom half of $\JJ$ in Eq.~\ref{eq:JJ:di:basic}. Note that we are free to reorder the rows of $\JJ$ and $\Rr$ 
 and intermix the normal and conjugate baselines, as this will not affect the LS equations derived at Eq.~\ref{eq:LM}.
 This proves most convenient: instead of splitting $\JJ$ and $\Rr$ into 
 two vertical blocks with the compound index $[pq]~(p<q)$ running through $\Nbl$ rows within each block, we can treat 
 the two blocks as one, with a single compound index $[pq]~(p\ne q)$ running through $2\Nbl$ rows:
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
 \label{eq:JJ:di}
 \begin{array}{r@{~}cc@{~}cc}
                 & \overbrace{~~~~~~~~}^{j=1\dots \Na} & \overbrace{~~~~~~~~}^{j=1\dots \Na} \\
 \JJ = \big [ & m_{pq}\bar{g}_q\delta^{j}_p & g_p m_{pq} \delta^{j}_q & \big ],~
-\Rr = \big [ r_{pq} \big ] ~~{\} \scriptstyle [pq]=1\dots 2\Nbl}
+\Rr = \big [ r_{pq} \big ] ~~{%DIFDELCMD < \} %%%
+\bm{\}} \scriptstyle [pq]=1\dots 2\Nbl}
 \end{array}
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend where for $q>p$, $r_{pq}=\bar{r}_{qp}$ and $m_{pq}=\bar{m}_{qp}$. For clarity, we may adopt the 
+where for $q>p$, $r_{pq}=\bar{r}_{qp}$ and $m_{pq}=\bar{m}_{qp}$. For clarity, we may adopt the 
 following order for enumerating the row index $[pq]$: $12,13,\dots,1n,$ $21,22,\dots,2n,$ $31,32,\dots,3n,$ $\dots,n1,\dots,n\,n-1$. 
 
 Equation~\ref{eq:JJ:3ant} in the Appendix provides an example of $\JJ$ for the 3-antenna case. For
 brevity, let us define the shorthand 
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < \[
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \begin{equation}
-\DIFaddend y_{pq} = m_{pq} \bar{g}_q. 
-\DIFdelbegin %DIFDELCMD < \]
-\end{equation}%DIFAUXCMD
-%DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\begin{equation}%DIFAUXCMD
-\DIFdelend \DIFaddbegin \end{equation}
-\DIFaddend We can now write out the 
+\begin{equation}
+y_{pq} = m_{pq} \bar{g}_q. 
+\end{equation}
+We can now write out the 
 structure of $\JJ^H\JJ$. This is Hermitian, consisting of four $\Na\times\Na$ blocks:
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
 \label{eq:JHJ:DI:ABCD}
 \JJ^H\JJ = \Matrix{cc}{\mat{A}&\mat{B}\\\mat{C}&\mat{D}} = \Matrix{cc}{\mat{A}&\mat{B}\\\mat{B}^H&\mat{A}}
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend since the value at row $i$, column $j$ of each block is
+since the value at row $i$, column $j$ of each block is
 \begin{eqnarray}
 A_{ij} = \sum_{pq} \bar{y}_{pq} y_{pq} \delta^{i}_p \delta^{j}_p &=& 
   \left \{ \begin{array}{cc}
@@ -632,7 +504,7 @@ D_{ij} = \sum_{pq} y_{pq} \bar{y}_{pq} \delta^{i}_q \delta^{j}_q &=& A_{ij}
 \label{eq:JHJ:DI:ABCD1}
 \end{eqnarray}
 
-\DIFaddbegin \newcommand{\JHJblocksFull}[4]{
+\newcommand{\JHJblocksFull}[4]{
 \Matrix{c@{}c@{}c}{
  #1 & \bigg |~ & #2 \\[10pt]
  \hline \\[-8pt]
@@ -646,30 +518,11 @@ D_{ij} = \sum_{pq} y_{pq} \bar{y}_{pq} \delta^{i}_q \delta^{j}_q &=& A_{ij}
  #2 & \bigg |~ & \searrow~~ }
 }
 
-\DIFaddend We then write $\JJ^H\JJ$ in terms of the four $\Na\times\Na$ blocks as:
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < \newcommand{\JHJblocksFull}[4]{
-%DIFDELCMD < \Matrix{c@{}c@{}c}{
-%DIFDELCMD <  #1 & \bigg |~ & #2 \\[10pt]
-%DIFDELCMD <  \hline \\[-8pt]
-%DIFDELCMD <  #3 & \bigg |~ & #4 }
-%DIFDELCMD < }
-%DIFDELCMD < 
-
-%DIFDELCMD < \newcommand{\JHJblocks}[2]{
-%DIFDELCMD < \Matrix{c@{}c@{}c}{
-%DIFDELCMD <  #1 & \big |~ & \nearrow^H \\
-%DIFDELCMD <  \hline \\[-8pt]
-%DIFDELCMD <  #2 & \bigg |~ & \searrow~~ }
-%DIFDELCMD < }
-%DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+We then write $\JJ^H\JJ$ in terms of the four $\Na\times\Na$ blocks as:
+\begin{equation}
 \label{eq:JHJ:DI}
 \JJ^H \JJ = 
-\DIFdelbegin %DIFDELCMD < \JHJblocksFull{
+%DIFDELCMD < \JHJblocksFull{
 %DIFDELCMD < \mathrm{diag} \sum\limits_{q\ne i} |y_{iq}^2| 
 %DIFDELCMD < }{
 %DIFDELCMD <   \left \{ 
@@ -686,63 +539,33 @@ D_{ij} = \sum_{pq} y_{pq} \bar{y}_{pq} \delta^{i}_q \delta^{j}_q &=& A_{ij}
 %DIFDELCMD < }{
 %DIFDELCMD <   \mathrm{diag} \sum\limits_{q\ne i} |y^2_{iq}| 
 %DIFDELCMD < }
-%DIFDELCMD < % \Matrix{c@{~\bigg |~}c}{
-%DIFDELCMD < % \mathrm{diag} \sum\limits_{q\ne i} |y_{iq}^2| & 
-%DIFDELCMD < %   \left \{ 
-%DIFDELCMD < %   \begin{array}{@{}cc@{}}
-%DIFDELCMD < %    \bar{y}_{ij} \bar{y}_{ji}, &{\scriptstyle i\ne j} \\
-%DIFDELCMD < %    0, &{\scriptstyle i=j}
-%DIFDELCMD < %   \end{array} \right .\\
-%DIFDELCMD < %   \left \{ 
-%DIFDELCMD < %   \begin{array}{@{}cc@{}}
-%DIFDELCMD < %    y_{ij}y_{ji},&{\scriptstyle i\ne j} \\
-%DIFDELCMD < %    0, &{\scriptstyle i=j}
-%DIFDELCMD < %   \end{array} \right . 
-%DIFDELCMD < %   & \mathrm{diag} \sum\limits_{q\ne i} |y^2_{iq}| 
-%DIFDELCMD < % }
-%DIFDELCMD < % \Stack{ 
-%DIFDELCMD < % \bigg \} \scriptstyle i=1\dots \Na \\ 
-%DIFDELCMD < % \bigg \} \scriptstyle i=1\dots \Na 
-%DIFDELCMD < %}
 \end{equation}%DIFAUXCMD
 %DIFDELCMD < \end{equation}
+%DIFDELCMD < Equation~\ref{eq:JHJ:3ant} in the Appendix provides an example of $\JJ^H\JJ$ for the 3-antenna case. 
 %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdel{Equation~\ref{eq:JHJ:3ant} in the Appendix provides an example of $\JJ^H\JJ$ for the 3-antenna case. 
-}%DIFDELCMD < 
 
 %DIFDELCMD < \newcommand{\yysq}[2]{{y^2_{#1}+y^2_{#2}}}
 %DIFDELCMD < \newcommand{\bb}[2]{{\bar{y}_{#1#2}\bar{y}_{#2#1}}}
 %DIFDELCMD < \newcommand{\bbb}[2]{y_{#1#2}y_{#2#1}}
 %DIFDELCMD < 
 
-%DIFDELCMD < %%%
-\DIFdel{The other component of the LM/GN equations (Eq.~\ref{eq:LM}) is the $\JJ^H\Rr$ term. This will be a column vector of length $2\Na$. We can write this as a stack of two $\Na$-vectors:
-}%DIFDELCMD < 
-
+%DIFDELCMD < The other component of the LM/GN equations (Eq.~\ref{eq:LM}) is the $\JJ^H\Rr$ term. This will be a column vector of length $2\Na$. We can write this as a stack of two $\Na$-vectors:
 \begin{equation}%DIFAUXCMD
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \label{eq:JHR:DI}
-%DIFDELCMD < \JJ%%%
-\DIFdel{^H}%DIFDELCMD < \Rr %%%
-\DIFdel{= }%DIFDELCMD < \Matrix{c}{ 
+%DIFDELCMD < \JJ^H\Rr = \Matrix{c}{ 
 %DIFDELCMD < \sum\limits_{pq} \bar{y}_{pq} r_{pq} \delta^{i}_p  \\
 %DIFDELCMD < \sum\limits_{pq} y_{qp} r_{pq} \delta^{i}_q 
-%DIFDELCMD < } %%%
-\DIFdel{= }%DIFDELCMD < \Matrix{c}{
+%DIFDELCMD < } = \Matrix{c}{
 %DIFDELCMD < \sum\limits_{q\ne i} \bar{y}_{iq} r_{iq}   \\
 %DIFDELCMD < \sum\limits_{q\ne i} y_{iq} \bar{r}_{iq}  
 %DIFDELCMD < }
 %DIFDELCMD < \Stack{
-%DIFDELCMD < \big \} \scriptstyle %%%
-\DIFdel{i=1}%DIFDELCMD < \dots \Na \\ 
-%DIFDELCMD < \big \} \scriptstyle %%%
-\DIFdel{i=1}%DIFDELCMD < \dots \Na%%%
-\DIFdel{,
-}%DIFDELCMD < }
+%DIFDELCMD < \big \} \scriptstyle i=1\dots \Na \\ 
+%DIFDELCMD < \big \} \scriptstyle i=1\dots \Na
+%DIFDELCMD < }
 %DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \JHJblocksFull{
+\JHJblocksFull{
 \mathrm{diag} \sum\limits_{q\ne i} |y_{iq}^2| 
 }{
   \left \{ 
@@ -777,18 +600,12 @@ The other component of the LM/GN equations (Eq.~\ref{eq:LM}) is the $\JJ^H\Rr$ t
 \sum\limits_{q\ne i} y_{iq} \bar{r}_{iq}  
 }
 \Stack{
-\big \} \scriptstyle i=1\dots \Na \\ 
-\big \} \scriptstyle i=1\dots \Na
+\bm{\big\}} \scriptstyle i=1\dots \Na \\[1ex] 
+\bm{\big\}} \scriptstyle i=1\dots \Na
 }
-\DIFaddend \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend with the second equality established by swapping $p$ and $q$ in the bottom sum, and making use of $r_{pq}=\bar{r}_{qp}$. Clearly, the bottom half of the vector is the conjugate of the top:
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\end{equation}
+with the second equality established by swapping $p$ and $q$ in the bottom sum, and making use of $r_{pq}=\bar{r}_{qp}$. Clearly, the bottom half of the vector is the conjugate of the top:
+\begin{equation}
 \label{eq:JHR:DI1}
 \JJ^H\Rr = \Matrix{c}{\bmath{c}\\\bar{\bmath{c}}},~~c_i = \sum\limits_{q\ne i} \bar{y}_{iq} r_{iq}.
 \end{equation}
@@ -800,81 +617,40 @@ Due to the structure of the RIME, we have a particularly elegant way of computin
 By analogy with the augmented residuals vector $\Rr$, we can express the data and model visibilities 
 as $2\Nbl$-vectors,
 using the compound index $[pq]$ $(p\ne q)$:
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < \[
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \begin{equation}
-\DIFaddend \Dd = [ d_{pq} ],~~\Vv = [ g_p m_{pq} \bar{g}_q ],~~\Rr =\Dd-\Vv
-\DIFdelbegin %DIFDELCMD < \]
-\end{equation}%DIFAUXCMD
-%DIFDELCMD < %%%
-\begin{equation}%DIFAUXCMD
-\DIFdelend \DIFaddbegin \end{equation}
-\DIFaddend 
+\begin{equation}
+\Dd = [ d_{pq} ],~~\Vv = [ g_p m_{pq} \bar{g}_q ],~~\Rr =\Dd-\Vv
+\end{equation}
 
 As noted by \citet{Tasse-cohjones}, we have the wonderful property that
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
 \label{eq:v_Jg}
 \Vv = \JJ_\LEFT \bmath{g}  = \frac{1}{2}\JJ \Gg,~~~\mathrm{where}~\Gg = \Matrix{c}{\bmath{g} \\ \bmath{\bar g}},
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend (where $\bmath{X}_\LEFT$ designates the left half of matrix $\bmath{X}$ -- see Table~\ref{tab:notation} for a summary of notation),
+(where $\bmath{X}_\LEFT$ designates the left half of matrix $\bmath{X}$ -- see Table~\ref{tab:notation} for a summary of notation),
 which basically comes about due to the RIME being bilinear with respect to $\bmath{g}$ and $\bmath{\bar g}$. 
 Substituting this into the GN update step, and noting that $\bmath{X}(\bmath{Y}_\LEFT) = (\bmath{XY})_\LEFT$, 
 we have 
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < \[
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \begin{equation}
-\DIFaddend \Matrix{c}{\delta\vecg\\\delta\vecgc} = (\JHJ)^{-1} \JJ^H (\Dd - \JJ_\LEFT \vecg) = (\JHJ)^{-1} \JJ^H \Dd - \vecg.
-\DIFdelbegin %DIFDELCMD < \]
-\end{equation}%DIFAUXCMD
-%DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\begin{equation}%DIFAUXCMD
-\DIFdelend \DIFaddbegin \end{equation}
-\DIFaddend Consequently, the updated gain values at each iteration can be derived directly from the data, thus obviating the need
+\begin{equation}
+\Matrix{c}{\delta\vecg\\\delta\vecgc} = (\JHJ)^{-1} \JJ^H (\Dd - \JJ_\LEFT \vecg) = (\JHJ)^{-1} \JJ^H \Dd - \vecg.
+\end{equation}
+Consequently, the updated gain values at each iteration can be derived directly from the data, thus obviating the need
 for computing residuals. Additionally, since the bottom half of the equations is simply the conjugate of the top, 
 we only need to evaluate the top half:
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
 \label{eq:ghat}
 \vecg_{k+1} = \vecg_k + \delta\vecg = (\JHJ)^{-1}_{~~~\TOP} \JJ^H \Dd,
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend where $\bmath{X}_\TOP$ designates the upper half of matrix $\bmath{X}$. 
+where $\bmath{X}_\TOP$ designates the upper half of matrix $\bmath{X}$. 
 
 The derivation above assumes an exact inversion of $\HH=\JHJ$. In practice, this large matrix can be costly to invert, 
 so the algorithms below will substitute it with some cheaper-to-invert approximation $\HHa$. Using the approximate
-matrix in the GN update equation, we find instead \DIFdelbegin \DIFdel{:
-}%DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \DIFadd{that
-}\DIFaddend \begin{equation}
+matrix in the GN update equation, we find instead that
+\begin{equation}
 \label{eq:ghat:approx}
 \vecg_{k+1} = \HHa^{-1}_{~~~\TOP} \JJ^H \Dd + (\II - \HHa^{-1}_{~~~\TOP} \HH_\LEFT )\vecg_k,
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend which means that when an approximate $\JHJ$ is in use, the shortcut of Eq.~\ref{eq:ghat} only applies when 
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+which means that when an approximate $\JHJ$ is in use, the shortcut of Eq.~\ref{eq:ghat} only applies when 
+\begin{equation}
 \label{eq:ghat:precise}
 \HHa^{-1}_{~~~\TOP} \HH_\LEFT=\II.
 \end{equation}
@@ -896,103 +672,22 @@ A common use case (especially in low-SNR scenarios) is to employ larger solution
 That is, we measure multiple visibilities per each baseline $pq$, across an interval of timeslots and
 frequency channels, then obtain complex gain solutions that are constant across each interval. The 
 minimization problem of Eq.~\ref{eq:RIME:unpol} can then be re-written as
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
 \label{eq:cal:DI:tf}
 \min_{\bmath{g}}\sum_{pqs}|r_{pqs}|^2, 
 ~~~r_{pqs} = d_{pqs}-g_p m_{pqs} \bar{g}_q, 
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend where $s=1,...,N_s$ is a sample index enumerating all the samples within the 
+where $s=1,...,N_s$ is a sample index enumerating all the samples within the 
 time/frequency solution interval. We can repeat the derivations above using  $[pqs]$ as a
 single compound index. Instead of having shape $2\Nbl\times2\Na$, the Jacobian 
 will have a shape of $2\Nbl\Ns\times 2\Na$, and the residual vector will have a length of 
 $2\Nbl\Ns$. In deriving the $\JHJ$ term, the sums in Eq.~\ref{eq:JHJ:DI:ABCD} must be taken over all $pqs$ 
 rather than just $pq$. Defining the usual shorthand of 
 $y_{pqs}=m_{pqs}\bar{g}_q$, we then have:
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
 \label{eq:JHJ:DI:tf}
 \JJ^H \JJ = 
-\DIFdelbegin %DIFDELCMD < \JHJblocks{
-%DIFDELCMD <   \mathrm{diag} \sum\limits_{q\ne i,s} |y^2_{iqs}| 
-%DIFDELCMD < }{
-%DIFDELCMD <   \left \{ 
-%DIFDELCMD <   \begin{array}{@{}cc@{}}
-%DIFDELCMD <    \sum\limits_{s} y_{ijs}y_{jis},&{\scriptstyle i\ne j} \\
-%DIFDELCMD <    0, &{\scriptstyle i=j}
-%DIFDELCMD <   \end{array} \right . 
-%DIFDELCMD < },
-\end{equation}%DIFAUXCMD
-%DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
-%DIFDELCMD < where the symbols $\searrow$ and $\nearrow^H$ represent a copy and a copy-transpose of the appropriate matrix block (as per the structure of Eq.~\ref{eq:JHJ:DI:ABCD}). Likewise, the $\JJ^H\Rr$ term can be written as:
-%DIFDELCMD < 
-
-%DIFDELCMD < \begin{equation}
-%DIFDELCMD < \label{eq:JHR:DI:tf}
-%DIFDELCMD < \JJ^H\Rr 
-%DIFDELCMD < = \Matrix{c}{
-%DIFDELCMD < \sum\limits_{q\ne i,s} \bar{y}_{iqs} r_{iqs}   \\
-%DIFDELCMD <  \hline \\[-8pt]
-%DIFDELCMD < \downarrow^H
-%DIFDELCMD < %\sum\limits_{q\ne i,s} y_{iqs} \bar{r}_{iqs}  
-%DIFDELCMD < }.
-%DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
-%DIFDELCMD < \subsection{Weighting}
-%DIFDELCMD < \label{sec:DI:W}
-%DIFDELCMD < 
-
-%DIFDELCMD < Although \citet{ComplexOpt} do not mention this explicitly, it is straightforward to incorporate weights into the 
-%DIFDELCMD < complex LS problem. Equation~\ref{eq:LSmin} is reformulated as
-%DIFDELCMD < 
-
-%DIFDELCMD < \begin{equation}
-%DIFDELCMD < \label{eq:LSmin:w}
-%DIFDELCMD < \min_{\bmath{z}} ||\mat{W} \Rr(\bmath{z},\bmath{\bar z})||_F,
-%DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
-%DIFDELCMD < where $\mat{W}$ is an $M\times M$ weights matrix (usually, the inverse of the data covariance matrix $\mat{C}$). This then propagates into the LM equations as
-%DIFDELCMD < 
-
-%DIFDELCMD < \begin{equation}
-%DIFDELCMD < \label{eq:LM:W}
-%DIFDELCMD < \delta\Zz = (\JJ^H \mat{W} \JJ + \lambda\II)^{-1}\JJ^H \mat{W} \Rr_k.
-%DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
-%DIFDELCMD < Adding weights to Eqs.~\ref{eq:JHJ:DI:tf} and \ref{eq:JHR:DI:tf}, we arrive at the following:
-%DIFDELCMD < 
-
-\begin{equation}%DIFAUXCMD
-%DIFDELCMD < \begin{equation}
-%DIFDELCMD < \label{eq:JHJ:DI:tfw}
-%DIFDELCMD < \JJ^H\mat{W}\JJ = 
-%DIFDELCMD < \JHJblocks{
-%DIFDELCMD <   \mathrm{diag} \sum\limits_{q\ne i,s} w_{iqs} |y^2_{iqs}|
-%DIFDELCMD < }{
-%DIFDELCMD <   \left \{ 
-%DIFDELCMD <   \begin{array}{@{}c@{,~}c@{}}
-%DIFDELCMD <    \sum\limits_{s} w_{ijs} y_{ijs}y_{jis}&{\scriptstyle i\ne j} \\
-%DIFDELCMD <    0 &{\scriptstyle i=j}
-%DIFDELCMD <   \end{array} \right . 
-%DIFDELCMD < }
-%DIFDELCMD < % \Stack{ 
-%DIFDELCMD < % \bigg \} \scriptstyle i=1\dots \Na \\ 
-%DIFDELCMD < % \bigg \} \scriptstyle i=1\dots \Na 
-%DIFDELCMD < %}
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \JHJblocks{
+\JHJblocks{
   \mathrm{diag} \sum\limits_{q\ne i,s} |y^2_{iqs}| 
 }{
   \left \{ 
@@ -1047,7 +742,7 @@ Adding weights to Eqs.~\ref{eq:JHJ:DI:tf} and \ref{eq:JHR:DI:tf}, we arrive at t
 % \bigg \} \scriptstyle i=1\dots \Na \\ 
 % \bigg \} \scriptstyle i=1\dots \Na 
 %}
-\DIFaddend \end{equation}
+\end{equation}
 
 \begin{equation}
 \label{eq:JHR:DI:tfw}
@@ -1061,7 +756,7 @@ Adding weights to Eqs.~\ref{eq:JHJ:DI:tf} and \ref{eq:JHR:DI:tf}, we arrive at t
 \end{equation}
 
 
-\DIFaddbegin \newcommand{\GGd}{\GG^{(d)}}
+\newcommand{\GGd}{\GG^{(d)}}
 \newcommand{\GGdH}{\GG^{(d)H}}
 \newcommand{\MMd}{\MM^{(d)}}
 \newcommand{\YYd}{\YY^{(d)}}
@@ -1082,7 +777,7 @@ Adding weights to Eqs.~\ref{eq:JHJ:DI:tf} and \ref{eq:JHR:DI:tf}, we arrive at t
 \newcommand{\yycH}{\bar{y}^{(c)}}
 
 
-\DIFaddend \subsection{Direction-dependent calibration}
+\subsection{Direction-dependent calibration}
 \label{sec:unpol:DD}
 
 Let us apply the same formalism to the direction-dependent (DD) calibration problem. 
@@ -1091,69 +786,31 @@ gain. It has been common practice to do DD gain solutions on larger time/frequen
 solutions, both for SNR reasons, and because short intervals lead to underconstrained solutions
 and suppression of unmodelled sources. We therefore incorporate solution intervals into the
 equations from the beginning. The minimization problem becomes:
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < \newcommand{\GGd}{\GG^{(d)}}
-%DIFDELCMD < \newcommand{\GGdH}{\GG^{(d)H}}
-%DIFDELCMD < \newcommand{\MMd}{\MM^{(d)}}
-%DIFDELCMD < \newcommand{\YYd}{\YY^{(d)}}
-%DIFDELCMD < \newcommand{\YYdH}{\YY^{(d)H}}
-%DIFDELCMD < \newcommand{\YYc}{\YY^{(c)}}
-%DIFDELCMD < \newcommand{\YYcH}{\YY^{(c)H}}
-%DIFDELCMD < \newcommand{\ggd}{g^{(d)}}
-%DIFDELCMD < \newcommand{\ggdH}{\bar{g}^{(d)}}
-%DIFDELCMD < \newcommand{\ggc}{g^{(c)}}
-%DIFDELCMD < \newcommand{\ggcH}{\bar{g}^{(c)}}
-%DIFDELCMD < \newcommand{\mmc}{m^{(c)}}
-%DIFDELCMD < \newcommand{\mmd}{m^{(d)}}
-%DIFDELCMD < \newcommand{\mmcH}{\bar{m}^{(c)}}
-%DIFDELCMD < \newcommand{\mmdH}{\bar{m}^{(d)}}
-%DIFDELCMD < \newcommand{\yyd}{y^{(d)}}
-%DIFDELCMD < \newcommand{\yydH}{\bar{y}^{(d)}}
-%DIFDELCMD < \newcommand{\yyc}{y^{(c)}}
-%DIFDELCMD < \newcommand{\yycH}{\bar{y}^{(c)}}
-%DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
 \label{eq:cal:dd:unpol}
 \min_{\bmath{g}}\sum_{pqs}|r_{pqs}|^2, ~~~
 r_{pqs} = d_{pqs} - \sum_{d=1}^{\Nd} \ggd_p \mmd_{pqs} \ggdH_q.
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend It's obvious that the Jacobian corresponding to this  this problem is very similar to the one 
+It's obvious that the Jacobian corresponding to this \DIFdelbegin \DIFdel{this }\DIFdelend problem is very similar to the one 
 in Eq.~\ref{eq:JJ:di}, but instead of having shape $2\Nbl\times2\Na$, this will have a 
 shape of $2\Nbl\Ns\times 2\Na\Nd$. We now treat $[pqs]$ and $[jd]$ as compound indices: 
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < \[
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \begin{equation}
-\DIFaddend \begin{array}{r@{~}cc@{~}cc}
+\begin{equation}
+\begin{array}{r@{~}cc@{~}cc}
  & \overbrace{~~~~~~~~~~~~}^{\Stack{\scriptstyle j=1\dots \Na\\\scriptstyle d=1\dots \Nd}} & 
    \overbrace{~~~~~~~~~~~~}^{\Stack{\scriptstyle j=1\dots \Na\\\scriptstyle d=1\dots \Nd}} \\
 \JJ = \bigg [ &
   \mmd_{pqs}\ggdH_q \delta^j_p & 
   \ggd_p \mmd_{pqs}  \delta^j_q 
 \bigg ] &
-\big \}
+%DIFDELCMD < \big \}
+%DIFDELCMD < %%%
+\bm{\bigg \}}
 \begin{array}{l}
 \scriptstyle [pq]=1\dots 2\Nbl~(p\ne q)\\ \scriptstyle s=1\dots\Ns
 \end{array}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \end{array}
-\DIFdelbegin %DIFDELCMD < \]
-\end{equation}%DIFAUXCMD
-%DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\begin{equation}%DIFAUXCMD
-\DIFdelend \DIFaddbegin \end{equation}
-\DIFaddend Every antenna $j$ and direction $d$ will correspond to a column in $\JJ$, but the specific order of the columns 
+\end{array}
+\end{equation}
+Every antenna $j$ and direction $d$ will correspond to a column in $\JJ$, but the specific order of the columns 
 (corresponding to the order in which we place the $\ggd_p$ elements in the augmented parameter vector $\Gg$)
 is completely up to us. 
 
@@ -1161,12 +818,9 @@ Consider now the $\JHJ$ product. This will consist of $2\times2$ blocks, each of
 $[\Na\Nd]^2$. Let's use $i,c$ to designate the rows within each block, $j,d$ to designate the columns, 
 and define $\yyd_{pqs}=\mmd_{pqs}\ggdH_q$. The $\JHJ$ matrix will then have the following block 
 structure:
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
 \JHJ = \Matrix{cc}{\bmath{A}&\bmath{B}^H\\\bmath{B}&\bmath{A}}
-= \DIFdelbegin %DIFDELCMD < \JHJblocks{
+= %DIFDELCMD < \JHJblocks{
 %DIFDELCMD <   \delta^i_j \sum\limits_{q\ne i,s} \yycH_{iqs} \yyd_{iqs} 
 %DIFDELCMD < }{
 %DIFDELCMD <   %& \nearrow^H \\
@@ -1188,13 +842,9 @@ structure:
 %DIFDELCMD < \label{eq:JHJ:DD:unpol}
 \end{equation}%DIFAUXCMD
 %DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
 %DIFDELCMD < while the $\JJ^H\Rr$ term will be a vector of length $2\Na\Nd$, with the bottom half again being
 %DIFDELCMD < a conjugate of the top half. Within each half, we can write out the element corresponding to 
 %DIFDELCMD < antenna $j$, direction $d$: 
-%DIFDELCMD < 
-
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \label{eq:JHR:DD:unpol}
 %DIFDELCMD < \JJ^H\Rr = \Matrix{c}{\bmath{c}\\\bar{\bmath{c}}},~~c_{jd} = \sum\limits_{q\ne j,s} 
@@ -1203,14 +853,10 @@ structure:
 %DIFDELCMD < 
 
 %DIFDELCMD < Finally, let us note that the property of Eq.~\ref{eq:v_Jg} also holds for the DD case. It is easy to see that
-%DIFDELCMD < 
-
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \label{eq:v_Jg:dd}
 %DIFDELCMD < \Vv = \bigg [ \sum_{d=1}^{\Nd} \ggd_p \mmd_{pqs} \ggdH_q \bigg ] = \JJ_\LEFT \Gg.
 %DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
 %DIFDELCMD < Consequently, the shortcut of Eq.~\ref{eq:ghat} also applies.
 %DIFDELCMD < 
 
@@ -1220,7 +866,8 @@ structure:
 
 %DIFDELCMD < In principle, implementing one of the flavours of calibration above is ``just'' a matter of  
 %DIFDELCMD < plugging Eqs.~\ref{eq:JHJ:DI}+\ref{eq:JHR:DI1}, \ref{eq:JHJ:DI:tf}+\ref{eq:JHR:DI:tf},
-%DIFDELCMD < \ref{eq:JHJ:DI:tfw}+\ref{eq:JHR:DI:tfw} or \ref{eq:JHJ:DD:unpol}+\ref{eq:JHR:DD:unpol} into one the algorithms defined in 
+%DIFDELCMD < \ref{eq:JHJ:DI:tfw}+\ref{eq:JHR:DI:tfw} or \ref{eq:JHJ:DD:unpol}+\ref{eq:JHR:DD:unpol} into one the 
+%DIFDELCMD < algorithms defined in 
 %DIFDELCMD < Appendix~\ref{sec:algs}. Note, however, that both the GN and LM algorithms hinge around 
 %DIFDELCMD < inverting a large matrix. This will have a size of $2\Na$ or $2\Na\Nd$ squared, 
 %DIFDELCMD < for the DI or DD case respectively. With a naive implementation of matrix inversion, 
@@ -1230,18 +877,13 @@ structure:
 
 %DIFDELCMD < \begin{figure*}
 %DIFDELCMD < \begin{center}
-%DIFDELCMD < % <<<<<<< cjpaper0.tex
-%DIFDELCMD < % \includegraphics[width=\textwidth]{FourOrderJhJ}
-%DIFDELCMD < % =======
-%DIFDELCMD < %\includegraphics[width=\textwidth]{ThreeJhJ.eps}
-%DIFDELCMD < \includegraphics[width=\textwidth]{\FigDir FourOrderJhJ}
-%DIFDELCMD < % >>>>>>> cjpaper.tex
+%DIFDELCMD < \includegraphics[width=.72\textwidth]{\FigDir JHJ_all_new}
 %DIFDELCMD < \caption{\label{fig:JHJ}A graphical representation of $\JHJ$ for a case of 
 %DIFDELCMD < 40 antennas and 5 directions. Each pixel represents the amplitude of a single matrix element.
-%DIFDELCMD < The top row (a--d) shows conventional real-only Jacobians constructed by taking the partial derivatives w.r.t. 
+%DIFDELCMD < The left column (a--d) shows conventional real-only Jacobians constructed by taking the partial derivatives w.r.t. 
 %DIFDELCMD < the real and imaginary parts of the gains. The ordering of the parameters is (a) real/imaginary major, 
 %DIFDELCMD < direction, antenna minor (i.e. antenna changes fastest); (b) real/imaginary, antenna, direction; (c) direction, 
-%DIFDELCMD < real/imaginary, antenna; (d) antenna, real/imaginary, direction. The bottom row (e--h) shows full complex Jacobians with similar parameter ordering (direct/conjugate instead of real/imaginary). Note that panel (f) can also be taken to represent the direction-independent case, if we imagine each $5\times5$ block as one pixel.}
+%DIFDELCMD < real/imaginary, antenna; (d) antenna, real/imaginary, direction. The right column (e--h) shows full complex Jacobians with similar parameter ordering (direct/conjugate instead of real/imaginary). Note that panel (f) can also be taken to represent the direction-independent case, if we imagine each $5\times5$ block as one pixel.}
 %DIFDELCMD < \end{center}
 %DIFDELCMD < \end{figure*}
 %DIFDELCMD < 
@@ -1263,13 +905,9 @@ structure:
 %DIFDELCMD < Fig.~\ref{fig:JHJ}(f). It is therefore not unreasonable 
 %DIFDELCMD < to approximate $\JHJ$ with a diagonal matrix for purposes of inversion (or equivalently, making the assumption that 
 %DIFDELCMD < the problem is separable per antenna):
-%DIFDELCMD < 
-
-%DIFDELCMD < \[
+%DIFDELCMD < \begin{equation}
 %DIFDELCMD < \HHa = \Matrix{cc}{\bmath{A}&0\\0&\bmath{A}}
-%DIFDELCMD < \]
-%DIFDELCMD < 
-
+%DIFDELCMD < \end{equation}
 %DIFDELCMD < This makes the costs of matrix inversion negligible -- $O(\Na)$ operations, as compared to the $O(\Na^2)$ cost 
 %DIFDELCMD < of computing the diagonal elements of the Jacobian in the first place. The price of using an approximate inverse for 
 %DIFDELCMD < $\JHJ$ is a less accurate update step, so we can expect to require more iterations before convergence is reached.
@@ -1277,14 +915,10 @@ structure:
 
 %DIFDELCMD < Combining this approximation with GN optimization and using Eq.~\ref{eq:ghat:approx}, we find the following expression
 %DIFDELCMD < for the GN update step:
-%DIFDELCMD < 
-
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \label{eq:stefcal-matrix}
 %DIFDELCMD < \vecg_{k+1} = \HHa^{-1}_{\UL} \JJ_\LEFT^{~H} \Dd,
 %DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
 %DIFDELCMD < where $\bmath{X}_\UL$ designates the top left quadrant of matrix $\bmath{X}$. Note that the condition of 
 %DIFDELCMD < Eq.~\ref{eq:ghat:precise} is met: $\HHa^{-1}_{~~~\TOP} \HH_\LEFT=\bmath{A}^{-1}\bmath{A}=\II$, i.e. the
 %DIFDELCMD < GN update can be written in terms of $\Dd$. This comes about due to
@@ -1294,8 +928,6 @@ structure:
 %DIFDELCMD < 
 
 %DIFDELCMD < The per-element expression, in the diagonal approximation, is
-%DIFDELCMD < 
-
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \label{eq:stefcal}
 %DIFDELCMD < g_{p,k+1} = \big( \sum\limits_{q\ne p} \bar{y}_{pq} y_{pq} \big)^{-1} \sum\limits_{q\ne p} \bar{y}_{pq} d_{pq}.
@@ -1303,22 +935,20 @@ structure:
 %DIFDELCMD < 
 
 %DIFDELCMD < Equation~\ref{eq:stefcal} 
-%DIFDELCMD < is identical to the update step proposed by \citet{Stefcal} for the \StefCal\ algorithm, and by \citet{Mitchell-RTS} for MWA calibration. Note that these authors arrive at the result from a different 
-%DIFDELCMD < direction, by treating Eq.~\ref{eq:cal:DI} as a function of $\bmath{g}$ only, and completely ignoring the conjugate term. 
+%DIFDELCMD < is identical to the update step proposed by \citet{Stefcal} for the \StefCal\ algorithm, and by 
+%DIFDELCMD < \citet{Mitchell-RTS} for MWA calibration. Note that these authors arrive at the result from a different 
+%DIFDELCMD < direction, by treating Eq.~\ref{eq:cal:DI} as a function of $\bmath{g}$ only, and completely ignoring 
+%DIFDELCMD < the conjugate term. 
 %DIFDELCMD < The resulting complex Jacobian (Eq.~\ref{eq:JJ:di:basic}) then has null off-diagonal blocks, and $\JJ^H\JJ$ becomes 
 %DIFDELCMD < diagonal.
 %DIFDELCMD < 
 
 %DIFDELCMD < Interestingly, applying the same idea to LM optimization (Eq.~\ref{eq:LM}), and remembering that $\HHa$ is 
 %DIFDELCMD < diagonal, we can derive the following update equation instead:
-%DIFDELCMD < 
-
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \bmath{g}_{k+1} = \frac{\lambda}{1+\lambda}\bmath{g}_k + \frac{1}{1+\lambda} \HHa_{\UL}^{-1} \JJ_\LEFT^{~H} \Dd,
 %DIFDELCMD < \label{eq:stefcal-lambda-average}
 %DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
 %DIFDELCMD < which for $\lambda=1$ essentially becomes the basic average-update step of \StefCal. We should note that \citet{Stefcal}
 %DIFDELCMD < empirically find better convergence when Eq.~\ref{eq:stefcal-matrix} is employed for odd $k$, and 
 %DIFDELCMD < Eq.~\ref{eq:stefcal-lambda-average} for even $k$. In terms of the framework defined here, the basic \StefCal\ algorithm 
@@ -1351,41 +981,25 @@ structure:
 
 %DIFDELCMD < \begin{itemize}
 %DIFDELCMD < \item conjugate major, direction, antenna minor (CDA):
-%DIFDELCMD < 
-
-%DIFDELCMD < \[
+%DIFDELCMD < \begin{equation}
 %DIFDELCMD < [g^{(1)}_1 \dots g^{(1)}_{\Na}, g^{(2)}_1 \dots g^{(2)}_{\Na}, g^{(3)}_1 \dots g^{(\Nd)}_{\Na}, 
 %DIFDELCMD <  \bar{g}^{(1)}_1 \dots \bar{g}^{(1)}_{\Na} \dots ]^T
-%DIFDELCMD < \]
-%DIFDELCMD < 
-
+%DIFDELCMD < \end{equation}
 %DIFDELCMD < \item conjugate, antenna, direction (CAD):
-%DIFDELCMD < 
-
-%DIFDELCMD < \[
+%DIFDELCMD < \begin{equation}
 %DIFDELCMD < [g^{(1)}_1 \dots g^{(\Nd)}_1, g^{(1)}_2 \dots g^{(\Nd)}_2, g^{(1)}_3 \dots g^{(\Nd)}_{\Na}, 
 %DIFDELCMD <  \bar{g}^{(1)}_1 \dots ]^T
-%DIFDELCMD < \]
-%DIFDELCMD < 
-
+%DIFDELCMD < \end{equation}
 %DIFDELCMD < \item direction, conjugate, antenna (DCA):
-%DIFDELCMD < 
-
-%DIFDELCMD < \[
+%DIFDELCMD < \begin{equation}
 %DIFDELCMD < [g^{(1)}_1 \dots g^{(1)}_{\Na},\bar{g}^{(1)}_1 \dots \bar{g}^{(1)}_{\Na},
 %DIFDELCMD < g^{(2)}_1 \dots g^{(2)}_{\Na}, \bar{g}^{(2)}_1 \dots ]^T
-%DIFDELCMD < \]
-%DIFDELCMD < 
-
+%DIFDELCMD < \end{equation}
 %DIFDELCMD < \item antenna, conjugate, direction (ACD):
-%DIFDELCMD < 
-
-%DIFDELCMD < \[
+%DIFDELCMD < \begin{equation}
 %DIFDELCMD < [g^{(1)}_1 \dots g^{(\Nd)}_1,\bar{g}^{(1)}_1 \dots \bar{g}^{(\Nd)}_1,
 %DIFDELCMD < g^{(1)}_2 \dots g^{(\Nd)}_2, \bar{g}^{(1)}_2 \dots ]^T
-%DIFDELCMD < \]
-%DIFDELCMD < 
-
+%DIFDELCMD < \end{equation}
 %DIFDELCMD < \end{itemize}
 %DIFDELCMD < 
 
@@ -1393,28 +1007,25 @@ structure:
 %DIFDELCMD < 
 
 %DIFDELCMD < At this point we may derive a whole family of DD calibration algorithms -- there are many ways to skin a cat. Each 
-%DIFDELCMD < algorithm is defined by picking an ordering for $\Gg$, then examining the corresponding $\JHJ$ structure and specifying 
-%DIFDELCMD < an approximate matrix inversion mechanism, then applying GN or LM optimization. Let us now work through a couple of examples.
+%DIFDELCMD < algorithm is defined by picking an ordering for $\Gg$, then examining the corresponding $\JHJ$ structure 
+%DIFDELCMD < and specifying an approximate matrix inversion mechanism, then applying GN or LM optimization. Let us now work 
+%DIFDELCMD < through a couple of examples.
 %DIFDELCMD < 
 
 %DIFDELCMD < \subsubsection{DCA: separating by direction}
 %DIFDELCMD < \label{sec:dca}
 %DIFDELCMD < 
 
-%DIFDELCMD < Let us first consider the DCA ordering (Fig.~\ref{fig:JHJ}g). The $\JHJ$ term can be split into $\Nd\times\Nd$ blocks:
-%DIFDELCMD < 
-
 %DIFDELCMD < \newcommand{\JJJ}{\mathcal{J}}
 %DIFDELCMD < 
 
+%DIFDELCMD < Let us first consider the DCA ordering (Fig.~\ref{fig:JHJ}g). The $\JHJ$ term can be split into $\Nd\times\Nd$ blocks:
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \label{eq:JHJ:DD:blocked}
 %DIFDELCMD < \JHJ = \Matrix{ccc}{\JJJ^1_1 & \dots & \JJJ^{\Nd}_1 \\
 %DIFDELCMD < \vdots & & \vdots \\
 %DIFDELCMD < \JJJ_{\Nd}^1 & \dots & \JJJ_{\Nd}^{\Nd} },
 %DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
 %DIFDELCMD < where the structure of each $2\Na\times2\Na$ block at row $c$, column $d$, is exactly as 
 %DIFDELCMD < given by Eq.~\ref{eq:JHJ:DD:unpol} (or by Fig.~\ref{fig:JHJ}f, in miniature). 
 %DIFDELCMD < 
@@ -1422,58 +1033,36 @@ structure:
 %DIFDELCMD < The on-diagonal (``same-direction'') blocks $\JJJ^d_d$ will have the same structure as in the DI 
 %DIFDELCMD < case (Eq.~\ref{eq:JHJ:DI} or Eq.~\ref{eq:JHJ:3ant}). Consider now the off-diagonal (``cross-direction'') 
 %DIFDELCMD < blocks $\JJJ^d_c$. Their non-zero elements can take one of two forms:
-%DIFDELCMD < 
-
-%DIFDELCMD < \[
+%DIFDELCMD < \begin{equation}
 %DIFDELCMD <   \sum\limits_{q\ne i,s} \yycH_{iqs} \yyd_{iqs} = \sum\limits_{q\ne i} \ggc_q \ggdH_q \sum_s \mmcH_{iqs} \mmd_{iqs}
-%DIFDELCMD < \]
-%DIFDELCMD < 
-
+%DIFDELCMD < \end{equation}
 %DIFDELCMD < or
-%DIFDELCMD < 
-
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD <   \sum\limits_{s} \yyc_{jis} \yyd_{ijs} = \ggcH_i \ggdH_j \sum_s \mmcH_{ijs} \mmd_{ijs}
 %DIFDELCMD < \label{eq:JHJ:DD:crossterms}
 %DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
 %DIFDELCMD < A common element of both is essentially a dot product of sky model components. This is a 
 %DIFDELCMD < measure of how ``non-orthogonal'' the components are:
-%DIFDELCMD < 
-
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \label{eq:Xpqcd}
 %DIFDELCMD < X_{pq}^{(cd)} = \left \langle \bmath{m}_{pq}^\mathrm{(c)},\bmath{m}^\mathrm{(d)}_{pq} \right \rangle = \sum_s \mmc_{pqs} \mmdH_{pqs}.
 %DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
 %DIFDELCMD < We should now note that each model component will typically correspond to a source of limited extent. This can be 
 %DIFDELCMD < expressed as
-%DIFDELCMD < 
-
-%DIFDELCMD < \[
+%DIFDELCMD < \begin{equation}
 %DIFDELCMD < m_{pqt\nu}^{(d)} = S^{(d)}_{pqt\nu} k^{(d)}_{pqt\nu}, 
-%DIFDELCMD < \]
-%DIFDELCMD < 
-
+%DIFDELCMD < \end{equation}
 %DIFDELCMD < where the term $S$ represents the visibility of that sky model component if placed at phase centre (usually 
 %DIFDELCMD < only weakly dependent on $t,\nu$ -- in the case of a point source, for example, $S$ is just a constant flux term),
 %DIFDELCMD < while the term
-%DIFDELCMD < 
-
-%DIFDELCMD < \[
+%DIFDELCMD < \begin{equation}
 %DIFDELCMD < k^{(d)}_{pqt\nu} = e^{-2\pi i (\bmath{u}_{pq}(t)\cdot\bmath{\sigma}_d)\nu/c},~~~\bmath{\sigma}_d = [l_d,m_d,n_d-1]^T,
-%DIFDELCMD < \]
-%DIFDELCMD < 
-
+%DIFDELCMD < \end{equation}
 %DIFDELCMD < represents the phase rotation to direction $\bmath{\sigma}_d$ (where $lmn$ are the corresponding direction cosines), 
 %DIFDELCMD < given a baseline vector as a function of time $\bmath{u}_{pq}(t)$. We can then approximate the sky model dot product above as
-%DIFDELCMD < 
-
-%DIFDELCMD < \[
+%DIFDELCMD < \begin{equation}
 %DIFDELCMD < X_{pq}^{(cd)} = S^{(c)}_{pq}S^{(d)}_{pq} \sum_s e^{-2\pi i [\bmath{u}_{pq}(t)\cdot(\bmath{\sigma}_c-\bmath{\sigma}_d) ]\nu/c}
-%DIFDELCMD < \]
+%DIFDELCMD < \end{equation}
 %DIFDELCMD < 
 
 %DIFDELCMD < The sum over samples $s$ is essentially just an integral over a complex fringe. We may expect this to be small (i.e. the
@@ -1484,18 +1073,18 @@ structure:
 %DIFDELCMD < If we now assume that the sky model components are orthogonal or near-orthogonal, then 
 %DIFDELCMD < we may treat the ``cross-direction'' blocks of the $\JHJ$ matrix in Eq.~\ref{eq:JHJ:DD:blocked} as null. The problem is 
 %DIFDELCMD < then separable by direction, and $\JHJ$ is approximated by a block-diagonal matrix:
-%DIFDELCMD < 
-
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \label{eq:JHJ:DD:block-diag}
 %DIFDELCMD < \HHa = \Matrix{ccc}{\JJJ^1_1 &  & 0 \\
 %DIFDELCMD < & \ddots &  \\
 %DIFDELCMD < 0 & & \JJJ_{\Nd}^{\Nd} },
 %DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
 %DIFDELCMD < The inversion complexity then reduces to $O(\Nd\Na^3)$, which, for large numbers of directions, is a huge improvement on 
 %DIFDELCMD < $O(\Nd^3\Na^3)$. Either GN and LM optimization may now be applied. 
+%DIFDELCMD < 
+
+%DIFDELCMD < \newcommand{\JJX}{\bmath{A}}
+%DIFDELCMD < \newcommand{\JJY}{\bmath{B}}
 %DIFDELCMD < 
 
 %DIFDELCMD < \subsubsection{COHJONES: separating by antenna}
@@ -1503,20 +1092,12 @@ structure:
 
 %DIFDELCMD < A complementary approach is to separate the problem by antenna instead. Consider the CAD ordering (Fig.~\ref{fig:JHJ}f). 
 %DIFDELCMD < The top half of $\JHJ$ then has the following block structure (and the bottom half is its symmetric conjugate):
-%DIFDELCMD < 
-
-%DIFDELCMD < \newcommand{\JJX}{\bmath{A}}
-%DIFDELCMD < \newcommand{\JJY}{\bmath{B}}
-%DIFDELCMD < 
-
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \label{eq:JHJ:DD:blocked-ant}
 %DIFDELCMD < \HH_\TOP = \Matrix{cccccc}{\JJX^1_1 &  & 0 & \JJY^1_1 & \dots & \JJY^{\Na}_1 \\
 %DIFDELCMD <  & \ddots &  & \vdots & & \vdots \\
 %DIFDELCMD < 0 &  & \JJX_{\Na}^{\Na} & \JJY_{\Na}^1 & \dots & \JJY_{\Na}^{\Na} },
 %DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
 %DIFDELCMD < that is, its left half is block-diagonal, consisting of $\Nd\times\Nd$ blocks (which follows
 %DIFDELCMD < from Eq.~\ref{eq:JHJ:DD:unpol}), while its right half consists of elements of the form given by
 %DIFDELCMD < Eq.~\ref{eq:JHJ:DD:crossterms}. 
@@ -1530,21 +1111,13 @@ structure:
 
 %DIFDELCMD < For GN, the update step may be computed in direct analogy to Eq.~\ref{eq:stefcal} (noting that Eq.~\ref{eq:ghat:precise}
 %DIFDELCMD < holds):
-%DIFDELCMD < 
-
-%DIFDELCMD < \[
+%DIFDELCMD < \begin{equation}
 %DIFDELCMD < \bmath{g}_{k+1} = \HHa_\UL^{-1} \JJ_\LEFT^{~H} \Dd.
-%DIFDELCMD < \]
-%DIFDELCMD < 
-
+%DIFDELCMD < \end{equation}
 %DIFDELCMD < We may note in passing that for LM, the analogy is only approximate:
-%DIFDELCMD < 
-
-%DIFDELCMD < \[
+%DIFDELCMD < \begin{equation}
 %DIFDELCMD < \Gg_{k+1} \approx \frac{\lambda}{1+\lambda}\Gg_k + \frac{1}{1+\lambda} \HHa_\UL^{-1} \JJ_\LEFT^{~H} \Dd,
-%DIFDELCMD < \]
-%DIFDELCMD < 
-
+%DIFDELCMD < \end{equation}
 %DIFDELCMD < since $\HHa$ is only approximately diagonal.
 %DIFDELCMD < 
 
@@ -1567,16 +1140,10 @@ structure:
 %DIFDELCMD < approximation for the entirety of $\JHJ$. The matrix then becomes purely diagonal, matrix inversion reduces to $O(\Nd\Na)$ in 
 %DIFDELCMD < complexity, and algorithmic cost becomes dominated by the $O(\Nd\Na^2)$ process of computing the diagonal elements of 
 %DIFDELCMD < $\JHJ$. Note that Eq.~\ref{eq:ghat:precise} no longer holds, and the GN update step must be computed via the residuals:
-%DIFDELCMD < 
-
-%DIFDELCMD < \[
+%DIFDELCMD < \begin{equation}
 %DIFDELCMD < \bmath{g}_{k+1} = \bmath{g}_k + \HHa^{-1}_\UL \JJ^{~H}_\LEFT \Rr,
-%DIFDELCMD < \]
-%DIFDELCMD < 
-
+%DIFDELCMD < \end{equation}
 %DIFDELCMD < with the per-element expression being 
-%DIFDELCMD < 
-
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \label{eq:stefcal:dd:unpol}
 %DIFDELCMD < g_{p,k+1}^{(d)} = g_{p,k}^{(d)} + 
@@ -1603,7 +1170,7 @@ structure:
 %DIFDELCMD < steps will scale differently (except iii, which is $O(\Na^2\Nd)$ for all algorithms). Table~\ref{tab:costs} 
 %DIFDELCMD < summarizes the scaling behaviour. 
 %DIFDELCMD < An additional scaling factor is given by the number of iterations required to converge. This is harder
-%DIFDELCMD < to quantify. For example, in the authors' experience \citep{OMS-Stefcal}, an ``exact'' (LM) implementation of
+%DIFDELCMD < to quantify. For example, in our experience \citep{OMS-Stefcal}, an ``exact'' (LM) implementation of
 %DIFDELCMD < DI calibration problem converges in much fewer iterations than \StefCal\ (on the order of a few vs. a few tens), but is much 
 %DIFDELCMD < slower in terms of ``wall time'' due to the more expensive iterations ($\Na^3$ vs. $\Na$ scaling). This trade-off  
 %DIFDELCMD < between ``cheap--approximate'' and ``expensive--accurate'' is typical for iterative algorithms. 
@@ -1619,7 +1186,15 @@ structure:
 %DIFDELCMD < 
 
 %DIFDELCMD < \begin{table}
+%DIFDELCMD < \caption{\label{tab:costs}The scaling of computational costs for a single iteration of the 
+%DIFDELCMD < four DD calibration algorithms discussed in the text, broken down by computational step. 
+%DIFDELCMD < The dominant term(s) in each case are marked by ``$\dagger$''. Not shown is the cost of computing the $\JJ^H\Dd$ 
+%DIFDELCMD < vector, which is $O(\Na^2\Nd)$ for all algorithms. ``Exact'' refers to a naive implementation of GN or LM with exact 
+%DIFDELCMD < inversion of the $\JHJ$ term. Scaling laws for DI calibration algorithms may be obtained by assuming $\Nd=1$, in which
+%DIFDELCMD < case \COH\ or {\sc AllJones} become equivalent to \StefCal. 
+%DIFDELCMD < }
 %DIFDELCMD < \begin{tabular}{c|ccc}
+%DIFDELCMD < \hline
 %DIFDELCMD < algorithm & $\HHa$ & $\HHa^{-1}$ & multiply \\
 %DIFDELCMD < \hline
 %DIFDELCMD < Exact          & $O(\Na^2\Nd^2)$ & $O(\Na^3\Nd^3)^\dagger$ &  $O(\Na^2\Nd^2)$ \\ 
@@ -1628,13 +1203,6 @@ structure:
 %DIFDELCMD < DCA            & $O(\Na^2\Nd)$   & $O(\Na^3\Nd)^\dagger$   &  $O(\Na^2\Nd)$ \\
 %DIFDELCMD < \hline
 %DIFDELCMD < \end{tabular}
-%DIFDELCMD < \caption{\label{tab:costs}The scaling of computational costs for a single iteration of the 
-%DIFDELCMD < four DD calibration algorithms discussed in the text, broken down by computational step. 
-%DIFDELCMD < The dominant term(s) in each case are marked by ``$\dagger$''. Not shown is the cost of computing the $\JJ^H\Dd$ 
-%DIFDELCMD < vector, which is $O(\Na^2\Nd)$ for all algorithms. ``Exact'' refers to a naive implementation of GN or LM with exact 
-%DIFDELCMD < inversion of the $\JHJ$ term. Scaling laws for DI calibration algorithms may be obtained by assuming $\Nd=1$, in which
-%DIFDELCMD < case \COH\ or {\sc AllJones} become equivalent to \StefCal. 
-%DIFDELCMD < }
 %DIFDELCMD < \end{table}
 %DIFDELCMD < 
 
@@ -1642,7 +1210,7 @@ structure:
 %DIFDELCMD < \label{sec:DI:smooth}
 %DIFDELCMD < 
 
-%DIFDELCMD < From physical considerations, we know that gains do not vary arbitrarily as a functions of frequency and time. It can
+%DIFDELCMD < From physical considerations, we know that gains do not vary arbitrarily in frequency and time. It can
 %DIFDELCMD < therefore be desirable to impose some sort of smoothness constraint on the solutions, which can improve conditioning, especially
 %DIFDELCMD < in low-SNR situations. A simple but crude way to do this is use solution intervals (Sect.~\ref{sec:solution-intervals}),
 %DIFDELCMD < which gives a constant gain solution per interval, but produces non-physical jumps at the edge of each interval.
@@ -1653,14 +1221,10 @@ structure:
 %DIFDELCMD < Another way to impose smoothness combines the ideas of solution intervals  (Eq.~\ref{eq:cal:DI:tf}) 
 %DIFDELCMD < and weighting (Eq.~\ref{eq:LSmin:w}). At every time/frequency sample $t_0,\nu_0$, we can postulate a weighted 
 %DIFDELCMD < LS problem:
-%DIFDELCMD < 
-
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \label{eq:cal:DI:smooth}
 %DIFDELCMD < \min_{\bmath{g}}\sum_{pqt\nu}w(t-t_0,\nu-\nu_0)|r_{pqt\nu}|^2, 
 %DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
 %DIFDELCMD < where $w$ is a smooth weighting kernel that upweighs samples at or near the current sample, and downweighs distant 
 %DIFDELCMD < samples (e.g., a 2D Gaussian). The solutions for adjacent samples will be very close (since they 
 %DIFDELCMD < are constrained by practically the same range of data points, with only a smooth change in weights), and the 
@@ -1672,36 +1236,24 @@ structure:
 %DIFDELCMD < implementing this in practice. Consider the weighted equations of Eqs.~\ref{eq:JHJ:DI:tfw} and \ref{eq:JHR:DI:tfw}, 
 %DIFDELCMD < and replace the sample index $s$ by $t,\nu$. Under the diagonal approximation, each parameter update at $t_0,\nu_0$ is 
 %DIFDELCMD < computed as:
-%DIFDELCMD < 
-
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \label{eq:stefcal:w}
 %DIFDELCMD < g_{p,{k+1}}(t_0,\nu_0) = \frac{\sum\limits_{q\ne p,t,\nu} w(t-t_0,\nu-\nu_0) \bar{y}_{pqt\nu} d_{pqt\nu} }
 %DIFDELCMD < {\sum\limits_{q\ne p,t,\nu} w(t-t_0,\nu-\nu_0) \bar{y}_{pqt\nu} y_{pqt\nu}}.
 %DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
 %DIFDELCMD < Looking at Eq.~\ref{eq:stefcal:w}, it's clear that both sums represent a convolution. If we define two functions of $t,\nu$:
-%DIFDELCMD < 
-
-%DIFDELCMD < \[
+%DIFDELCMD < \begin{equation}
 %DIFDELCMD < \alpha_p(t,\nu) = \sum\limits_{q\ne p} \bar{y}_{pqt\nu} d_{pqt\nu},~~~
 %DIFDELCMD < \beta_p(t,\nu) = \sum\limits_{q\ne p} \bar{y}_{pqt\nu} y_{pqt\nu},
-%DIFDELCMD < \]
-%DIFDELCMD < 
-
+%DIFDELCMD < \end{equation}
 %DIFDELCMD < then Eq.~\ref{eq:stefcal:w} corresponds to the ratio of two convolutions
-%DIFDELCMD < 
-
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \label{eq:JHJ:diag:smooth}
 %DIFDELCMD < g_{p,k+1}(t,\nu) = \frac{w\circ \alpha_p}{w\circ\beta_p},
 %DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
 %DIFDELCMD < sampled over a discrete $t,\nu$ grid. Note that the formulation above also allows for different smoothing kernels per antenna.
 %DIFDELCMD < Iterating Eq.~\ref{eq:JHJ:diag:smooth} to convergence at every $t,\nu$ slot, we obtain per-antenna arrays of gain solutions 
-%DIFDELCMD < answrering Eq.~\ref{eq:cal:DI:smooth}. These solutions are smooth in frequency and time, with the degree of smoothness 
+%DIFDELCMD < answering Eq.~\ref{eq:cal:DI:smooth}. These solutions are smooth in frequency and time, with the degree of smoothness 
 %DIFDELCMD < constrained by the kernel $w$. 
 %DIFDELCMD < 
 
@@ -1734,18 +1286,12 @@ structure:
 
 %DIFDELCMD < To incorporate polarization, let us start by rewriting the basic RIME of Eq.~\ref{eq:RIME:unpol} using $2\times 2$ matrices 
 %DIFDELCMD < \citep[a full derivation may be found in][]{RRIME1}:
-%DIFDELCMD < 
-
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \label{eq:RIME:pol}
 %DIFDELCMD < \DD_{pq} = \GG_p \MM_{pq} \GG^H_q + \mat{N}_{pq}.
 %DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
 %DIFDELCMD < Here, $\DD_{pq}$ is the \emph{visibility matrix} observed by baseline $pq$, $\MM_{pq}$ is the sky \emph{coherency matrix}, $\GG_p$ is the Jones matrix associated with antenna $p$, and $\mat{N}_{pq}$ is a noise matrix. Quite importantly, the visibility and coherency matrices are Hermitian: 
 %DIFDELCMD < $\DD_{pq}=\DD^H_{qp}$, and $\MM_{pq}=\MM^H_{qp}$. The basic polarization calibration problem can be formulated as
-%DIFDELCMD < 
-
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \label{eq:cal:DI:pol}
 %DIFDELCMD < \min_{\{\GG_p\}}\sum_{pq}||\RR_{pq}||_F,~~
@@ -1753,230 +1299,151 @@ structure:
 %DIFDELCMD < \end{equation}
 %DIFDELCMD < 
 
-%DIFDELCMD < In principle, this can be recast into an ordinary complex NLLS problem (Eq.~\ref{eq:LSmin}) by vectorizing each 
-%DIFDELCMD < matrix in the above equation,  and then deriving the complex Jacobian according to Eq.~\ref{eq:JJ}. We may, however, 
+%DIFDELCMD < In principle, this can be recast into an ordinary complex NLLS problem (Eq.~\ref{eq:LSmin}) {\bf by vectorizing each 
+%DIFDELCMD < matrix equation,} and then deriving the complex Jacobian according to Eq.~\ref{eq:JJ}. We may, however, 
 %DIFDELCMD < obtain a more elegant derivation by using a simple operator calculus, where the ``atomic'' elements are $2\times2$ matrices 
 %DIFDELCMD < rather than scalars. We can then define the Jacobian more simply in terms of operators on such matrices. 
-%DIFDELCMD < 
-
-%DIFDELCMD < \subsection{Operator calculus}
-%DIFDELCMD < 
-
-%DIFDELCMD < First, let us introduce the vectorization operator ``vec'' and its inverse in the usual way. For a $2\times2$ matrix:
 %DIFDELCMD < 
 
 %DIFDELCMD < \newcommand{\VEC}[1]{\mathrm{vec}\,{#1}}
 %DIFDELCMD < \newcommand{\VECINV}[1]{\mathrm{vec}^{-1}\,{#1}}
 %DIFDELCMD < 
 
-%DIFDELCMD < \[
-%DIFDELCMD < \VEC{\mat{X}} = \Matrix{c}{x_{11}\\x_{12}\\x_{21}\\x_{22}},~~~
-%DIFDELCMD < \VECINV{\Matrix{c}{x_{11}\\x_{12}\\x_{21}\\x_{22}}} = \mat{X},
-%DIFDELCMD < \]
+%DIFDELCMD < \subsection{Operator calculus}
 %DIFDELCMD < 
 
-%DIFDELCMD < This sets up a trivial isomorphism between the space of $2\times2$ complex matrices $\COMPLEX^{2\times2}$ and the space 
-%DIFDELCMD < $\COMPLEX^4$. Any linear operator on $\mat{X} \in \COMPLEX^{2\times2}$, which we'll write as $\mathcal{A}[\mat{X}]$, 
-%DIFDELCMD < must then be equivalent to  multiplication of $\VEC{\mat{X}} \in \COMPLEX^4$ by some $4\times 4$ complex matrix $\mat A$. To put this formally, we can say that the $\mathrm{vec}$ operator induces an isomorphism  $\mathcal{W}$ 
+%DIFDELCMD < First, let us introduce the vectorization operator ``vec'' and its inverse in the usual (stacked columns) 
+%DIFDELCMD < way. For a $2\times2$ matrix:
+%DIFDELCMD < \begin{equation}
+%DIFDELCMD < \VEC{\mat{X}} = \Matrix{c}{x_{11}\\x_{21}\\x_{12}\\x_{22}},~~~
+%DIFDELCMD < \VECINV{\Matrix{c}{x_{11}\\x_{21}\\x_{12}\\x_{22}}} = \mat{X},
+%DIFDELCMD < \end{equation}
+%DIFDELCMD < which sets up a trivial isomorphism between the space of $2\times2$ complex matrices $\COMPLEX^{2\times2}$ and the space 
+%DIFDELCMD < $\COMPLEX^4$. Any linear operator on $\mat{X} \in \COMPLEX^{2\times2}$, which we'll write as $\mathcal{B}[\mat{X}]$, 
+%DIFDELCMD < must then be equivalent to  multiplication of $\VEC{\mat{X}} \in \COMPLEX^4$ by some $4\times 4$ complex matrix $\mat B$. To put this formally, we can say that the $\mathrm{vec}$ operator induces an isomorphism  $\mathcal{W}$ 
 %DIFDELCMD < between $\COMPLEX^{4\times4}$ and the space of linear 
 %DIFDELCMD < operators on $\COMPLEX^{2\times2}$:
-%DIFDELCMD < 
-
 %DIFDELCMD < \begin{eqnarray}
 %DIFDELCMD < && \mathcal{W}:\COMPLEX^{4\times4}\leftrightarrow\mathrm{Lin}(\COMPLEX^{2\times2},\COMPLEX^{2\times2}) \nonumber\\
-%DIFDELCMD < && \mathcal{W}(\mat{A})[\mat{X}] = \VECINV{(\mat{A}\,\VEC{\mat{X}})} \nonumber \\
-%DIFDELCMD < && \mathcal{W}^{-1}(\mathcal{A})\bmath{x} = \VEC{(\mathcal{A}[ \VECINV{\bmath{x}} ])} \label{eq:iso:W}
+%DIFDELCMD < && \mathcal{W}(\mat{B})[\mat{X}] = \VECINV{(\mat{B}\,\VEC{\mat{X}})} \nonumber \\
+%DIFDELCMD < && \mathcal{W}^{-1}(\mathcal{B})\bmath{x} = \VEC{(\mathcal{B}[ \VECINV{\bmath{x}} ])} \label{eq:iso:W}
 %DIFDELCMD < \end{eqnarray}
 %DIFDELCMD < 
 
-%DIFDELCMD < Of particular interest to us are two linear operators on $\COMPLEX^{2\times2}$: right multiply by $\mat{A}$, and left multiply by $\mat{A}$, where $\mat{A}$ is a $2\times2$ complex matrix:
-%DIFDELCMD < %, and transpose: 
-%DIFDELCMD < 
-
-%DIFDELCMD < \[
+%DIFDELCMD < Of particular interest to us are two linear operators on $\COMPLEX^{2\times2}$: right multiply by some $2\times2$ complex matrix $\mat{A}$, and left multiply by $\mat{A}$:
+%DIFDELCMD < \begin{equation}
 %DIFDELCMD < \begin{array}{l@{~}l}
 %DIFDELCMD < \Rop{\mat{A}}[\mat{X}] &= \mat{XA} \\
 %DIFDELCMD < \Lop{\mat{A}}[\mat{X}] &= \mat{AX} \\
 %DIFDELCMD < %\Top[\mat{X}] &= \mat{X}^T
 %DIFDELCMD < \end{array}
-%DIFDELCMD < \]
-%DIFDELCMD < 
-
-%DIFDELCMD < The $\mathcal{W}$ isopmorphism ensures that these operators can be represented as multiplication of 4-vectors 
-%DIFDELCMD < by a $4\times4$ matrix. Indeed, if $\mat{Y}=\Rop{\mat{A}}[\mat{X}]$, then 
-%DIFDELCMD < 
-
-%DIFDELCMD < \begin{equation}
-%DIFDELCMD < \Matrix{c}{y_{11}\\y_{12}\\y_{21}\\y_{22}} = \VEC{\Rop{\mat{A}}[\mat{X}]} = 
-%DIFDELCMD < \Matrix{cccc}{a_{11}&a_{21}&0&0 \\ a_{12}&a_{22}&0&0 \\ 0&0&a_{11}&a_{21} \\ 0&0&a_{12}&a_{22} }
-%DIFDELCMD < \Matrix{c}{x_{11}\\x_{12}\\x_{21}\\x_{22}} 
 %DIFDELCMD < \end{equation}
+%DIFDELCMD < The $\mathcal{W}$ isomorphism ensures that these operators can be represented as multiplication of 4-vectors 
+%DIFDELCMD < by specific kinds of $4\times4$ matrices. The exact form of these matrices is derived in Appendix~\ref{app:4x4}.
+%DIFDELCMD < We may repurpose the symbols $\Rop{\mat{A}}$ and $\Lop{\mat{A}}$ to also represent the $4\times4$ matrices themselves. 
 %DIFDELCMD < 
 
-%DIFDELCMD < Likewise, 
-%DIFDELCMD < 
-
-%DIFDELCMD < \begin{equation}
-%DIFDELCMD < \VEC{\Lop{\mat{A}}[\mat{X}]} = 
-%DIFDELCMD < \Matrix{cccc}{a_{11}&0&a_{12}&0 \\ 0&a_{11}&0&a_{12} \\ a_{21}&0&a_{22}&0  \\ 0&a_{21}&0&a_{22} }
-%DIFDELCMD < \VEC{\mat{X}}.
-%DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
-%DIFDELCMD < % and
-%DIFDELCMD < 
-
-%DIFDELCMD < % \begin{equation}
-%DIFDELCMD < % \VEC{\Top[\mat{X}]} = 
-%DIFDELCMD < % \Matrix{cccc}{1&0&0&0 \\ 0&0&1&0 \\ 0&1&0&0 \\ 0&0&0&1} \VEC{\mat{X}}.
-%DIFDELCMD < % \end{equation}
-%DIFDELCMD < 
-
-%DIFDELCMD < % Since $(\mat{A}\mat{X})^T = \mat{X}^T \mat{A}^T$, the superposition of a transpose and
-%DIFDELCMD < % an $\Lop{\mat{A}}$ or $\Rop{\mat{A}}$ operator is equivalent to the opposite-hand operator using $\mat{A}^T$:
-%DIFDELCMD < 
-
-%DIFDELCMD < % \begin{eqnarray}
-%DIFDELCMD < % \label{eq:LA:RATT}
-%DIFDELCMD < % \big[ \Rop{\mat{A}^T}[\cdot] \big ]^T = \Lop{\mat{A}}[\cdot] ~~&~&~~
-%DIFDELCMD < % \big[ \Lop{\mat{A}}[\cdot] \big]^T = \Rop{\mat{A}^T}[\cdot] \nonumber\\
-%DIFDELCMD < % \big[ \Rop{\mat{A}^H}[\cdot] \big ]^T = \Lop{\bar{\mat{A}}}[\cdot] ~~&~&~~
-%DIFDELCMD < % \big[ \Lop{\bar{\mat{A}}}[\cdot] \big]^T = \Rop{\mat{A}^H}[\cdot],
-%DIFDELCMD < % \end{eqnarray}
-%DIFDELCMD < 
-
-%DIFDELCMD < % which we can also write as e.g.
-%DIFDELCMD < 
-
-%DIFDELCMD < % \begin{equation}
-%DIFDELCMD < % \label{eq:RATT:op}
-%DIFDELCMD < % \Lop{\mat{A}} = \Top \Rop{\mat{A}^T},~~~\Top\Lop{\mat{A}} = \Lop{\mat{A}^T}.
-%DIFDELCMD < % \end{equation}
-%DIFDELCMD < 
-
-%DIFDELCMD < We may repurpose the symbols $\Rop{\mat{A}}$ and $\Lop{\mat{A}}$ to also represent the $4\times4$ matrices 
-%DIFDELCMD < themselves. It is trivial to see that
-%DIFDELCMD < 
-
+%DIFDELCMD < From the operator definitions, it is trivial to see that
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \label{eq:RH:LH}
 %DIFDELCMD < \Rop{\mat{A}}^H = \Rop{\mat{A}^H},~~~\Lop{\mat{A}}^H = \Lop{\mat{A}^H}.
 %DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
-%DIFDELCMD < % It is easy to see that Eq.~\ref{eq:RATT:op} must necessarily hold for the $4\times4$ matrix forms as well.
-%DIFDELCMD < 
-
-%DIFDELCMD < % Note that the meaning of $\Top$ is specifically a transpose in $\COMPLEX^{2\times2}$ space -- it is not the same
-%DIFDELCMD < % thing as a transpose of the $4\times4$ matrices. What $\Top$ actual does in $\COMPLEX^4$ is a swapping of vector 
-%DIFDELCMD < % elements (i.e. swapping of rows 2 and 3). 
-%DIFDELCMD < 
-
-%DIFDELCMD < Other obvious properties are:
-%DIFDELCMD < 
-
+%DIFDELCMD < and also that
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \label{eq:RAB:LAB}
 %DIFDELCMD < \Lop{\mat{A}}\Lop{\mat{B}} = \Lop{\mat{AB}},~~~\Rop{\mat{A}}\Rop{\mat{B}} = \Rop{\mat{BA}},~~~[\Rop{\mat{A}}]^{-1} = \Rop{\mat{A^{-1}}}
 %DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
 %DIFDELCMD < Note that Eq.~\ref{eq:RAB:LAB} is equally valid whether interpreted in terms of chaining operators, or multipying 
 %DIFDELCMD < the equivalent $4\times4$ matrices.
 %DIFDELCMD < 
 
 %DIFDELCMD < Finally, note that the transpose and Hermitian transpose operators in $\COMPLEX^{2\times2}$ space correspond to a swapping
 %DIFDELCMD < of the second and third rows in $\COMPLEX^4$ space:
-%DIFDELCMD < 
-
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \label{eq:vec:XH}
-%DIFDELCMD < \VEC{\mat{X}^T} = \Matrix{c}{x_{11}\\x_{21}\\x_{12}\\x_{22}},~~~
-%DIFDELCMD < \VEC{\mat{X}^H} = \Matrix{c}{\bar{x}_{11}\\\bar{x}_{21}\\\bar{x}_{12}\\\bar{x}_{22}}.
+%DIFDELCMD < \VEC{\mat{X}^T} = \Matrix{c}{x_{11}\\x_{12}\\x_{21}\\x_{22}},~~~
+%DIFDELCMD < \VEC{\mat{X}^H} = \Matrix{c}{\bar{x}_{11}\\\bar{x}_{12}\\\bar{x}_{21}\\\bar{x}_{22}}.
 %DIFDELCMD < \end{equation}
 %DIFDELCMD < 
 
 %DIFDELCMD < \subsection{Derivative operators and Jacobians}
 %DIFDELCMD < 
 
-%DIFDELCMD < We can use the relations of Eq.~\ref{eq:iso:W} to induce a natural mapping between any matrix-valued function of a 
+%DIFDELCMD < The vec operator also produces a natural mapping between any matrix-valued function of a 
 %DIFDELCMD < matrix argument $\mat{F}(\mat{G})$, $\mat{F}:\COMPLEX^{2\times2}\to\COMPLEX^{2\times2}$ and a corresponding 
 %DIFDELCMD < vector-valued function of a vector, $\bmath{f}:\COMPLEX^4\to\COMPLEX^4$:
-%DIFDELCMD < 
-
-%DIFDELCMD < \[
+%DIFDELCMD < \begin{equation}
 %DIFDELCMD < \bmath{f}(\bmath{g}) = \VEC{\mat{F}(\VECINV{\bmath{g}})}.
-%DIFDELCMD < \]
-%DIFDELCMD < 
-
-%DIFDELCMD < Consider now the partial (and conjugate partial) Jacobians of $\bmath{f}$ with respect to $\bmath{g}$ 
-%DIFDELCMD < (and $\bar{\bmath{g}}$). These are $4\times4$ matrices (Eq.~\ref{eq:Jk}):
-%DIFDELCMD < 
-
-%DIFDELCMD < \[
-%DIFDELCMD < \JJ_g = [ \partial f_i / \partial g_j ],~~~\JJ_{\bar{g}} = [ \partial f_i / \partial \bar{g}_j ]
-%DIFDELCMD < \]
-%DIFDELCMD < 
-
-%DIFDELCMD < We can now use the isomorphism of Eq.~\ref{eq:iso:W} to formally define the corresponding ``Wirtinger derivative operators'' 
-%DIFDELCMD < of $\mat{F}$ with respect to $\mat{G}$ and $\mat{G^H}$ as
-%DIFDELCMD < 
-
+%DIFDELCMD < \end{equation}
+%DIFDELCMD < Consider the partial and conjugate partial Jacobians of $\bmath{f}$ with respect to $\bmath{g}$ 
+%DIFDELCMD < and $\bar{\bmath{g}}$. These are $4\times4$ matrices given by Eq.~\ref{eq:Jk}:
+%DIFDELCMD < \begin{equation}
+%DIFDELCMD < \label{eq:Jk-fg}
+%DIFDELCMD < \JJ_k = [ \partial f_i / \partial g_j ],~~~\JJ_{k^*} = [ \partial f_i / \partial \bar{g}_j ],
+%DIFDELCMD < \end{equation}
+%DIFDELCMD < that represent linear approximations to $\bmath{f}$, i.e. linear operators on $\COMPLEX^4$ 
+%DIFDELCMD < mapping an increment in the argument $\Delta\bmath{g}$ to an increment in the function value $\Delta\bmath{f}$. 
+%DIFDELCMD < The isomorphism above matches them up with equivalent linear operators on $\COMPLEX^{2\times2}$ that represent
+%DIFDELCMD < linear approximations to $\bmath{F}$. We can call these operators the Wirtinger $2\times2$ matrix derivatives 
+%DIFDELCMD < of $\mat{F}$ with respect to $\mat{G}$ and $\mat{G^H}$:
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \label{eq:def:dF:dG}
-%DIFDELCMD < \frac{\partial\mat{F}}{\partial{\mat{G}}} = \mathcal{W}(\JJ_g),~~~
-%DIFDELCMD < \frac{\partial\mat{F}}{\partial{\mat{G}^H}} = \mathcal{W}(\JJ_{\bar{g}}^T)
+%DIFDELCMD < \frac{\partial\mat{F}}{\partial{\mat{G}}} = \mathcal{W}(\JJ_k),~~~
+%DIFDELCMD < \frac{\partial\mat{F}}{\partial{\mat{G}^H}} = \mathcal{W}(\JJ_{k^*}^T)
 %DIFDELCMD < \end{equation}
 %DIFDELCMD < 
 
-%DIFDELCMD < This formal definition will allow to write the Jacobians below in terms of matrices composed of operators. 
-%DIFDELCMD < In particular, it is easy to see (just from considering the corresponding $4\times4$ matrices) that
+%DIFDELCMD < The matrix derivative can be viewed as a linear operator on $\COMPLEX^{2\times2}$ that maps an increment
+%DIFDELCMD < $\Delta\mat{G}$ 
+%DIFDELCMD < to an increment $\Delta\mat{F}$. This is more than just a formal definition: thanks to the isomorphism, the operators 
+%DIFDELCMD < given by Eq.~\ref{eq:def:dF:dG}  are Wirtinger derivatives in exactly the same sense that the Jacobians of 
+%DIFDELCMD < Eq.~\ref{eq:Jk-fg} are Wirtinger derivatives, the former are simply the $\COMPLEX^{2\times2}$ manifestation of
+%DIFDELCMD < the gradient operators in $\COMPLEX^4$, as defined in Sect.~\ref{sec:Wirtinger}. However, operating in 
+%DIFDELCMD < $\COMPLEX^{2\times2}$ space allows us to write the larger Jacobians below in terms of simpler matrices composed 
+%DIFDELCMD < of operators, with a structure that completely conforms to the scalar derivation.
 %DIFDELCMD < 
 
-%DIFDELCMD < \[
-%DIFDELCMD < \frac{\partial(\mat{GA})}{\partial{\mat{G}}} = \Rop{A},~~~~\frac{\partial(\mat{AG^H})}{\partial{\mat{G^H}}} = \Lop{A}.
-%DIFDELCMD < \]
+%DIFDELCMD < It is easy to see that
+%DIFDELCMD < \begin{equation}
+%DIFDELCMD < \frac{\partial(\mat{GA})}{\partial{\mat{G}}} = \Rop{A},~~~~\frac{\partial(\mat{AG^H})}{\partial{\mat{G^H}}} = \Lop{A},
+%DIFDELCMD < \end{equation}
+%DIFDELCMD < in the operator sense, since in $\COMPLEX^4$ space the corresponding operation is simply multiplication of 
+%DIFDELCMD < a vector by a $\Rop{A}$ or $\Lop{A}$ matrix. Note that this calculus also offers a natural way of taking more
+%DIFDELCMD < complicated matrix derivatives. For example,
+%DIFDELCMD < \begin{equation}
+%DIFDELCMD < \frac{\partial(\mat{AGB})}{\partial{\mat{G}}} = \Lop{A}\Rop{B},
+%DIFDELCMD < \end{equation}
+%DIFDELCMD < which is a straightforward manifestation of the chain rule: $\mat{AGB}=\mat{A}(\mat{GB})$.
 %DIFDELCMD < 
 
 %DIFDELCMD < \subsection{Complex Jacobians for the polarized RIME}
 %DIFDELCMD < 
 
 %DIFDELCMD < Let us apply the operator calculus developed above to Eq.~\ref{eq:cal:DI:pol}. We have:
-%DIFDELCMD < 
-
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \label{eq:dR:dG}
 %DIFDELCMD < \frac{\partial\VV_{pq}}{\partial\GG_p} = \Rop{\MM_{pq}\GG^H_q},\mathrm{~~and~~}
 %DIFDELCMD < \frac{\partial\VV_{pq}}{\partial\GG^H_q} = \Lop{\GG_p \MM_{pq}}.
 %DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
 %DIFDELCMD < If we now stack all the gain matrices into one augmented ``vector of matrices'':
-%DIFDELCMD < 
-
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \label{eq:GGvec}
 %DIFDELCMD < \GGg = [ \GG_1,\dots,\GG_{\scriptstyle \Na},\GG^H_1,\dots,\GG^H_{\scriptstyle \Na} ]^T,
 %DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
 %DIFDELCMD < then we may construct the top half of the full complex Jacobian operator in full analogy with the 
 %DIFDELCMD < derivation of Eq.~\ref{eq:JJ:di:basic}. We'll use the same ``compound index'' convention for $pq$. That is, 
 %DIFDELCMD < $[pq]$ will represent a single index running through $M$ values (i.e. enumerating all combinations of $p<q$).
-%DIFDELCMD < 
-
 \begin{equation}%DIFAUXCMD
 %DIFDELCMD < \begin{equation}
 %DIFDELCMD < \label{eq:JJtop}
 %DIFDELCMD < \begin{array}{r@{~}cc@{~}cc}
 %DIFDELCMD <   & \overbrace{~~~~~~~~}^{j=1\dots \Na} & \overbrace{~~~~~~~~}^{j=1\dots \Na} \\
 %DIFDELCMD < 
-
 %DIFDELCMD < \JJ_\TOP = \big [ & 
 %DIFDELCMD < \Rop{ \MM_{pq}\GG^H_q }\delta^j_p & 
 %DIFDELCMD < \Lop{ \GG_p \MM_{pq}  }\delta^j_q 
 %DIFDELCMD < & \big ] ~~ \} %%%
-\DIFdelend \DIFaddbegin \JHJblocks{
+\JHJblocks{
   \delta^i_j \sum\limits_{q\ne i,s} \yycH_{iqs} \yyd_{iqs} 
 }{
   %& \nearrow^H \\
@@ -2080,9 +1547,9 @@ The per-element expression, in the diagonal approximation, is
 g_{p,k+1} = \big( \sum\limits_{q\ne p} \bar{y}_{pq} y_{pq} \big)^{-1} \sum\limits_{q\ne p} \bar{y}_{pq} d_{pq}.
 \end{equation}
 
-Equation~\ref{eq:stefcal} 
-is identical to the update step proposed by \citet{Stefcal} for the \StefCal\ algorithm, and by 
-\citet{Mitchell-RTS} for MWA calibration. Note that these authors arrive at the result from a different 
+Equation~\ref{eq:stefcal} is identical to the update step proposed by \citet{ME4}, and later adopted by 
+\citet{Mitchell-RTS} for MWA calibration, and independently derived by \citet{Stefcal} for the \StefCal\ algorithm. 
+Note that these authors arrive at the result from a different 
 direction, by treating Eq.~\ref{eq:cal:DI} as a function of $\bmath{g}$ only, and completely ignoring 
 the conjugate term. 
 The resulting complex Jacobian (Eq.~\ref{eq:JJ:di:basic}) then has null off-diagonal blocks, and $\JJ^H\JJ$ becomes 
@@ -2397,39 +1864,52 @@ To incorporate polarization, let us start by rewriting the basic RIME of Eq.~\re
 \label{eq:RIME:pol}
 \DD_{pq} = \GG_p \MM_{pq} \GG^H_q + \mat{N}_{pq}.
 \end{equation}
-Here, $\DD_{pq}$ is the \emph{visibility matrix} observed by baseline $pq$, $\MM_{pq}$ is the sky \emph{coherency matrix}, $\GG_p$ is the Jones matrix associated with antenna $p$, and $\mat{N}_{pq}$ is a noise matrix. Quite importantly, the visibility and coherency matrices are Hermitian: 
+Here, $\DD_{pq}$ is the \emph{visibility matrix} observed by baseline $pq$, $\MM_{pq}$ is the sky \emph{coherency matrix},
+$\GG_p$ is the Jones matrix associated with antenna $p$, and $\mat{N}_{pq}$ is a noise matrix. Quite importantly, 
+the visibility and coherency matrices are Hermitian: 
 $\DD_{pq}=\DD^H_{qp}$, and $\MM_{pq}=\MM^H_{qp}$. The basic polarization calibration problem can be formulated as
 \begin{equation}
 \label{eq:cal:DI:pol}
 \min_{\{\GG_p\}}\sum_{pq}||\RR_{pq}||_F,~~
-\RR_{pq} = \DD_{pq}-\GG_p \MM_{pq} \GG^H_q
+\RR_{pq} = \DD_{pq}-\GG_p \MM_{pq} \GG^H_q.
 \end{equation}
 
-In principle, this can be recast into an ordinary complex NLLS problem (Eq.~\ref{eq:LSmin}) {\bf by vectorizing each 
-matrix equation,} and then deriving the complex Jacobian according to Eq.~\ref{eq:JJ}. We may, however, 
-obtain a more elegant derivation by using a simple operator calculus, where the ``atomic'' elements are $2\times2$ matrices 
-rather than scalars. We can then define the Jacobian more simply in terms of operators on such matrices. 
+
+\DIFaddbeginFL \DIFaddFL{This is a set of $2\times2$ matrix equations, rather than the vector equations employed in the complex NNLS formalism 
+above (Eq.~\ref{eq:LSmin}). In principle, there is a straightforward way of recasting matrix equations into a 
+form suitable to  Eq.~\ref{eq:LSmin}: we can vectorize each matrix equation, turning it into an equation on 4-vectors, 
+and then derive the complex Jacobian in the usual manner (Eq.~\ref{eq:JJ}). We may, however, obtain a more elegant 
+derivation by using a simple operator calculus, where the ``atomic'' elements are $2\times2$ matrices rather than scalars. 
+We can then define the Jacobian in a more transparent way, as a matrix of linear operators on such atomic elements.}
+\DIFaddend
 
 \newcommand{\VEC}[1]{\mathrm{vec}\,{#1}}
 \newcommand{\VECINV}[1]{\mathrm{vec}^{-1}\,{#1}}
 
 \subsection{Operator calculus}
 
-\DIFadd{
-
+\DIFaddbeginFL \DIFaddFL{
 First, let us introduce the vectorization operator ``vec'' and its inverse in the usual (stacked columns) 
-way. For a $2\times2$ matrix:
+way. For a $2\times2$ matrix:}\DIFaddend
 \begin{equation}
 \VEC{\mat{X}} = \Matrix{c}{x_{11}\\x_{21}\\x_{12}\\x_{22}},~~~
 \VECINV{\Matrix{c}{x_{11}\\x_{21}\\x_{12}\\x_{22}}} = \mat{X},
 \end{equation}
+\DIFaddbeginFL \DIFaddFL{
 which sets up a trivial isomorphism between the space of $2\times2$ complex matrices $\COMPLEX^{2\times2}$ and the space 
-$\COMPLEX^4$. Any linear operator on $\mat{X} \in \COMPLEX^{2\times2}$, which we'll write as $\mathcal{B}[\mat{X}]$, 
-must then be equivalent to  multiplication of $\VEC{\mat{X}} \in \COMPLEX^4$ by some $4\times 4$ complex matrix $\mat B$. To put this formally, we can say that the $\mathrm{vec}$ operator induces an isomorphism  $\mathcal{W}$ 
-between $\COMPLEX^{4\times4}$ and the space of linear 
-operators on $\COMPLEX^{2\times2}$:
-\begin{eqnarray}
-&& \mathcal{W}:\COMPLEX^{4\times4}\leftrightarrow\mathrm{Lin}(\COMPLEX^{2\times2},\COMPLEX^{2\times2}) \nonumber\\
+$\COMPLEX^4$. Note that the ``vec'' operator is linear. Therefore, any linear operator on 
+$\mat{X} \in \COMPLEX^{2\times2}$, which we'll write as $\mathcal{B}[\mat{X}]$,  must then be equivalent to 
+multiplication of $\VEC{\mat{X}} \in \COMPLEX^4$ by some $4\times 4$ complex matrix $\mat B$, and vice versa:
+}\DIFaddend
+\begin{equation}
+\mathbf{x} = \VEC{\mat{X}},~~\mat{B}\mathbf{x} = \VEC{\mathcal{B}[\mat{X}]}
+\end{equation}
+\DIFaddbeginFL \DIFaddFL{
+To put this formally, we can say that the  $\mathrm{vec}$ operator induces an isomorphism  $\mathcal{W}$ 
+between the space of linear operators on $\COMPLEX^4$ -- that is, $\COMPLEX^{4\times4}$, and the space of linear operators on $\COMPLEX^{2\times2}$:
+}\DIFaddend
+\DIFaddend\begin{eqnarray}
+&& \COMPLEX^{4\times4}=\mathrm{Lin}(\COMPLEX^4,\COMPLEX^4) \overset{\mathcal{W}}{\rightarrow} \mathrm{Lin}(\COMPLEX^{2\times2},\COMPLEX^{2\times2}) \nonumber\\
 && \mathcal{W}(\mat{B})[\mat{X}] = \VECINV{(\mat{B}\,\VEC{\mat{X}})} \nonumber \\
 && \mathcal{W}^{-1}(\mathcal{B})\bmath{x} = \VEC{(\mathcal{B}[ \VECINV{\bmath{x}} ])} \label{eq:iso:W}
 \end{eqnarray}
@@ -2512,8 +1992,8 @@ complicated matrix derivatives. For example,
 \frac{\partial(\mat{AGB})}{\partial{\mat{G}}} = \Lop{A}\Rop{B},
 \end{equation}
 which is a straightforward manifestation of the chain rule: $\mat{AGB}=\mat{A}(\mat{GB})$.
-}
-\DIFaddend
+
+
 
 \subsection{Complex Jacobians for the polarized RIME}
 
@@ -2539,7 +2019,7 @@ $[pq]$ will represent a single index running through $M$ values (i.e. enumeratin
 \JJ_\TOP = \big [ & 
 \Rop{ \MM_{pq}\GG^H_q }\delta^j_p & 
 \Lop{ \GG_p \MM_{pq}  }\delta^j_q 
-& \big ] ~~ \} \DIFaddend \scriptstyle [pq]=1\dots \Nbl~(p<q)
+& \big ] ~~ \bm{\}} \scriptstyle [pq]=1\dots \Nbl~(p<q)
 % 
 %\Lop{ \bar{\GG}_p    \bar{\MM}_{pq} }\delta^j_q & 
 %\Rop{ \bar{\MM}_{pq} \bar{\GG^H_q}  }\delta^j_p  
@@ -2547,9 +2027,9 @@ $[pq]$ will represent a single index running through $M$ values (i.e. enumeratin
 \end{array}
 \end{equation}
 
-Note that there are two fully equivalent ways to read the above equation. In operator notation, it specifies a linear operator 
-$\JJ_\TOP$
-that maps a $2\Na$-vector of $2\times2$ matrices to an $\Nbl$-vector of $2\times2$ matrices. In conventional matrix notation, 
+Note that there are two fully equivalent ways to read the above equation. In operator notation, it specifies a linear 
+operator $\JJ_\TOP$ that maps a $2\Na$-vector of $2\times2$ matrices to an $\Nbl$-vector of $2\times2$ matrices. In
+conventional matrix notation, 
 $\JJ_\TOP$ is just a $4\Nbl\times8\Na$ matrix; the above equation then specifies the structure of this matrix in terms
 of $4\times4$ blocks, where each block is the matrix equivalent of the appropriate $\mathcal{R}$ or $\mathcal{L}$ operator.
 
@@ -2557,181 +2037,84 @@ Consider now the bottom half of the Jacobian. In Eq.~\ref{eq:JJ}, this correspon
 vector $\rrc_k$, and can be constructed by conjugating and mirroring $\JJ_\TOP$. Let us modify this construction 
 by taking the derivative of the Hermitian transpose of the residuals. We construct the augmented residual vector of matrices
 as:
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
 \RRr = 
+%DIFDELCMD < \Matrix{c}{
+%DIFDELCMD <   \RR_{pq} \\ 
+%DIFDELCMD <   \RR^H_{pq} 
+%DIFDELCMD < } 
+%DIFDELCMD < %%%
+%DIFDELCMD < \Stack{ 
+%DIFDELCMD < \} %%%
 \Matrix{c}{
-  \RR_{pq} \\ 
+  \RR_{pq} \\[1ex] 
   \RR^H_{pq} 
 } 
 ~~ 
 \Stack{ 
-\} \scriptstyle [pq]=1\dots \Nbl~(p<q) \\ 
-\} \scriptstyle [pq]=1\dots \Nbl~(p<q) 
+\bm{\}} \scriptstyle [pq]=1\dots \Nbl~(p<q) %DIFDELCMD < \\ 
+%DIFDELCMD < \} %%%
+\\[1ex] 
+\bm{\}} \scriptstyle [pq]=1\dots \Nbl~(p<q) 
 }
 \label{eq:RRtranspose}
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-%DIF <  Note that this modification is simply a matter of swapping some rows (Eq.~\ref{eq:vec:XH}) in the conjugate residual vector,
-%DIF <  i.e. a simple change in the numbering of the  equations. 
-%DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend Now, since $\VV^H_{pq}=\GG_q \MM^H_{pq} \GG^H_p,$ we have
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+Now, since $\VV^H_{pq}=\GG_q \MM^H_{pq} \GG^H_p,$ we have
+\begin{equation}
 \label{eq:dRH:dG}
 \frac{\partial\VV^H_{pq}}{\partial\GG_q} = \Rop{\MM^H_{pq}\GG^H_p},\mathrm{~~and~~}
 \frac{\partial\VV^H_{pq}}{\partial\GG^H_p} = \Lop{\GG_q \MM^H_{pq}},
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend and we may write out the full complex Jacobian as
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < \[
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \begin{equation}
-\DIFaddend \JJ = - \Matrix{cc}{ 
+and we may write out the full complex Jacobian as
+\begin{equation}
+\JJ = - \Matrix{cc}{ 
 \Rop{ \MM_{pq}\GG^H_q }\delta^j_p & 
 \Lop{ \GG_p \MM_{pq}  }\delta^j_q \\
 \Rop{ \MM^H_{pq} \GG^H_p } \delta^j_q & 
 \Lop{ \GG_q \MM^H_{pq}  } \delta^j_p  
 }~~ 
+%DIFDELCMD < \Stack{ 
+%DIFDELCMD < \} %%%
 \Stack{ 
-\} \scriptstyle [pq]=1\dots \Nbl~(p<q) \\ 
-\} \scriptstyle [pq]=1\dots \Nbl~(p<q) 
+\bm{\}} \scriptstyle [pq]=1\dots \Nbl~(p<q) %DIFDELCMD < \\ 
+%DIFDELCMD < \} %%%
+\\[1ex] 
+\bm{\}} \scriptstyle [pq]=1\dots \Nbl~(p<q) 
 }
-\DIFdelbegin %DIFDELCMD < \]
-\end{equation}%DIFAUXCMD
-%DIFDELCMD < %%%
-\begin{equation}%DIFAUXCMD
-\DIFdelend \DIFaddbegin \end{equation}
-\DIFaddend 
+\end{equation}
 
 We may now make exactly the same observation as we did to derive Eq.~\ref{eq:JJ:di}, and rewrite both $\JJ$ and $\RRr$ in terms of 
 a single row block. The $pq$ index will now run through $2\Nbl$ values (i.e. enumerating all combinations of $p\ne q$):
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
 \label{eq:JJ:pol}
 \JJ = \Matrix{cc}{ 
 \Rop{ \MM_{pq}\GG^H_q }\delta^j_p & 
 \Lop{ \GG_p \MM_{pq}  }\delta^j_q \\
 }~~ 
-\} \scriptstyle [pq]=1\dots 2\Nbl~(p\ne q)\\ 
+%DIFDELCMD < \} %%%
+\bm{\big\}} \scriptstyle [pq]=1\dots 2\Nbl~(p\ne q)\\ 
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdel{and 
-}%DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \DIFadd{and 
-}\DIFaddend \begin{equation}
+and 
+\begin{equation}
 \RRr = \Matrix{c}{ \mat{R}_{pq}}~~ 
-\} \scriptstyle [pq]=1\dots 2\Nbl~(p\ne q)\\ 
+%DIFDELCMD < \} %%%
+\bm{\}} \scriptstyle [pq]=1\dots 2\Nbl~(p\ne q)\\ 
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend This is in complete analogy to the derivations of the unpolarized case. For compactness, let us now define
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \newcommand{\YY}{\mat{Y}}
+This is in complete analogy to the derivations of the unpolarized case. For compactness, let us now define
+\newcommand{\YY}{\mat{Y}}
 \newcommand{\ZZ}{\mat{Z}}
-\DIFdelbegin %DIFDELCMD < \[
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \begin{equation}
-\DIFaddend \YY_{pq} = \MM_{pq} \GG^H_q,
-\DIFdelbegin %DIFDELCMD < \]
-\end{equation}%DIFAUXCMD
-%DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\begin{equation}%DIFAUXCMD
-\DIFdelend \DIFaddbegin \end{equation}
-\DIFaddend and, noting that 
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < \[
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \begin{equation}
-\DIFaddend \YY_{qp}^H = \GG_p \MM_{pq},
-\DIFdelbegin %DIFDELCMD < \]
-\end{equation}%DIFAUXCMD
-%DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\begin{equation}%DIFAUXCMD
-\DIFdelend \DIFaddbegin \end{equation}
-\DIFaddend and using Eq.~\ref{eq:RH:LH}, we can now write out the $\JHJ$ term, still expressed in terms of 
+\begin{equation}
+\YY_{pq} = \MM_{pq} \GG^H_q,
+\end{equation}
+and, noting that 
+\begin{equation}
+\YY_{qp}^H = \GG_p \MM_{pq},
+\end{equation}
+and using Eq.~\ref{eq:RH:LH}, we can now write out the $\JHJ$ term, still expressed in terms of 
 operators, as:
-%DIF < \footnote{The Hermitian conjugate operators are derived as $\Rop{\mat{A}}^H=\Rop{\mat{A}^H}$ and 
-%DIF < $\Lop{\mat{A}}^H=\Lop{\mat{A}^H}$, see Appendix~\ref{sec:4x4app}.} 
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
 \label{eq:JHJ:pol}
-\JHJ = \DIFdelbegin %DIFDELCMD < \JHJblocks{
-%DIFDELCMD <   \mathrm{diag}\sum\limits_{q\ne i} \Rop{\YY_{iq} \YY^H_{iq}} 
-%DIFDELCMD < }{
-%DIFDELCMD < % & 
-%DIFDELCMD < %   \left \{ 
-%DIFDELCMD < %   \begin{array}{@{}cc@{}}
-%DIFDELCMD < %    \Rop{ \YY^H_{ij}  } \Lop{\YY^H_{ji}},&{\scriptstyle i\ne j} \\
-%DIFDELCMD < %    0, &{\scriptstyle i=j}
-%DIFDELCMD < %   \end{array} \right . 
-%DIFDELCMD < %   \\
-%DIFDELCMD <   \left \{ 
-%DIFDELCMD <   \begin{array}{@{}cc@{}}
-%DIFDELCMD <    \Lop{ Y_{ji}  } \Rop{\YY_{ij}},&{\scriptstyle i\ne j} \\
-%DIFDELCMD <    0, &{\scriptstyle i=j}
-%DIFDELCMD <   \end{array} \right . 
-%DIFDELCMD < }
-%DIFDELCMD <   % &
-%DIFDELCMD <   % \mathrm{diag}\sum\limits_{q\ne i} \Lop{\YY^H_{qi}\YY_{qi}}
-\end{equation}%DIFAUXCMD
-%DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
-%DIFDELCMD < (Note that this makes use of the property $\Rop{\mat{A}}\Rop{\mat{B}}=\Rop{\mat{BA}}$ and 
-%DIFDELCMD < $\Lop{\mat{A}}\Lop{\mat{B}}=\Lop{\mat{AB}}$.) Compare this result to Eq.~\ref{eq:JHJ:DI}.
-%DIFDELCMD < 
-
-%DIFDELCMD < For the $\JJ^H\RRr$ term, we can directly apply the linear operators appearing in $\JJ^H$ 
-%DIFDELCMD < to the matrices in $\RRr$:
-%DIFDELCMD < 
-
-\begin{equation}%DIFAUXCMD
-%DIFDELCMD < \begin{equation}
-%DIFDELCMD < \JJ^H\RRr = \Matrix{c}{ 
-%DIFDELCMD < \sum\limits_{pq} \YY^H_{pq} \RR_{pq} \delta^{i}_p  \\
-%DIFDELCMD < \hline\\[-8pt]
-%DIFDELCMD < \sum\limits_{pq} \RR_{pq} \YY_{qp} \delta^{i}_q 
-%DIFDELCMD < } = \Matrix{c}{
-%DIFDELCMD < \sum\limits_{q\ne i} \YY^H_{iq} \RR_{iq} \\
-%DIFDELCMD < \hline\\[-8pt]
-%DIFDELCMD < \downarrow^H
-%DIFDELCMD < %\sum\limits_{q\ne i} \RR^H_{iq} \YY_{iq}  
-%DIFDELCMD < },
-%DIFDELCMD < % \Stack{ 
-%DIFDELCMD < % \big \} \scriptstyle i=1\dots \Na \\ 
-%DIFDELCMD < % \big \} \scriptstyle i=1\dots \Na,
-%DIFDELCMD < % }
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \JHJblocks{
+\JHJ = \JHJblocks{
   \mathrm{diag}\sum\limits_{q\ne i} \Rop{\YY_{iq} \YY^H_{iq}} 
 }{
 % & 
@@ -2770,66 +2153,41 @@ to the matrices in $\RRr$:
 % \big \} \scriptstyle i=1\dots \Na \\ 
 % \big \} \scriptstyle i=1\dots \Na,
 % }
-\DIFaddend \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend where the second equality is established by swapping the $p$ and $q$ indices. Unsurprisingly, and by analogy with 
+\end{equation}
+where the second equality is established by swapping the $p$ and $q$ indices. Unsurprisingly, and by analogy with 
 Eq.~\ref{eq:JHR:DI1}, the bottom half of the vector is Hermitian with respect to the top.
 
 \subsection{Parameter updates and the diagonal approximation}
 
 The relation of Eq.~\ref{eq:v_Jg} also apply in the fully-polarized case. It is easy to see that if we define the augmented 
 data and model vectors of matrices as
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < \[
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \begin{equation}
-\DIFaddend \DDd = [ \DD_{pq} ],~~\VVv = [ \GG_p \MM_{pq} \GG_q^H ],
-\DIFdelbegin %DIFDELCMD < \]
-\end{equation}%DIFAUXCMD
-%DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\begin{equation}%DIFAUXCMD
-\DIFdelend \DIFaddbegin \end{equation}
-\DIFaddend then $\VVv = \JJ_\LEFT \GGg$ holds, and the GN update step can be written as
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
+\DDd = [ \DD_{pq} ],~~\VVv = [ \GG_p \MM_{pq} \GG_q^H ],
+\end{equation}
+then $\VVv = \JJ_\LEFT \GGg$ holds, and the GN update step can be written as
+\begin{equation}
 \label{eq:ghat:matrix}
 \GGg_{k+1} = (\JHJ)^{-1} \JJ^H \DDd.
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend By analogy with Eq.~\ref{eq:ghat}, this equation also holds when $\JHJ$ is approximated, but only if the condition of 
+By analogy with Eq.~\ref{eq:ghat}, this equation also holds when $\JHJ$ is approximated, but only if the condition of 
 Eq.~\ref{eq:ghat:precise} is met.
 
 To actually implement GN or LM optimization, we still need to invert the  $\JHJ$ matrix that is represented in operator form 
 by Eq.~\ref{eq:JHJ:pol}. We have two options here. The brute-force numerical approach is to substitute the 
-$4\times4$ matrix forms of \DIFaddbegin \DIFadd{the }\DIFaddend $\Rop{~}$ and $\Lop{~}$ \DIFaddbegin \DIFadd{operators (Eqs.~\ref{eq:RA4x4} and \ref{eq:LA4x4}) }\DIFaddend into the 
+$4\times4$ matrix forms of the $\Rop{~}$ and $\Lop{~}$ operators (Eqs.~\ref{eq:RA4x4} and \ref{eq:LA4x4}) into the 
 equation, thus resulting in conventional matrix,
 and then do a straightfoward matrix inversion. The second option is to use an analogue of the diagonal 
 approximation described in Sect.~\ref{sec:DI:stefcal}. If we neglect the off-diagonal operators of Eq.~\ref{eq:JHJ:pol}, 
 the operator form of the matrix is diagonal, and the problem becomes separable per antenna. The inverse operator 
 corresponding to $\Rop{\mat{A}}$ is, trivially, $\Rop{\mat{A}^{-1}}$. We then arrive a simple per-antenna equation 
 for the GN update step:
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
 \label{eq:update:DI:diag:pol}
 \GG_{p,k+1} =  
 \left [ \sum\limits_{q\ne p} \YY^H_{pq} \DD_{pq} \right ] 
 \left [ \sum\limits_{q\ne p} \YY_{pq} \YY^H_{pq}  \right ]^{-1}
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend This is, once again, equivalent to the polarized {\sc \StefCal} update step proposed by \DIFaddbegin \citet{OMS-Stefcal} \DIFadd{and }\DIFaddend \citet{Stefcal}.
+This is, once again, equivalent to the polarized {\sc \StefCal} update step proposed by \citet{OMS-Stefcal} and \citet{Stefcal}.
 
 
 % Note also that all 
@@ -2842,50 +2200,9 @@ for the GN update step:
 Let us now briefly address the fully-polarized DD case. This can be done by direct analogy with
 Sect.~\ref{sec:unpol:DD}, using the operator calculus developed above. As a result, we arrive at the
 following expression for $\JHJ$:
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
 \label{eq:JHJ:DD:pol}
-  \JHJ = \DIFdelbegin %DIFDELCMD < \JHJblocks{
-%DIFDELCMD <   \delta^i_j \sum\limits_{q\ne i,s} \Rop{\YYd_{iqs} \YYcH_{iqs}} 
-%DIFDELCMD <   % & 
-%DIFDELCMD <   % \left \{ 
-%DIFDELCMD <   % \begin{array}{@{}cc@{}}
-%DIFDELCMD <   %  \sum\limits_{s} \Rop{ \YYcH_{ijs}  } \Lop{\YYdH_{jis}},&{\scriptstyle i\ne j} \\
-%DIFDELCMD <   %  0 &{\scriptstyle i=j}
-%DIFDELCMD <   % \end{array} \right . 
-%DIFDELCMD <   % \\
-%DIFDELCMD <   }{
-%DIFDELCMD <   \left \{ 
-%DIFDELCMD <   \begin{array}{@{}cc@{}}
-%DIFDELCMD <    \sum\limits_{s} \Lop{ \YYc_{jis}  } \Rop{\YYd_{ijs}},&{\scriptstyle i\ne j} \\
-%DIFDELCMD <    0 &{\scriptstyle i=j}
-%DIFDELCMD <   \end{array} \right . 
-%DIFDELCMD <   }
-%DIFDELCMD <   % &
-%DIFDELCMD <   % \delta^i_j \sum\limits_{q\ne i,s} \Lop{\YYcH_{qis}\YYd_{qis}}
-%DIFDELCMD < ,
-\end{equation}%DIFAUXCMD
-%DIFDELCMD < \end{equation}
-%DIFDELCMD < 
-
-%DIFDELCMD < using the normal shorthand of $\YYd_{pqs} = \MMd_{pqs} \GGdH_q$. The $\JJ^H\RRr$ term is then
-%DIFDELCMD < 
-
-%DIFDELCMD < \newcommand{\CCC}{\mathcal{C}}
-%DIFDELCMD < 
-
-\begin{equation}%DIFAUXCMD
-%DIFDELCMD < \begin{equation}
-%DIFDELCMD < \label{eq:JHR:DD:pol}
-%DIFDELCMD < \JJ^H\RRr = \Matrix{c}{
-%DIFDELCMD < \sum\limits_{q\ne i,s} \YYdH_{iqs} \RR_{iqs} \\
-%DIFDELCMD < \hline\\[-8pt]
-%DIFDELCMD < \downarrow^H}.
-%DIFDELCMD < %\sum\limits_{q\ne i,s} \RR^H_{iqs} \YYd_{iqs}  } 
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \JHJblocks{
+  \JHJ = \JHJblocks{
   \delta^i_j \sum\limits_{q\ne i,s} \Rop{\YYd_{iqs} \YYcH_{iqs}} 
   % & 
   % \left \{ 
@@ -2914,33 +2231,20 @@ using the normal shorthand of $\YYd_{pqs} = \MMd_{pqs} \GGdH_q$. The $\JJ^H\RRr$
 \hline\\[-8pt]
 \downarrow^H}.
 %\sum\limits_{q\ne i,s} \RR^H_{iqs} \YYd_{iqs}  } 
-\DIFaddend \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend All the separability considerations of Sect.~\ref{sec:separability} now apply, and polarized versions of the 
-algorithms referenced therein may be reformulated for the fully polarized case. For example\DIFaddbegin \DIFadd{:
-}\DIFaddend 
+\end{equation}
+All the separability considerations of Sect.~\ref{sec:separability} now apply, and polarized versions of the 
+algorithms referenced therein may be reformulated for the fully polarized case. For example:
 
 \begin{itemize} 
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \item If we assume separability by both direction and antenna, as in the {\sc AllJones} algorithm, then
+\item If we assume separability by both direction and antenna, as in the {\sc AllJones} algorithm, then
 the $\HHa$ matrix is fully diagonal in operator form, and the GN update step can be computed as
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
 \label{eq:update:DD:diag:pol}
 \delta \GGd_{p,k+1} = 
 \left [ \sum\limits_{q\ne p,s} \YYdH_{pqs} \RR_{pqs} \right ]
 \left [ \sum\limits_{q\ne p,s} \YYd_{pqs} \YYdH_{pqs}  \right ]^{-1}.
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend Note that in this case (as in the unpolarized {\sc AllJones} version) the condition of Eq.~\ref{eq:ghat:precise}
+Note that in this case (as in the unpolarized {\sc AllJones} version) the condition of Eq.~\ref{eq:ghat:precise}
 is not met, so we must use the residuals and compute $\delta\GG$.
 
 \item If we only assume separability by antenna, as in the {\sc CohJones} algorithm, then the $\HHa$ matrix 
@@ -2975,8 +2279,7 @@ such options.
 \subsection{Feed forward}
 \label{sec:feed-forward}
 
-\DIFdelbegin %DIFDELCMD < \citet{Stefcal} %%%
-\DIFdelend \DIFaddbegin \citet{Stefcal-URSI} \DIFaddend propose variants of the \StefCal\ algorithm (``2-basic'' and ``2-relax'') where the results of the 
+\citet{Stefcal-URSI} propose variants of the \StefCal\ algorithm (``2-basic'' and ``2-relax'') where the results of the 
 update step (Eq.~\ref{eq:update:DI:diag:pol}, in essense) are computed sequentially per antenna, with updated
 values for $\GG_1\dots\GG_{k-1}$ fed forward into the equations for $\GG_k$ (via the appropriate $\YY$ terms). This is shown to 
 substantially improve convergence, at the cost of sacrificing the embarassing parallellism by antenna. This technique 
@@ -2992,10 +2295,7 @@ improves convergence to justify the extra complexity, is an open issue that rema
 
 The main idea of feed-forward is to take into account solutions for antennas (and/or directions) $1,...,k-1$ when computing the
 solution for $k$. A related approach is to approximate the $\JHJ$ matrix as block-triangular:
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{equation}
+\begin{equation}
 \label{eq:JHJ:DD:block-triag}
 \HHa = \Matrix{cccc}{
 \JJJ^1_1 & 0 & \cdots & 0 \\
@@ -3003,14 +2303,8 @@ solution for $k$. A related approach is to approximate the $\JHJ$ matrix as bloc
 \vdots & & \ddots &  \vdots \\
 \JJJ_{N}^1 & \JJJ_{N}^2 & \cdots & \JJJ_{N}^{N} },
 \end{equation}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \newcommand{\KKK}{\mathcal{K}}
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend The inverse of this is also block triangular:
+\newcommand{\KKK}{\mathcal{K}}
+The inverse of this is also block triangular:
 \begin{equation}
 \label{eq:JHJ:DD:block-triag-inv}
 \HHa^{-1} = \Matrix{cccc}{
@@ -3020,12 +2314,8 @@ solution for $k$. A related approach is to approximate the $\JHJ$ matrix as bloc
 \KKK_{N}^1 & \KKK_{N}^2 & \cdots & \KKK_{N}^{N} },
 \end{equation}
 which can be computed using Gaussian elimination:
-\DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < \[
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \begin{equation}
-\DIFaddend \begin{array}{l@{~}l}
+\begin{equation}
+\begin{array}{l@{~}l}
 \KKK^1_1 &= [\JJJ^1_1]^{-1} \\
 \KKK^2_2 &= [\JJJ^2_2]^{-1} \\
 \KKK^1_2 &= - \KKK^2_2 \JJJ^1_2 \KKK^1_1\\
@@ -3034,14 +2324,8 @@ which can be computed using Gaussian elimination:
 \KKK^1_3 &= - \KKK^3_3 [ \JJJ^1_3 \KKK^1_1 + \JJJ^2_3 \KKK^1_2  ]\\
 \cdots
 \end{array}
-\DIFdelbegin %DIFDELCMD < \]
-\end{equation}%DIFAUXCMD
-%DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\begin{equation}%DIFAUXCMD
-\DIFdelend \DIFaddbegin \end{equation}
-\DIFaddend From this, the GN or LM update steps may be derived directly.
+\end{equation}
+From this, the GN or LM update steps may be derived directly.
 
 \subsection{Peeling}
 \label{sec:peeling}
@@ -3271,9 +2555,9 @@ so-called ``SKA pathfinder'' telescopes, as well as the SKA itself.
 
 \section*{Acknowledgments}
 
-\DIFaddbegin \DIFadd{We would like to thank the referee, Johan Hamaker, for extremely valuable comments that improved the paper.
-}\DIFaddend This work is based upon research supported by the South African Research Chairs Initiative of the Department of 
-Science and Technology and National Research Foundation. \DIFdelbegin \DIFdel{Dr. }\DIFdelend Trienko Grobler originally pointed us in the direction
+We would like to thank the referee, Johan Hamaker, for extremely valuable comments that improved the paper.
+This work is based upon research supported by the South African Research Chairs Initiative of the Department of 
+Science and Technology and National Research Foundation. Trienko Grobler originally pointed us in the direction
 of Wirtinger derivatives.
 
 \bibliographystyle{mn2e}
@@ -3288,18 +2572,10 @@ To give a specific example of complex Jacobians, consider the 3 antenna case.
 Using the numbering convention for $pq$ of 12, 13, 32, we obtain the following partial Jacobians
 (Eqs.~\ref{eq:Jk} and \ref{eq:Jbark}):
 
-\DIFdelbegin %DIFDELCMD < \[
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \begin{equation}
-\DIFaddend \JJ_k = \Matrix{ccc}{m_{12}\bar{g}_2 & 0 & 0 \\ m_{13}\bar{g}_3 & 0 & 0 \\ 0 & m_{23}\bar{g}_3 & 0 },
-\JJ_{\DIFdelbegin %DIFDELCMD < \bar{k}%%%
-\DIFdelend \DIFaddbegin \DIFadd{k^*}\DIFaddend } = \Matrix{ccc}{0 & g_1 m_{12} & 0 \\ 0 & 0 & g_1 m_{13} \\ 0 & 0 & g_2 m_{23} }
-\DIFdelbegin %DIFDELCMD < \]
-\end{equation}%DIFAUXCMD
-%DIFDELCMD < %%%
-\begin{equation}%DIFAUXCMD
-\DIFdelend \DIFaddbegin \end{equation}
-\DIFaddend 
+\begin{equation}
+\JJ_k = \Matrix{ccc}{m_{12}\bar{g}_2 & 0 & 0 \\ m_{13}\bar{g}_3 & 0 & 0 \\ 0 & m_{23}\bar{g}_3 & 0 },
+\JJ_{k^*} = \Matrix{ccc}{0 & g_1 m_{12} & 0 \\ 0 & 0 & g_1 m_{13} \\ 0 & 0 & g_2 m_{23} }
+\end{equation}
 
 We then get the following expression
 for the full complex Jacobian $\JJ$ (Eq.~\ref{eq:JJ:di}):
@@ -3350,9 +2626,6 @@ y_{31} \bar{r}_{31} + y_{32} \bar{r}_{32}   \\
 \section{$4\times4$ operator forms}
 \label{app:4x4}
 
-
-\DIFadd{
-
 Here we derive the $4\times4$ matrix forms of the $\Rop{\mat{A}}$ and $\Lop{\mat{A}}$ operators introduces in 
 Sect.~\ref{sec:pol}. The matrix outer product proves to be useful here, and in particular the  following 
 basic relation:
@@ -3382,7 +2655,6 @@ and
 \VEC{\mat{X}}.
 \end{equation}
 
-}
 
 \section{Gradient-based optimization algorithms}
 \label{sec:algs}
@@ -3439,7 +2711,6 @@ All of the above algortihms iterate to ``convergence''. One or more of the follo
 \item Improvement to cost function smaller than some pre-defined threshold: $\chi^2_{k-1}-\chi^2_{k}<\epsilon_0$.
 \item Norm of the gradient smaller than some threshold:  $||\JJ||_F<\gamma_0$.
 \end{itemize}
-
 
 
 
