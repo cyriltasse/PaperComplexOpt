@@ -6,7 +6,6 @@
 
 \usepackage{graphicx}
 \usepackage{amsfonts}
-\usepackage{bm}
 % \usepackage{amssymb}
 % \usepackage{amsmath}
 
@@ -24,12 +23,6 @@
 \usepackage{amsmath}
 \usepackage[T1]{fontenc}
 \usepackage{aecompl} 
-
-\usepackage{arydshln}
-\setlength\dashlinedash{0.2pt}
-\setlength\dashlinegap{1.5pt}
-\setlength\arrayrulewidth{.5pt}
-
 
 \pdfminorversion=5 
 
@@ -212,7 +205,7 @@ applicability of complex optimization to radio interferometry is perhaps broader
 \begin{table}
 \caption{\label{tab:notation}Notation and frequently used symbols}
 \begin{tabular}{ll}
-\hline
+\hline\\
 $x$        & scalar value $x$    \\
 $\bar{x}$        & complex conjugate    \\
 $\bmath{x}$  & vector $\bmath{x}$  \\
@@ -225,7 +218,7 @@ $\mathrm{diag}\,\bmath{x}$ & diagonal matrix formed from $\bmath{x}$\\
 $||\cdot||_F$ & Frobenius norm \\
 $(\cdot)^T$ & transpose \\
 $(\cdot)^H$ & Hermitian transpose \\
-$\otimes$ & outer product a.k.a. Kronecker product\\
+$\otimes$ & outer product\\
 $\bmath{\bar x},\bmath{\bar X}$ & element-by-element complex conjugate of $\bmath{x}$, $\bmath{X}$  \\
 $\AUG{x}, \AUGx{X}$ & augmented vectors $\AUG{x} = \Matrix{c}{\bmath{x} \\ \bmath{\bar x}},~~\AUGx{X}=\Matrix{c}{\bmath{X}_i \\ \bmath{X}^H_i}$ \\
 $\bmath{X}_\TOP$ & upper half of matrix $\bmath{X}$\\
@@ -300,10 +293,10 @@ define an {\em augmented parameter vector} containing both,
 and designate its value at step $k$ by $\Zz_k$. Then, define
 \begin{equation}
 \label{eq:Jkrk}
-\JJ_k=\frac{\partial \vv}{\partial \zz} (\Zz_k), ~\JJ_{k^*}=\frac{\partial \vv}{\partial \bar{\zz}}(\Zz_k),~
+\JJ_k=\frac{\partial \vv}{\partial \zz} (\Zz_k), ~\JJ_k^*=\frac{\partial \vv}{\partial \bar{\zz}}(\Zz_k),~
 \Rr_k=\Matrix{c}{\rr(\Zz_k)\\\bar{\rr}(\Zz_k)}
 \end{equation}
-We'll call the $m\times n$ matrices $\JJ_k$ and $\JJ_{k^*}$ the \emph{partial} and \emph{partial conjugate 
+We'll call the $m\times n$ matrices $\JJ_k$ and $\JJ_k^*$ the \emph{partial} and \emph{partial conjugate 
 Jacobian}\footnote{\citet{ComplexOpt} define the Jacobian via $\partial\rr$ rather than
 $\partial\vv$. This yields a Jacobian of the opposite sign, and introduces a minus sign into 
 Eqs.~\ref{eq:GN} and \ref{eq:LM}. In this paper we use the $\partial\vv$ convention, as is more common in the
@@ -313,11 +306,9 @@ and the $2m$-vector $\Rr_k$ the \emph{augmented residual vector}. The \emph{comp
 of the model $\vv$ can then be written (in block matrix form) as
 \begin{equation}
 \label{eq:JJ}
-\JJ = \Matrix{cc}{\JJ_k & \JJ_{k^*} \\ \bar{\JJ}_{k^*} & \bar{\JJ}_{k} },
+\JJ = \Matrix{cc}{\JJ_k & \JJ^*_k \\ \bar{\JJ^*_k} & \bar{\JJ_k} },
 \end{equation}
-with the bottom two blocks being element-by-element conjugated versions of the top two. Note the use of $\bar{\JJ}$ to
-indicate element-by-element conjugation -- not to be confused with the Hermitian conjugate which we'll invoke later. 
-$\JJ$ is a $2m \times 2n$ matrix. The GN update step is defined as
+{\bf with the bottom two blocks being element-by-element conjugated versions of the top two. Note that $\JJ$ is a $2m \times 2n$ matrix.} The GN update step is defined as
 \begin{equation}
 \label{eq:GN}
 \delta\Zz = \Matrix{c}{\delta \zz \\ \delta \bar{\zz}} = (\JJ^H \JJ)^{-1}\JJ^H \Rr_k,
@@ -332,18 +323,18 @@ where $\DD$ is the diagonalized version of $\JJ^H\JJ$. With $\lambda=0$ this bec
 with $\lambda\to\infty$ this corresponds to steepest descent (SD) with ever smaller steps.
 
 Note that while $\delta\zz$ and $\delta \bar{\zz}$ are formally computed independently, the structure of the equations 
-is symmetric (since the function being minimized -- the Frobenius norm -- is real and symmetric w.r.t. $\zz$ and $\bar{\zz}$),
-which ensures that $\overline{\delta\zz} = \delta \bar{\zz}$. In practice this  redundancy usually means that only half the calculations need to be performed.
+ensures that the results are consistent, i.e. that $\overline{\delta\zz} = \delta \bar{\zz}$. In practice this 
+redundancy usually means that only half the calculations need to be performed.
 
 \citet{ComplexOpt} show that Eqs.~\ref{eq:GN} and \ref{eq:LM} yield exactly the same system of LS equations as would have 
 been produced had we treated $\rr(\zz)$ as a function of real and imaginary parts $\rr(\bmath{x},\bmath{y})$, 
 and taken ordinary derivatives in $\REAL^{2n}$. However, the complex Jacobian may be easier and more elegant 
 to derive analytically, as we'll see below in the case of radio interferometric calibration.
 
-\section{Scalar (unpolarized) calibration}
+\section{Unpolarized calibration}
 \label{sec:unpol}
 
-In this section we will apply the formalism above to the scalar case, i.e. that of unpolarized calibration. 
+In this section we will apply the formalism above to the simpler case of unpolarized calibration. 
 This will then be extended to the fully polarized case in Sect.~\ref{sec:pol}.
 
 \subsection{Direction-independent calibration}
@@ -356,12 +347,12 @@ This will then be extended to the fully polarized case in Sect.~\ref{sec:pol}.
 Let us first explore the simplest case of direction-independent (DI) calibration. Consider an interferometer
 array of $\Na$ antennas measuring $\Nbl=\Na(\Na-1)/2$ pairwise visibilities. Each antenna pair
 $pq$ ($1\leq p<q\leq \Na$) 
-measures the visibility\footnote{In principle, the {\em autocorrelation} terms $pp$, corresponding to the
+measures the visibility{\bf\footnote{In principle, the {\em autocorrelation} terms $pp$, corresponding to the
 total power in the field, are also measured, and may be incorporated into the equations here. 
 It is, however, common practice to omit autocorrelations from the interferometric
 calibration problem due to their much higher noise, as well as technical difficulties in modelling the
 total intensity contribution. The derivations below are equally valid for $p\leq q$; we use $p<q$ for consistency
-with practice.}
+with practice.}} 
 \begin{equation}
 \label{eq:RIME:unpol}
 g_p m_{pq} \bar{g}_q + n_{pq},
@@ -400,12 +391,12 @@ In other words, within each column $j$, $\JJ_k$ is only non-zero at rows corresp
 this more compactly using the Kronecker delta:
 \begin{equation}
 \label{eq:Jk}
-J_k = \overbrace{ \Matrix{c}{ m_{pq}\bar{g}_q\delta^{j}_p } } ^{j=1\dots \Na} \bm{ \}} {\scriptstyle [pq]=1\dots \Nbl~(p<q)}
+J_k = \overbrace{ \Matrix{c}{ m_{pq}\bar{g}_q\delta^{j}_p } } ^{j=1\dots \Na} \big \}{\scriptstyle [pq]=1\dots \Nbl~(p<q)}
 \end{equation}
 Likewise, the conjugate partial Jacobian $J_{k^*}$ may be written as
 \begin{equation}
 \label{eq:Jbark}
-J_{k^*} = \overbrace{ \Matrix{c}{ g_p m_{pq} \delta^{j}_q } } ^{j=1\dots \Na} \bm{ \}} {\scriptstyle [pq]=1\dots \Nbl~(p<q)}
+J_{k^*} = \overbrace{ \Matrix{c}{ g_p m_{pq} \delta^{j}_q } } ^{j=1\dots \Na} \big \}{\scriptstyle [pq]=1\dots \Nbl~(p<q)}
 \end{equation}
 A specific example is provided in Appendix~\ref{sec:3ant}. The full complex Jacobian (Eq.~\ref{eq:JJ}) then 
 becomes, in block matrix notation,
@@ -417,7 +408,7 @@ becomes, in block matrix notation,
   \Stack{ m_{pq}\bar{g}_q\delta^{j}_p \\ \bar{m}_{pq} \bar{g}_p \delta^{j}_q } &
   \Stack{ g_p m_{pq} \delta^{j}_q \\ g_q \bar{m}_{pq} \delta^{j}_p }  
 & \bigg ] &
-\Stack{ \bm{\}} {\scriptstyle [pq]=1\dots \Nbl}~(p<q) \\ \bm{\}} {\scriptstyle [pq]=1\dots \Nbl}~(p<q) }
+\Stack{ \} {\scriptstyle [pq]=1\dots \Nbl}~(p<q) \\ \} {\scriptstyle [pq]=1\dots \Nbl}~(p<q) }
 \end{array}
 \end{equation}
 where the $[pq]~(p<q)$ and $j$ subscripts within each block span the full range of $1\dots \Nbl$ and 
@@ -427,7 +418,7 @@ $qp$ ($q>p$):
 \begin{equation}
 \Rr = \Matrix{c}{ r_{pq} \\ \bar{r}_{pq} } = \Matrix{c}{d_{pq}-g_p m_{pq}\bar{g}_q\\ \bar{d}_{pq}-\bar{g}_p \bar{m}_{pq}g_q} = 
 \Matrix{c}{ r_{pq} \\ r_{qp} }~~ 
-\Stack{ \bm{\}} \scriptstyle [pq]=1\dots \Nbl~(p<q) \\ \bm{\}} \scriptstyle [pq]=1\dots \Nbl~(p<q) }
+\Stack{ \} \scriptstyle [pq]=1\dots \Nbl~(p<q) \\ \} \scriptstyle [pq]=1\dots \Nbl~(p<q) }
 \end{equation}
 as does the bottom half of $\JJ$ in Eq.~\ref{eq:JJ:di:basic}. Note that we are free to reorder the rows of $\JJ$ and $\Rr$ 
 and intermix the normal and conjugate baselines, as this will not affect the LS equations derived at Eq.~\ref{eq:LM}.
@@ -439,7 +430,7 @@ the two blocks as one, with a single compound index $[pq]~(p\ne q)$ running thro
 \begin{array}{r@{~}cc@{~}cc}
                 & \overbrace{~~~~~~~~}^{j=1\dots \Na} & \overbrace{~~~~~~~~}^{j=1\dots \Na} \\
 \JJ = \big [ & m_{pq}\bar{g}_q\delta^{j}_p & g_p m_{pq} \delta^{j}_q & \big ],~
-\Rr = \big [ r_{pq} \big ] ~~{\bm{\}} \scriptstyle [pq]=1\dots 2\Nbl}
+\Rr = \big [ r_{pq} \big ] ~~{\} \scriptstyle [pq]=1\dots 2\Nbl}
 \end{array}
 \end{equation}
 where for $q>p$, $r_{pq}=\bar{r}_{qp}$ and $m_{pq}=\bar{m}_{qp}$. For clarity, we may adopt the 
@@ -477,14 +468,14 @@ D_{ij} = \sum_{pq} y_{pq} \bar{y}_{pq} \delta^{i}_q \delta^{j}_q &=& A_{ij}
 \newcommand{\JHJblocksFull}[4]{
 \Matrix{c@{}c@{}c}{
  #1 & \bigg |~ & #2 \\[10pt]
- \hdashline \\[-8pt]
+ \hline \\[-8pt]
  #3 & \bigg |~ & #4 }
 }
 
 \newcommand{\JHJblocks}[2]{
 \Matrix{c@{}c@{}c}{
  #1 & \big |~ & \nearrow^H \\
- \hdashline \\[-8pt]
+ \hline \\[-8pt]
  #2 & \bigg |~ & \searrow~~ }
 }
 
@@ -527,8 +518,8 @@ The other component of the LM/GN equations (Eq.~\ref{eq:LM}) is the $\JJ^H\Rr$ t
 \sum\limits_{q\ne i} y_{iq} \bar{r}_{iq}  
 }
 \Stack{
-\bm{\big\}} \scriptstyle i=1\dots \Na \\[1ex] 
-\bm{\big\}} \scriptstyle i=1\dots \Na
+\big \} \scriptstyle i=1\dots \Na \\ 
+\big \} \scriptstyle i=1\dots \Na
 }
 \end{equation}
 with the second equality established by swapping $p$ and $q$ in the bottom sum, and making use of $r_{pq}=\bar{r}_{qp}$. Clearly, the bottom half of the vector is the conjugate of the top:
@@ -631,7 +622,7 @@ block (as per the structure of Eq.~\ref{eq:JHJ:DI:ABCD}). Likewise, the $\JJ^H\R
 \JJ^H\Rr 
 = \Matrix{c}{
 \sum\limits_{q\ne i,s} \bar{y}_{iqs} r_{iqs}   \\
- \hdashline \\[-8pt]
+ \hline \\[-8pt]
 \downarrow^H
 %\sum\limits_{q\ne i,s} y_{iqs} \bar{r}_{iqs}  
 }.
@@ -676,7 +667,7 @@ Adding weights to Eqs.~\ref{eq:JHJ:DI:tf} and \ref{eq:JHR:DI:tf}, we arrive at t
 \JJ^H\mat{W}\Rr 
 = \Matrix{c}{
 \sum\limits_{q\ne i,s} w_{iqs} \bar{y}_{iqs} r_{iqs}   \\
-\hdashline\\[-8pt]
+\hline\\[-8pt]
 \downarrow^H
 %\sum\limits_{q\ne i,s} w_{iqs} y_{iqs} \bar{r}_{iqs}  
 }.
@@ -718,7 +709,7 @@ equations from the beginning. The minimization problem becomes:
 \min_{\bmath{g}}\sum_{pqs}|r_{pqs}|^2, ~~~
 r_{pqs} = d_{pqs} - \sum_{d=1}^{\Nd} \ggd_p \mmd_{pqs} \ggdH_q.
 \end{equation}
-It's obvious that the Jacobian corresponding to this problem is very similar to the one 
+It's obvious that the Jacobian corresponding to this  this problem is very similar to the one 
 in Eq.~\ref{eq:JJ:di}, but instead of having shape $2\Nbl\times2\Na$, this will have a 
 shape of $2\Nbl\Ns\times 2\Na\Nd$. We now treat $[pqs]$ and $[jd]$ as compound indices: 
 \begin{equation}
@@ -729,7 +720,7 @@ shape of $2\Nbl\Ns\times 2\Na\Nd$. We now treat $[pqs]$ and $[jd]$ as compound i
   \mmd_{pqs}\ggdH_q \delta^j_p & 
   \ggd_p \mmd_{pqs}  \delta^j_q 
 \bigg ] &
-\bm{\bigg \}}
+\big \}
 \begin{array}{l}
 \scriptstyle [pq]=1\dots 2\Nbl~(p\ne q)\\ \scriptstyle s=1\dots\Ns
 \end{array}
@@ -849,9 +840,9 @@ The per-element expression, in the diagonal approximation, is
 g_{p,k+1} = \big( \sum\limits_{q\ne p} \bar{y}_{pq} y_{pq} \big)^{-1} \sum\limits_{q\ne p} \bar{y}_{pq} d_{pq}.
 \end{equation}
 
-Equation~\ref{eq:stefcal} is identical to the update step proposed by \citet{ME4}, and later adopted by 
-\citet{Mitchell-RTS} for MWA calibration, and independently derived by \citet{Stefcal} for the \StefCal\ algorithm. 
-Note that these authors arrive at the result from a different 
+Equation~\ref{eq:stefcal} 
+is identical to the update step proposed by \citet{Stefcal} for the \StefCal\ algorithm, and by 
+\citet{Mitchell-RTS} for MWA calibration. Note that these authors arrive at the result from a different 
 direction, by treating Eq.~\ref{eq:cal:DI} as a function of $\bmath{g}$ only, and completely ignoring 
 the conjugate term. 
 The resulting complex Jacobian (Eq.~\ref{eq:JJ:di:basic}) then has null off-diagonal blocks, and $\JJ^H\JJ$ becomes 
@@ -1166,122 +1157,125 @@ To incorporate polarization, let us start by rewriting the basic RIME of Eq.~\re
 \label{eq:RIME:pol}
 \DD_{pq} = \GG_p \MM_{pq} \GG^H_q + \mat{N}_{pq}.
 \end{equation}
-Here, $\DD_{pq}$ is the \emph{visibility matrix} observed by baseline $pq$, $\MM_{pq}$ is the sky \emph{coherency matrix},
-$\GG_p$ is the Jones matrix associated with antenna $p$, and $\mat{N}_{pq}$ is a noise matrix. Quite importantly, 
-the visibility and coherency matrices are Hermitian: 
+Here, $\DD_{pq}$ is the \emph{visibility matrix} observed by baseline $pq$, $\MM_{pq}$ is the sky \emph{coherency matrix}, $\GG_p$ is the Jones matrix associated with antenna $p$, and $\mat{N}_{pq}$ is a noise matrix. Quite importantly, the visibility and coherency matrices are Hermitian: 
 $\DD_{pq}=\DD^H_{qp}$, and $\MM_{pq}=\MM^H_{qp}$. The basic polarization calibration problem can be formulated as
 \begin{equation}
 \label{eq:cal:DI:pol}
 \min_{\{\GG_p\}}\sum_{pq}||\RR_{pq}||_F,~~
-\RR_{pq} = \DD_{pq}-\GG_p \MM_{pq} \GG^H_q.
+\RR_{pq} = \DD_{pq}-\GG_p \MM_{pq} \GG^H_q
 \end{equation}
 
-This is a set of $2\times2$ matrix equations, rather than the vector equations employed in the complex NNLS formalism 
-above (Eq.~\ref{eq:LSmin}). In principle, there is a straightforward way of recasting matrix equations into a 
-form suitable to  Eq.~\ref{eq:LSmin}: we can vectorize each matrix equation, turning it into an equation on 4-vectors, 
-and then derive the complex Jacobian in the usual manner (Eq.~\ref{eq:JJ}). 
-
-In this section we will obtain a more elegant  derivation, by employing an operator calculus where the ``atomic'' 
-elements are $2\times2$ matrices rather than scalars. This will allow us to define the Jacobian in a more 
-transparent way, as a matrix of linear operators on $2\times2$ matrices. Mathematically, this is completely 
-equivalent to vectorizing the problem and applying Wirtinger calculus (each matrix then corresponds to 4 elements 
-of the parameter vector, and each operator in the Jacobian becomes a $4\times4$ matrix block). The casual
-reader may simply take the postulates of the following section on faith -- in particular, that the operator calculus 
-approach is completely equivalent to using $4\times4$ matrices. A rigorous formal footing to this is given 
-in Appendix~\ref{sec:opcalculus}.
-
-% \begin{tabular}{c | c}
-% \hline
-% Operator calculus term & Standard term\\
-% \hline
-% $2\times2$ matrix $\mat{X}$ & 4-vector $\bmath{x}$\\
-% linear matrix operator $\mathcal{F}$ & $4\times4$ matrix $\mat{F}$ \\ 
-% \hline
-% \end{tabular}
+In principle, this can be recast into an ordinary complex NLLS problem (Eq.~\ref{eq:LSmin}) {\bf by vectorizing each 
+matrix equation,} and then deriving the complex Jacobian according to Eq.~\ref{eq:JJ}. We may, however, 
+obtain a more elegant derivation by using a simple operator calculus, where the ``atomic'' elements are $2\times2$ matrices 
+rather than scalars. We can then define the Jacobian more simply in terms of operators on such matrices. 
 
 \newcommand{\VEC}[1]{\mathrm{vec}\,{#1}}
 \newcommand{\VECINV}[1]{\mathrm{vec}^{-1}\,{#1}}
 
-\subsection{Matrix operators and derivatives}
+\subsection{Operator calculus}
 
-By \emph{matrix operator}, we shall refer to any function $\mathcal{F}$ that maps a $2\times2$ complex matrix to 
-another such matrix:
+First, let us introduce the vectorization operator ``vec'' and its inverse in the usual (stacked columns) 
+way. For a $2\times2$ matrix:
 \begin{equation}
-\mathcal{F}:\COMPLEX^{2\times2} \to \COMPLEX^{2\times2}.
+\VEC{\mat{X}} = \Matrix{c}{x_{11}\\x_{21}\\x_{12}\\x_{22}},~~~
+\VECINV{\Matrix{c}{x_{11}\\x_{21}\\x_{12}\\x_{22}}} = \mat{X},
 \end{equation}
-When the operator $\mathcal{F}$ is applied to matrix $\mat{X}$, we'll write the result 
-as $\mat{Y}=\mathcal{F}\mat{X}$, or $\mathcal{F}[\mat{X}]$ if we need to avoid ambiguity.
+which sets up a trivial isomorphism between the space of $2\times2$ complex matrices $\COMPLEX^{2\times2}$ and the space 
+$\COMPLEX^4$. Any linear operator on $\mat{X} \in \COMPLEX^{2\times2}$, which we'll write as $\mathcal{B}[\mat{X}]$, 
+must then be equivalent to  multiplication of $\VEC{\mat{X}} \in \COMPLEX^4$ by some $4\times 4$ complex matrix $\mat B$. To put this formally, we can say that the $\mathrm{vec}$ operator induces an isomorphism  $\mathcal{W}$ 
+between $\COMPLEX^{4\times4}$ and the space of linear 
+operators on $\COMPLEX^{2\times2}$:
+\begin{eqnarray}
+&& \mathcal{W}:\COMPLEX^{4\times4}\leftrightarrow\mathrm{Lin}(\COMPLEX^{2\times2},\COMPLEX^{2\times2}) \nonumber\\
+&& \mathcal{W}(\mat{B})[\mat{X}] = \VECINV{(\mat{B}\,\VEC{\mat{X}})} \nonumber \\
+&& \mathcal{W}^{-1}(\mathcal{B})\bmath{x} = \VEC{(\mathcal{B}[ \VECINV{\bmath{x}} ])} \label{eq:iso:W}
+\end{eqnarray}
 
-If we fix a complex matrix $\mat{A}$, then two interesting (and linear) matrix operators are
-right-multiply by $\mat{A}$, and left-multiply by $\mat{A}$:
+Of particular interest to us are two linear operators on $\COMPLEX^{2\times2}$: right multiply by some $2\times2$ complex matrix $\mat{A}$, and left multiply by $\mat{A}$:
 \begin{equation}
 \begin{array}{l@{~}l}
-\Rop{\mat{A}}\mat{X} &= \mat{XA} \\
-\Lop{\mat{A}}\mat{X} &= \mat{AX} \\
+\Rop{\mat{A}}[\mat{X}] &= \mat{XA} \\
+\Lop{\mat{A}}[\mat{X}] &= \mat{AX} \\
 %\Top[\mat{X}] &= \mat{X}^T
 \end{array}
 \end{equation}
-Appendix~\ref{sec:opcalculus} formally shows that all linear matrix operators, including $\Rop{\mat{A}}$ and $\Lop{\mat{A}}$,
-can be represented as multiplication of 4-vectors by $4\times4$ matrices. 
+The $\mathcal{W}$ isomorphism ensures that these operators can be represented as multiplication of 4-vectors 
+by specific kinds of $4\times4$ matrices. The exact form of these matrices is derived in Appendix~\ref{app:4x4}.
+We may repurpose the symbols $\Rop{\mat{A}}$ and $\Lop{\mat{A}}$ to also represent the $4\times4$ matrices themselves. 
 
-Just from the operator definitions, it is trivial to see that
-% \begin{equation}
-% \label{eq:RH:LH}
-% \Rop{\mat{A}}^H = \Rop{\mat{A}^H},~~~\Lop{\mat{A}}^H = \Lop{\mat{A}^H}.
-% \end{equation}
-% and also that
+From the operator definitions, it is trivial to see that
+\begin{equation}
+\label{eq:RH:LH}
+\Rop{\mat{A}}^H = \Rop{\mat{A}^H},~~~\Lop{\mat{A}}^H = \Lop{\mat{A}^H}.
+\end{equation}
+and also that
 \begin{equation}
 \label{eq:RAB:LAB}
 \Lop{\mat{A}}\Lop{\mat{B}} = \Lop{\mat{AB}},~~~\Rop{\mat{A}}\Rop{\mat{B}} = \Rop{\mat{BA}},~~~[\Rop{\mat{A}}]^{-1} = \Rop{\mat{A^{-1}}}
 \end{equation}
+Note that Eq.~\ref{eq:RAB:LAB} is equally valid whether interpreted in terms of chaining operators, or multipying 
+the equivalent $4\times4$ matrices.
 
-% Note that Eq.~\ref{eq:RAB:LAB} is equally valid whether interpreted in terms of chaining operators, or multipying 
-% the equivalent $4\times4$ matrices.
-
-% Finally, note that the transpose and Hermitian transpose operators in $\COMPLEX^{2\times2}$ space correspond to a swapping
-% of the second and third rows in $\COMPLEX^4$ space:
-% \begin{equation}
-% \label{eq:vec:XH}
-% \VEC{\mat{X}^T} = \Matrix{c}{x_{11}\\x_{12}\\x_{21}\\x_{22}},~~~
-% \VEC{\mat{X}^H} = \Matrix{c}{\bar{x}_{11}\\\bar{x}_{12}\\\bar{x}_{21}\\\bar{x}_{22}}.
-% \end{equation}
-
-Consider now a matrix-valued function of $n$ matrices and their Hermitian transposes
+Finally, note that the transpose and Hermitian transpose operators in $\COMPLEX^{2\times2}$ space correspond to a swapping
+of the second and third rows in $\COMPLEX^4$ space:
 \begin{equation}
-\mat{F}(\mat{G}_1\dots\mat{G}_n,\mat{G}^H_1\dots\mat{G}^H_n),
-\end{equation}
-and think what a consistent definition for the partial matrix derivative $\partial\mat{F}/\partial\mat{G}_i$ 
-would need be. A partial derivative at some fixed point $\GGg_0 = (\mat{G}_1\dots\mat{G}_n,\mat{G}^H_1\dots\mat{G}^H_n)$
-is a local linear approximation to $\mat{F}$, i.e. a linear function mapping an increment 
-in an argument $\Delta\mat{G}_i$ to an increment in the function value $\Delta\mat{F}$. In other words, the partial 
-derivative is a linear matrix operator. Designating this operator as $\mathcal{D}=\partial\mat{F}/\partial\mat{G}_i$, we 
-can write the approximation as:
-\begin{equation}
-\mat{F}(...,\mat{G}_i+\Delta\mat{G}_i,...) - \mat{F}(...,\mat{G}_i,...) \approx \mathcal{D} \Delta\mat{G}_i.
-\end{equation}
-Obviously, the linear operator that best approximates a linear operator is the operator itself, so we necessarily have
-\begin{equation}
-\frac{\partial(\mat{GA})}{\partial{\mat{G}}} = \Rop{A},~~~~\frac{\partial(\mat{AG^H})}{\partial{\mat{G^H}}} = \Lop{A}.
+\label{eq:vec:XH}
+\VEC{\mat{X}^T} = \Matrix{c}{x_{11}\\x_{12}\\x_{21}\\x_{22}},~~~
+\VEC{\mat{X}^H} = \Matrix{c}{\bar{x}_{11}\\\bar{x}_{12}\\\bar{x}_{21}\\\bar{x}_{22}}.
 \end{equation}
 
-Appendix~\ref{sec:opcalculus} puts this on a formal footing, by providing formal definitions of \emph{Wirtinger matrix derivatives}
-\begin{equation}
-\frac{\partial\mat{F}}{\partial{\mat{G}}}, ~~
-\frac{\partial\mat{F}}{\partial{\mat{G}^H}} 
-\end{equation}
-that are completely equivalent to the partial complex Jacobians defined earlier. 
+\subsection{Derivative operators and Jacobians}
 
-Note that this calculus also offers a natural way of taking more
-complicated matrix derivatives (that is, for more elaborate versions of the RIME). For example,
+The vec operator also produces a natural mapping between any matrix-valued function of a 
+matrix argument $\mat{F}(\mat{G})$, $\mat{F}:\COMPLEX^{2\times2}\to\COMPLEX^{2\times2}$ and a corresponding 
+vector-valued function of a vector, $\bmath{f}:\COMPLEX^4\to\COMPLEX^4$:
+\begin{equation}
+\bmath{f}(\bmath{g}) = \VEC{\mat{F}(\VECINV{\bmath{g}})}.
+\end{equation}
+Consider the partial and conjugate partial Jacobians of $\bmath{f}$ with respect to $\bmath{g}$ 
+and $\bar{\bmath{g}}$. These are $4\times4$ matrices given by Eq.~\ref{eq:Jk}:
+\begin{equation}
+\label{eq:Jk-fg}
+\JJ_k = [ \partial f_i / \partial g_j ],~~~\JJ_{k^*} = [ \partial f_i / \partial \bar{g}_j ],
+\end{equation}
+that represent linear approximations to $\bmath{f}$, i.e. linear operators on $\COMPLEX^4$ 
+mapping an increment in the argument $\Delta\bmath{g}$ to an increment in the function value $\Delta\bmath{f}$. 
+The isomorphism above matches them up with equivalent linear operators on $\COMPLEX^{2\times2}$ that represent
+linear approximations to $\bmath{F}$. We can call these operators the Wirtinger $2\times2$ matrix derivatives 
+of $\mat{F}$ with respect to $\mat{G}$ and $\mat{G^H}$:
+\begin{equation}
+\label{eq:def:dF:dG}
+\frac{\partial\mat{F}}{\partial{\mat{G}}} = \mathcal{W}(\JJ_k),~~~
+\frac{\partial\mat{F}}{\partial{\mat{G}^H}} = \mathcal{W}(\JJ_{k^*}^T)
+\end{equation}
+
+The matrix derivative can be viewed as a linear operator on $\COMPLEX^{2\times2}$ that maps an increment
+$\Delta\mat{G}$ 
+to an increment $\Delta\mat{F}$. This is more than just a formal definition: thanks to the isomorphism, the operators 
+given by Eq.~\ref{eq:def:dF:dG}  are Wirtinger derivatives in exactly the same sense that the Jacobians of 
+Eq.~\ref{eq:Jk-fg} are Wirtinger derivatives, the former are simply the $\COMPLEX^{2\times2}$ manifestation of
+the gradient operators in $\COMPLEX^4$, as defined in Sect.~\ref{sec:Wirtinger}. However, operating in 
+$\COMPLEX^{2\times2}$ space allows us to write the larger Jacobians below in terms of simpler matrices composed 
+of operators, with a structure that completely conforms to the scalar derivation.
+
+It is easy to see that
+\begin{equation}
+\frac{\partial(\mat{GA})}{\partial{\mat{G}}} = \Rop{A},~~~~\frac{\partial(\mat{AG^H})}{\partial{\mat{G^H}}} = \Lop{A},
+\end{equation}
+in the operator sense, since in $\COMPLEX^4$ space the corresponding operation is simply multiplication of 
+a vector by a $\Rop{A}$ or $\Lop{A}$ matrix. Note that this calculus also offers a natural way of taking more
+complicated matrix derivatives. For example,
 \begin{equation}
 \frac{\partial(\mat{AGB})}{\partial{\mat{G}}} = \Lop{A}\Rop{B},
 \end{equation}
 which is a straightforward manifestation of the chain rule: $\mat{AGB}=\mat{A}(\mat{GB})$.
 
 
+
 \subsection{Complex Jacobians for the polarized RIME}
 
-Let us now apply this operator calculus to Eq.~\ref{eq:cal:DI:pol}. Taking the derivatives, we have:
+Let us apply the operator calculus developed above to Eq.~\ref{eq:cal:DI:pol}. We have:
 \begin{equation}
 \label{eq:dR:dG}
 \frac{\partial\VV_{pq}}{\partial\GG_p} = \Rop{\MM_{pq}\GG^H_q},\mathrm{~~and~~}
@@ -1303,7 +1297,7 @@ $[pq]$ will represent a single index running through $M$ values (i.e. enumeratin
 \JJ_\TOP = \big [ & 
 \Rop{ \MM_{pq}\GG^H_q }\delta^j_p & 
 \Lop{ \GG_p \MM_{pq}  }\delta^j_q 
-& \big ] ~~ \bm{\}} \scriptstyle [pq]=1\dots \Nbl~(p<q)
+& \big ] ~~ \} \scriptstyle [pq]=1\dots \Nbl~(p<q)
 % 
 %\Lop{ \bar{\GG}_p    \bar{\MM}_{pq} }\delta^j_q & 
 %\Rop{ \bar{\MM}_{pq} \bar{\GG^H_q}  }\delta^j_p  
@@ -1311,27 +1305,26 @@ $[pq]$ will represent a single index running through $M$ values (i.e. enumeratin
 \end{array}
 \end{equation}
 
-Note that there are two fully equivalent ways to read the above equation. In operator notation, it specifies a linear 
-operator $\JJ_\TOP$ that maps a $2\Na$-vector of $2\times2$ matrices to an $\Nbl$-vector of $2\times2$ matrices. In
-conventional matrix notation (Appendix~\ref{sec:opcalculus}), $\JJ_\TOP$ is just a $4\Nbl\times8\Na$ matrix; 
-the above equation then specifies the structure of this matrix in terms of $4\times4$ blocks, where each block 
-is the matrix equivalent of the appropriate $\mathcal{R}$ or $\mathcal{L}$ operator.
+Note that there are two fully equivalent ways to read the above equation. In operator notation, it specifies a linear operator 
+$\JJ_\TOP$
+that maps a $2\Na$-vector of $2\times2$ matrices to an $\Nbl$-vector of $2\times2$ matrices. In conventional matrix notation, 
+$\JJ_\TOP$ is just a $4\Nbl\times8\Na$ matrix; the above equation then specifies the structure of this matrix in terms
+of $4\times4$ blocks, where each block is the matrix equivalent of the appropriate $\mathcal{R}$ or $\mathcal{L}$ operator.
 
-Consider now the bottom half of the Jacobian. In Eq.~\ref{eq:JJ}, this corresponds to the derivatives of the conjugate
-residual vector $\rrc_k$, and can be constructed by conjugating and mirroring $\JJ_\TOP$. Let us modify this construction 
-by taking the derivative of the Hermitian transpose of the residuals instead. Note that substituting the Hermitian transpose 
-for element-by-element conjugation corresponds to a simple reordering of some rows in the conjugate residual vector (i.e.
-reordering of the LS equations), which we are always free to do. Let us then construct the augmented residual vector of matrices as:
+Consider now the bottom half of the Jacobian. In Eq.~\ref{eq:JJ}, this corresponds to the derivatives of the conjugate residual
+vector $\rrc_k$, and can be constructed by conjugating and mirroring $\JJ_\TOP$. Let us modify this construction 
+by taking the derivative of the Hermitian transpose of the residuals. We construct the augmented residual vector of matrices
+as:
 \begin{equation}
 \RRr = 
 \Matrix{c}{
-  \RR_{pq} \\[1ex] 
+  \RR_{pq} \\ 
   \RR^H_{pq} 
 } 
 ~~ 
 \Stack{ 
-\bm{\}} \scriptstyle [pq]=1\dots \Nbl~(p<q) \\[1ex] 
-\bm{\}} \scriptstyle [pq]=1\dots \Nbl~(p<q) 
+\} \scriptstyle [pq]=1\dots \Nbl~(p<q) \\ 
+\} \scriptstyle [pq]=1\dots \Nbl~(p<q) 
 }
 \label{eq:RRtranspose}
 \end{equation}
@@ -1350,8 +1343,8 @@ and we may write out the full complex Jacobian as
 \Lop{ \GG_q \MM^H_{pq}  } \delta^j_p  
 }~~ 
 \Stack{ 
-\bm{\}} \scriptstyle [pq]=1\dots \Nbl~(p<q) \\[1ex] 
-\bm{\}} \scriptstyle [pq]=1\dots \Nbl~(p<q) 
+\} \scriptstyle [pq]=1\dots \Nbl~(p<q) \\ 
+\} \scriptstyle [pq]=1\dots \Nbl~(p<q) 
 }
 \end{equation}
 
@@ -1363,55 +1356,42 @@ a single row block. The $pq$ index will now run through $2\Nbl$ values (i.e. enu
 \Rop{ \MM_{pq}\GG^H_q }\delta^j_p & 
 \Lop{ \GG_p \MM_{pq}  }\delta^j_q \\
 }~~ 
-\bm{\big\}} \scriptstyle [pq]=1\dots 2\Nbl~(p\ne q)\\ 
+\} \scriptstyle [pq]=1\dots 2\Nbl~(p\ne q)\\ 
 \end{equation}
 and 
 \begin{equation}
 \RRr = \Matrix{c}{ \mat{R}_{pq}}~~ 
-\bm{\}} \scriptstyle [pq]=1\dots 2\Nbl~(p\ne q)\\ 
+\} \scriptstyle [pq]=1\dots 2\Nbl~(p\ne q)\\ 
 \end{equation}
 This is in complete analogy to the derivations of the unpolarized case. For compactness, let us now define
 \newcommand{\YY}{\mat{Y}}
 \newcommand{\ZZ}{\mat{Z}}
 \begin{equation}
-\YY_{pq} = \MM_{pq} \GG^H_q,~~\YY_{qp} = \MM^H_{pq} \GG^H_p
+\YY_{pq} = \MM_{pq} \GG^H_q,
 \end{equation}
-noting that 
+and, noting that 
 \begin{equation}
-\YY^H_{pq} = \GG_q \MM^H_{pq},~~\YY_{qp}^H = \GG_p \MM_{pq}.
+\YY_{qp}^H = \GG_p \MM_{pq},
 \end{equation}
-Employing Eq.~\ref{eq:RH:LH}, the $\JJ$ and $\JJ^H$ terms can be written as
-\begin{equation}
-\JJ^H = \Matrix{c}{
-\Rop{ Y^H_{pq} }\delta^i_p \\[4pt]
-\hdashline\\[-10pt]
-\Lop{ Y_{qp}  }\delta^i_q \\
-},~~~ 
-\JJ = \Matrix{cc}{ 
-\Rop{ Y_{pq} }\delta^j_p & 
-\Lop{ Y^H_{qp}  }\delta^j_q \\
-}~~ 
-\end{equation}
-
-We can now write out the $\JHJ$ term, still expressed in terms of operators, as:
+and using Eq.~\ref{eq:RH:LH}, we can now write out the $\JHJ$ term, still expressed in terms of 
+operators, as:
 \begin{equation}
 \label{eq:JHJ:pol}
-\JHJ = \JHJblocksFull{
-  \mathrm{diag}\sum\limits_{q\ne i} \Rop{Y_{iq} Y^H_{iq}} 
+\JHJ = \JHJblocks{
+  \mathrm{diag}\sum\limits_{q\ne i} \Rop{\YY_{iq} \YY^H_{iq}} 
 }{
+% & 
+%   \left \{ 
+%   \begin{array}{@{}cc@{}}
+%    \Rop{ \YY^H_{ij}  } \Lop{\YY^H_{ji}},&{\scriptstyle i\ne j} \\
+%    0, &{\scriptstyle i=j}
+%   \end{array} \right . 
+%   \\
   \left \{ 
   \begin{array}{@{}cc@{}}
-   \Rop{ Y^H_{ij}  } \Lop{Y^H_{ji}},&{\scriptstyle i\ne j} \\
+   \Lop{ Y_{ji}  } \Rop{\YY_{ij}},&{\scriptstyle i\ne j} \\
    0, &{\scriptstyle i=j}
   \end{array} \right . 
-}{
-  \left \{ 
-  \begin{array}{@{}cc@{}}
-   \Lop{ Y_{ij}  } \Rop{ Y_{ji} },&{\scriptstyle i\ne j} \\
-   0, &{\scriptstyle i=j}
-  \end{array} \right . 
-}{
-  \mathrm{diag}\sum\limits_{q\ne i} \Lop{Y_{iq} Y^H_{iq}} 
 }
   % &
   % \mathrm{diag}\sum\limits_{q\ne i} \Lop{\YY^H_{qi}\YY_{qi}}
@@ -1419,16 +1399,16 @@ We can now write out the $\JHJ$ term, still expressed in terms of operators, as:
 (Note that this makes use of the property $\Rop{\mat{A}}\Rop{\mat{B}}=\Rop{\mat{BA}}$ and 
 $\Lop{\mat{A}}\Lop{\mat{B}}=\Lop{\mat{AB}}$.) Compare this result to Eq.~\ref{eq:JHJ:DI}.
 
-As for the $\JJ^H\RRr$ term, we can directly apply the linear operators appearing in $\JJ^H$ 
-to the matrices in $\RRr$. This results in the following vector of $2\times2$ matrices:
+For the $\JJ^H\RRr$ term, we can directly apply the linear operators appearing in $\JJ^H$ 
+to the matrices in $\RRr$:
 \begin{equation}
 \JJ^H\RRr = \Matrix{c}{ 
 \sum\limits_{pq} \YY^H_{pq} \RR_{pq} \delta^{i}_p  \\
-\hdashline\\[-8pt]
+\hline\\[-8pt]
 \sum\limits_{pq} \RR_{pq} \YY_{qp} \delta^{i}_q 
 } = \Matrix{c}{
 \sum\limits_{q\ne i} \YY^H_{iq} \RR_{iq} \\
-\hdashline\\[-8pt]
+\hline\\[-8pt]
 \downarrow^H
 %\sum\limits_{q\ne i} \RR^H_{iq} \YY_{iq}  
 },
@@ -1455,19 +1435,15 @@ then $\VVv = \JJ_\LEFT \GGg$ holds, and the GN update step can be written as
 By analogy with Eq.~\ref{eq:ghat}, this equation also holds when $\JHJ$ is approximated, but only if the condition of 
 Eq.~\ref{eq:ghat:precise} is met.
 
-To actually implement GN or LM optimization, we still need to invert the operator represented by the $\JHJ$ matrix in 
-Eq.~\ref{eq:JHJ:pol}. We have two options here. 
-
-The brute-force numerical approach is to substitute the 
-$4\times4$ matrix forms of the $\mathcal{R}$ and $\mathcal{L}$ operators (Eqs.~\ref{eq:RA4x4} and \ref{eq:LA4x4}) into the 
+To actually implement GN or LM optimization, we still need to invert the  $\JHJ$ matrix that is represented in operator form 
+by Eq.~\ref{eq:JHJ:pol}. We have two options here. The brute-force numerical approach is to substitute the 
+$4\times4$ matrix forms of the $\Rop{~}$ and $\Lop{~}$ operators (Eqs.~\ref{eq:RA4x4} and \ref{eq:LA4x4}) into the 
 equation, thus resulting in conventional matrix,
-and then do a straightfoward matrix inversion. 
-
-The second option is to use an analogue of the diagonal approximation described in Sect.~\ref{sec:DI:stefcal}. If we 
-neglect the off-diagonal operators of Eq.~\ref{eq:JHJ:pol}, the operator form of the matrix is diagonal, i.e. the problem 
-is again treated as being separable per antenna. As for the operators on the diagonal, they are trivially invertable as per 
-Eq.~\ref{eq:RAB:LAB}. We can therefore directly invert the operator form
-of $\JHJ$ and apply it to $\JJ^H\RRr$, thus arriving at a simple per-antenna equation  for the GN update step:
+and then do a straightfoward matrix inversion. The second option is to use an analogue of the diagonal 
+approximation described in Sect.~\ref{sec:DI:stefcal}. If we neglect the off-diagonal operators of Eq.~\ref{eq:JHJ:pol}, 
+the operator form of the matrix is diagonal, and the problem becomes separable per antenna. The inverse operator 
+corresponding to $\Rop{\mat{A}}$ is, trivially, $\Rop{\mat{A}^{-1}}$. We then arrive a simple per-antenna equation 
+for the GN update step:
 \begin{equation}
 \label{eq:update:DI:diag:pol}
 \GG_{p,k+1} =  
@@ -1489,23 +1465,25 @@ Sect.~\ref{sec:unpol:DD}, using the operator calculus developed above. As a resu
 following expression for $\JHJ$:
 \begin{equation}
 \label{eq:JHJ:DD:pol}
-  \JHJblocksFull{
+  \JHJ = \JHJblocks{
   \delta^i_j \sum\limits_{q\ne i,s} \Rop{\YYd_{iqs} \YYcH_{iqs}} 
-  }{
-  \left \{ 
-  \begin{array}{@{}c}
-   \sum\limits_{s} \Rop{ \YYcH_{ijs}  } \Lop{\YYdH_{jis}} \\
-   0
-  \end{array} \right . 
+  % & 
+  % \left \{ 
+  % \begin{array}{@{}cc@{}}
+  %  \sum\limits_{s} \Rop{ \YYcH_{ijs}  } \Lop{\YYdH_{jis}},&{\scriptstyle i\ne j} \\
+  %  0 &{\scriptstyle i=j}
+  % \end{array} \right . 
+  % \\
   }{
   \left \{ 
   \begin{array}{@{}cc@{}}
-   \sum\limits_{s} \Lop{ \YYc_{ijs}  } \Rop{\YYd_{jis}},&{\scriptstyle i\ne j} \\
+   \sum\limits_{s} \Lop{ \YYc_{jis}  } \Rop{\YYd_{ijs}},&{\scriptstyle i\ne j} \\
    0 &{\scriptstyle i=j}
   \end{array} \right . 
-  }{ 
-  \delta^i_j \sum\limits_{q\ne i,s} \Lop{\YYc_{iqs} \YYdH_{iqs}} 
   }
+  % &
+  % \delta^i_j \sum\limits_{q\ne i,s} \Lop{\YYcH_{qis}\YYd_{qis}}
+,
 \end{equation}
 using the normal shorthand of $\YYd_{pqs} = \MMd_{pqs} \GGdH_q$. The $\JJ^H\RRr$ term is then
 \newcommand{\CCC}{\mathcal{C}}
@@ -1513,7 +1491,7 @@ using the normal shorthand of $\YYd_{pqs} = \MMd_{pqs} \GGdH_q$. The $\JJ^H\RRr$
 \label{eq:JHR:DD:pol}
 \JJ^H\RRr = \Matrix{c}{
 \sum\limits_{q\ne i,s} \YYdH_{iqs} \RR_{iqs} \\
-\hdashline\\[-8pt]
+\hline\\[-8pt]
 \downarrow^H}.
 %\sum\limits_{q\ne i,s} \RR^H_{iqs} \YYd_{iqs}  } 
 \end{equation}
@@ -1908,139 +1886,37 @@ y_{31} \bar{r}_{31} + y_{32} \bar{r}_{32}   \\
 }.
 \end{equation}
 
+\section{$4\times4$ operator forms}
+\label{app:4x4}
 
-\newcommand{\WW}{\mathbb{W}}
-\newcommand{\WWi}{\mathbb{W}^{-1}}
-
-\section{Operator calculus}
-\label{sec:opcalculus}
-
-First, let us introduce the vectorization operator ``vec'' and its inverse in the usual (stacked columns) 
-way. For a $2\times2$ matrix $\mat{X}$:
-\begin{equation}
-\VEC{\mat{X}} = \Matrix{c}{x_{11}\\x_{21}\\x_{12}\\x_{22}},~~~
-\VECINV{\Matrix{c}{x_{11}\\x_{21}\\x_{12}\\x_{22}}} = \mat{X},
-\end{equation}
-which sets up an isomorphism between the space of $2\times2$ complex matrices $\COMPLEX^{2\times2}$ and the space 
-$\COMPLEX^4$. Note that the ``vec'' operator is linear, in other words the isomorphism preserves linear structure:
-\begin{equation}
-\VEC{(\mat{X}+a\mat{Y})}=\VEC{\mat{X}}+a\,\VEC{\mat{Y}},
-\end{equation}
-as well as the Frobenius norm:
-\begin{equation}
-||\VEC{\mat{X}}||_F = ||\mat{X}||_F.
-\end{equation}
-
-Consider now the set of all linear operators on $\COMPLEX^{2\times2}$, or $\mathrm{Lin}(\COMPLEX^{2\times2},\COMPLEX^{2\times2}).$
-Any such linear operator $\mathcal{B}$, whose action we'll write as $\mathcal{B}\mat{X}$, can be associated with a linear operator 
-on 4-vectors $\mat{B}\in\mathrm{Lin}(\COMPLEX^4,\COMPLEX^4)$, by defining $\mat{B}$ as
-\begin{equation}
-\label{eq:Bx}
-\mat{B}\bmath{x} = \VEC{\mathcal{B}\mat{X}},~~~\mat{X}=\VECINV{\bmath{x}}.
-\end{equation}
-Conversely, any linear operator on 4-vectors $\mat{B}$ can be associated with a linear operator on $2\times2$ matrices by defining
-\begin{equation}
-\label{eq:BX}
-\mathcal{B}\mat{X} = \VECINV{\mat{B}\bmath{x}},~~~\bmath{x}=\VEC{\mat{X}}.
-\end{equation}
-Now, the set $\mathrm{Lin}(\COMPLEX^4,\COMPLEX^4)$ is simply the set of all $4\times4$ matrices. Equations~\ref{eq:BX} 
-and \ref{eq:BX} establish a one-to-one mapping between this set and the set of linear operators on $2\times2$ 
-matrices. In other words, the ``vec'' operator induces two isomorphisms: one between $\COMPLEX^4$ and $\COMPLEX^{2\times2}$,
-and the other between $\COMPLEX^{4\times4}$ and linear operators on $\COMPLEX^{2\times2}$. We will designate the second isomorphism 
-by the symbol $\WW$:
-\begin{equation}
-\begin{array}{ll}
-\WW\mathcal{B} = \mat{B}: & \mat{B}\bmath{x} = \VEC{\,\mathcal{B}\,\VECINV{\bmath{x}}} \\
-\WWi\mat{B} = \mathcal{B}: & \mathcal{B}\mat{X} = \VECINV{(\mat{B}\,\VEC{\mat{X}})} 
-\end{array}
-\end{equation}
-Note that $\mathbb{W}$ also preserves linear structure.
-
-Of particular interest to us are two linear operators on $\COMPLEX^{2\times2}$: 
-right-multiply by some $2\times2$ complex matrix $\mat{A}$,  and left-multiply by $\mat{A}$:
-\begin{equation}
-\Rop{\mat{A}}\mat{X} = \mat{XA}, ~~~
-\Lop{\mat{A}}\mat{X} = \mat{AX} 
-\end{equation}
-The $\mathbb{W}$ isomorphism ensures that these operators can be represented as multiplication of 4-vectors 
-by specific kinds of $4\times4$ matrices.  The matrix outer product proves to be useful here, and in particular the following 
+Here we derive the $4\times4$ matrix forms of the $\Rop{\mat{A}}$ and $\Lop{\mat{A}}$ operators introduces in 
+Sect.~\ref{sec:pol}. The matrix outer product proves to be useful here, and in particular the  following 
 basic relation:
 \begin{equation}
-\VEC(\mat{A}\mat{B}\mat{C}) = (\mat{C}^T \otimes \mat{A})\,\VEC{\mat{B}},
+\VEC(\mat{A}\mat{B}\mat{C}) = (\mat{C}^T \otimes \mat{A})\,\VEC{\mat{B}}
 \end{equation}
-from which we can derive the matrix operator forms via:
+
+From this we can derive the matrix operator forms via:
 \begin{equation}
-\begin{array}{l}
-\VEC(\II\mat{X}\mat{A}) = (\mat{A}^T \otimes \II)\,\VEC{\mat{X}}\\
+\VEC(\II\mat{X}\mat{A}) = (\mat{A}^T \otimes \II)\,\VEC{\mat{X}}
+\end{equation}
+\begin{equation}
 \VEC(\mat{A}\mat{X}\II) = (\II \otimes \mat{A})\,\VEC{\mat{X}},
-\end{array}
 \end{equation}
 which gives us
 \begin{equation}
 \label{eq:RA4x4}
-\WW\Rop{\mat{A}} = 
+\VEC{\Rop{\mat{A}}[\mat{X}]} = 
 \Matrix{cccc}{a_{11}&0&a_{21}&0 \\ 0&a_{11}&0&a_{21} \\ a_{12}&0&a_{22}&0  \\ 0&a_{12}&0&a_{22} }
+\VEC{\mat{X}}
 \end{equation}
 and
 \begin{equation}
 \label{eq:LA4x4}
-\WW\Lop{\mat{A}} = 
+\VEC{\Lop{\mat{A}}[\mat{X}]} = 
 \Matrix{cccc}{a_{11}&a_{12}&0&0 \\ a_{21}&a_{22}&0&0 \\ 0&0&a_{11}&a_{12} \\ 0&0&a_{21}&a_{22} }
+\VEC{\mat{X}}.
 \end{equation}
-
-From this we get the important property that
-\begin{equation}
-\label{eq:RH:LH}
-[\WW\Rop{\mat{A}}]^H = \WW\Rop{\mat{A}^H},~~~[\WW\Lop{\mat{A}}]^H = \WW\Lop{\mat{A}^H}.
-\end{equation}
-
-Note that Eq.~\ref{eq:RAB:LAB}, which we earlier derived from the operator definitions, can now
-be verified with the $4\times4$ forms. Note also that Eq.~\ref{eq:RAB:LAB} is equally valid whether 
-interpreted in terms of chaining operators, or multipying the equivalent $4\times4$ matrices.
-
-% Finally, note that the transpose and Hermitian transpose operators in $\COMPLEX^{2\times2}$ space correspond to a swapping
-% of the second and third rows in $\COMPLEX^4$ space:
-% \begin{equation}
-% \label{eq:vec:XH}
-% \VEC{\mat{X}^T} = \Matrix{c}{x_{11}\\x_{12}\\x_{21}\\x_{22}},~~~
-% \VEC{\mat{X}^H} = \Matrix{c}{\bar{x}_{11}\\\bar{x}_{12}\\\bar{x}_{21}\\\bar{x}_{22}}.
-% \end{equation}
-
-\subsection{Derivative operators and Jacobians}
-
-Consider a matrix-valued function of a a matrix argument and its Hermitian transpose,
-$\mat{F}(\mat{G},\mat{G}^H)$. Yet again, we can employ the ``vec'' operator to construct a one-to-one
-mapping between such functions and 4-vector valued functions of 4-vectors:
-\begin{equation}
-\bmath{f}(\bmath{g},\bmath{\bar{g}}) = \VEC{\mat{F}(\VECINV{\bmath{g}},(\VECINV{\bmath{\bar{g}}})^T)}.
-\end{equation}
-
-Consider now the partial and conjugate partial Jacobians of $\bmath{f}$ with respect to $\bmath{g}$ 
-and $\bar{\bmath{g}}$, defined as per the formalism of Sect.~\ref{sec:Wirtinger}.  
-These are $4\times4$ matrices, as given by Eq.~\ref{eq:Jk},
-\begin{equation}
-\label{eq:Jk-fg}
-\JJ_k = [ \partial f_i / \partial g_j ],~~~\JJ_{k^*} = [ \partial f_i / \partial \bar{g}_j ],
-\end{equation}
-that represent local linear approximations to $\bmath{f}$, i.e. linear operators on $\COMPLEX^4$ that
-map increments in the arguments $\Delta\bmath{g}$ and $\Delta\bmath{\bar{g}}$ to increments 
-in the function value $\Delta\bmath{f}$. The $\WW$ isomorphism defined above matches these operators
-to linear operators on $\COMPLEX^{2\times2}$ that represent linear approximations to 
-$\bmath{F}$. It is the latter operators that we shall call \emph{the Wirtinger matrix derivatives}
-of $\mat{F}$ with respect to $\mat{G}$ and $\mat{G^H}$:
-\begin{equation}
-\label{eq:def:dF:dG}
-\frac{\partial\mat{F}}{\partial{\mat{G}}} = \WWi(\JJ_k),~~~
-\frac{\partial\mat{F}}{\partial{\mat{G}^H}} = \WWi(\JJ_{k^*}^T).
-\end{equation}
-
-This is more than just a formal definition: thanks to the $\WW$ isomorphism, the operators 
-given by Eq.~\ref{eq:def:dF:dG} are Wirtinger derivatives in exactly the same sense that the Jacobians of 
-Eq.~\ref{eq:Jk-fg} are Wirtinger derivatives, with the former being simply the $\COMPLEX^{2\times2}$ manifestation of
-the gradient operators in $\COMPLEX^4$, as defined in Sect.~\ref{sec:Wirtinger}. However, operating in 
-$\COMPLEX^{2\times2}$ space allows us to write the larger Jacobians of Sect.~\ref{sec:pol} 
-in terms of simpler matrices composed of operators, resulting in a Jacobian structure that is entirely analogous
-to the scalar derivation.
 
 
 \section{Gradient-based optimization algorithms}
