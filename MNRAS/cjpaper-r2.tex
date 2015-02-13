@@ -104,7 +104,6 @@
 \newcommand{\COH}{{\sc CohJones}}
 \newcommand{\StefCal}{{\sc StefCal}}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \title[Radio interferometric gain calibration as a complex optimization problem]{Radio interferometric gain calibration as a complex optimization problem}
@@ -188,7 +187,7 @@ free parameters; construction and/or inversion of this matrix is often the domin
 be treated as (perhaps approximately) sparse, these costs can be reduced, often drastically. Figure~\ref{fig:JHJ} 
 shows the structure of an example $\JHJ$ matrix for a DD gain calibration problem. The left column row shows versions of
 $\JHJ$ constructed via the real/imaginary approach, for four different orderings of the solvable parameters. None of
-the orderings yield a matrix that is particularly sparse or easily invertible. The right column shows a 
+the orderings yield a matrix that is particularly sparse or easily invertable. The right column shows a 
 complex $\JHJ$ for the same orderings. Panel (f) reveals sparsity that is not apparent in the real/imaginary 
 approach. This sparsity forms the basis of a new fast DD calibration algorithm discussed later in the paper.
 
@@ -203,7 +202,7 @@ and successfully applied to simulated LOFAR data: this is discussed in Sect.~\re
 In Sect.~\ref{sec:pol} we extend this approach to the fully polarized case, by developing a Wirtinger-like 
 operator calculus in which the polarization problem can be formulated succinctly. This naturally yields 
 fully polarized counterparts to the calibration algorithms defined previously. In Sect.~\ref{sec:variations}, 
-we discuss other algorithmic variations, and make connections to older DD calibration techniques such as 
+we discuss other algortihmic variations, and make connections to older DD calibration techniques such as 
 peeling \citep{JEN:peeling}. 
 
 While the scope of this work is restricted to LS solutions to the DI and DD gain calibration problem, the potential 
@@ -246,11 +245,6 @@ $\mathrm{vec}\,\bmath{X}$ & vectorization operator \\
 $\Rop{A}$ & right-multiply by $\bmath{A}$ operator (Sect.~\ref{sec:pol}) \\
 $\Lop{A}$ & left-multiply by $\bmath{A}$ operator (Sect.~\ref{sec:pol}) \\
 $\delta^i_j$ & Kronecker delta symbol \\
-$\Matrix{c@{}c@{}c}{
- A~ & \big |~ & B \\[2pt]
- \hdashline \\[-8pt]
- C~ & \big |~ & D }
-}$ & matrix blocks \\
 $\searrow,\nearrow,\downarrow$ & repeated matrix block \\
 \hline
 
@@ -365,7 +359,7 @@ $pq$ ($1\leq p<q\leq \Na$)
 measures the visibility\footnote{In principle, the {\em autocorrelation} terms $pp$, corresponding to the
 total power in the field, are also measured, and may be incorporated into the equations here. 
 It is, however, common practice to omit autocorrelations from the interferometric
-calibration problem due to their much higher noise, as well as technical difficulties in modeling the
+calibration problem due to their much higher noise, as well as technical difficulties in modelling the
 total intensity contribution. The derivations below are equally valid for $p\leq q$; we use $p<q$ for consistency
 with practice.}
 \begin{equation}
@@ -716,8 +710,8 @@ Adding weights to Eqs.~\ref{eq:JHJ:DI:tf} and \ref{eq:JHR:DI:tf}, we arrive at t
 Let us apply the same formalism to the direction-dependent (DD) calibration problem. 
 We reformulate the sky model as a sum of $\Nd$ sky components, each with its own DD 
 gain. It has been common practice to do DD gain solutions on larger time/frequency intervals than DI 
-solutions, both for SNR reasons, and because short intervals lead to under-constrained solutions
-and suppression of unmodeled sources. We therefore incorporate solution intervals into the
+solutions, both for SNR reasons, and because short intervals lead to underconstrained solutions
+and suppression of unmodelled sources. We therefore incorporate solution intervals into the
 equations from the beginning. The minimization problem becomes:
 \begin{equation}
 \label{eq:cal:dd:unpol}
@@ -881,7 +875,7 @@ by \citet{Stefcal}, and we can therefore hope to apply these lessons here. In pa
 that a direct application of GN produces very slow (oscillating) convergence, whereas combining GN and LM leads to faster convergence. They also propose a number of variations of the algorithm, all of which are 
 directly applicable to the above.
 
-Finally, let us note in passing that the update step of Eq.~\ref{eq:stefcal} is embarrassingly parallel, in the sense 
+Finally, let us note in passing that the update step of Eq.~\ref{eq:stefcal} is embarassingly parallel, in the sense 
 that the update for each antenna is computed entirely independently.
 
 \subsection{Separability of the direction-dependent case}
@@ -1044,7 +1038,7 @@ with the per-element expression being
 \begin{equation}
 \label{eq:stefcal:dd:unpol}
 g_{p,k+1}^{(d)} = g_{p,k}^{(d)} + 
-\bigg( \sum\limits_{q\ne p,s} \bar{y}^{(d)}_{pqs} y^{(d)}_{pqs} \bigg)^{-1}
+\big( \sum\limits_{q\ne p,s} \bar{y}^{(d)}_{pqs} y^{(d)}_{pqs} \big)^{-1}
 \sum\limits_{q\ne p,s} \bar{y}^{(d)}_{pqs} r_{pqs}.
 \end{equation}
 
@@ -1103,7 +1097,7 @@ From physical considerations, we know that gains do not vary arbitrarily in freq
 therefore be desirable to impose some sort of smoothness constraint on the solutions, which can improve conditioning, especially
 in low-SNR situations. A simple but crude way to do this is use solution intervals (Sect.~\ref{sec:solution-intervals}),
 which gives a constant gain solution per interval, but produces non-physical jumps at the edge of each interval.
-Other approaches include a posteriori smoothing of solutions done on smaller intervals, as well as various filter-based 
+Other approaches include aposteriori smoothing of solutions done on smaller intervals, as well as various filter-based 
 algorithms \citep{tasse-filters}. 
 
 Another way to impose smoothness combines the ideas of solution intervals  (Eq.~\ref{eq:cal:DI:tf}) 
@@ -1265,7 +1259,7 @@ can write the approximation as:
 \begin{equation}
 \mat{F}(...,\mat{G}_i+\Delta\mat{G}_i,...) - \mat{F}(...,\mat{G}_i,...) \approx \mathcal{D} \Delta\mat{G}_i.
 \end{equation}
-Obviously, the linear operator that best approximates a given linear operator is the operator itself, so we necessarily have
+Obviously, the linear operator that best approximates a linear operator is the operator itself, so we necessarily have
 \begin{equation}
 \frac{\partial(\mat{GA})}{\partial{\mat{G}}} = \Rop{A},~~~~\frac{\partial(\mat{AG^H})}{\partial{\mat{G^H}}} = \Lop{A}.
 \end{equation}
@@ -1467,11 +1461,11 @@ Eq.~\ref{eq:JHJ:pol}. We have two options here.
 The brute-force numerical approach is to substitute the 
 $4\times4$ matrix forms of the $\mathcal{R}$ and $\mathcal{L}$ operators (Eqs.~\ref{eq:RA4x4} and \ref{eq:LA4x4}) into the 
 equation, thus resulting in conventional matrix,
-and then do a straightforward matrix inversion. 
+and then do a straightfoward matrix inversion. 
 
 The second option is to use an analogue of the diagonal approximation described in Sect.~\ref{sec:DI:stefcal}. If we 
 neglect the off-diagonal operators of Eq.~\ref{eq:JHJ:pol}, the operator form of the matrix is diagonal, i.e. the problem 
-is again treated as being separable per antenna. As for the operators on the diagonal, they are trivially invertible as per 
+is again treated as being separable per antenna. As for the operators on the diagonal, they are trivially invertable as per 
 Eq.~\ref{eq:RAB:LAB}. We can therefore directly invert the operator form
 of $\JHJ$ and apply it to $\JJ^H\RRr$, thus arriving at a simple per-antenna equation  for the GN update step:
 \begin{equation}
@@ -1543,7 +1537,7 @@ becomes $4\Nd\times4\Nd$-block-diagonal, and may be inverted exactly at a cost o
 of Eq.~\ref{eq:ghat:precise} is met.
 \end{itemize}
 
-It is also straightforward to add weights and/or sliding window averaging to this formulation, as per 
+It is also straightfoward to add weights and/or sliding window averging to this formulation, as per 
 Sect.~\ref{sec:DI:W} and \ref{sec:DI:smooth}.
 
 Equations~\ref{eq:JHJ:DD:pol}--\ref{eq:JHR:DD:pol} can be considered the principal result of this work.
@@ -1551,7 +1545,7 @@ They provide the necessary ingredients for implementing GN or LM methods for DD 
 fully complex optimization problem. The equations may be combined and approximated in different 
 ways to produce different types of calibration algorithms. 
 
-Another interesting note is that Eq.~\ref{eq:update:DD:diag:pol} and its ilk are embarrassingly parallel, since the update step is 
+Another interesting note is that Eq.~\ref{eq:update:DD:diag:pol} and its ilk are embarassingly parallel, since the update step is 
 completely separated by direction and antenna. This makes it particularly well-suited to implementation on massively 
 parallel architectures such as GPUs.
 
@@ -1571,9 +1565,9 @@ such options.
 \label{sec:feed-forward}
 
 \citet{Stefcal-URSI} propose variants of the \StefCal\ algorithm (``2-basic'' and ``2-relax'') where the results of the 
-update step (Eq.~\ref{eq:update:DI:diag:pol}, in essence) are computed sequentially per antenna, with updated
+update step (Eq.~\ref{eq:update:DI:diag:pol}, in essense) are computed sequentially per antenna, with updated
 values for $\GG_1\dots\GG_{k-1}$ fed forward into the equations for $\GG_k$ (via the appropriate $\YY$ terms). This is shown to 
-substantially improve convergence, at the cost of sacrificing the embarrassing parallelism by antenna. This technique 
+substantially improve convergence, at the cost of sacrificing the embarassing parallellism by antenna. This technique 
 is directly applicable to both the {\sc AllJones} and {\sc CohJones} algorithms. 
 
 The {\sc CohJones} algorithm considers all directions simultaneously, but could still implement feed-forward by antenna.
@@ -1643,7 +1637,7 @@ Within the framework above, peeling can be considered as the ultimate feed forwa
 \subsection{Exact matrix inversion}
 
 Better approximations to $(\JHJ)^{-1}$ (or a faster exact inverse) may exist. Consider, for example, Fig.~\ref{fig:JHJ}f: 
-the matrix consists of four blocks, with the diagonal blocks being trivially invertible, and the off-diagonal blocks having a 
+the matrix consists of four blocks, with the diagonal blocks being trivially invertable, and the off-diagonal blocks having a 
 very specific structure. All the approaches discussed in this paper approximate the off-diagonal blocks by zero, and thus 
 yield algorithms which converge to the solution via many cheap approximative steps. If a fast way to invert matrices of the 
 off-diagonal type (faster than $O(N^3)$, that is) could be found, this could yield calibration algorithms that converge in fewer 
@@ -1759,7 +1753,7 @@ height of 100 km). The total electron content (TEC) values at the set of sample 
 decomposition \citep[the spatial correlation is given by Kolmogorov turbulence, see][]{Tol09}. The constructed TEC-screen has an 
 amplitude of $\sim0.07$ TEC-Unit, and the corresponding DD phase terms are plotted in Fig.~\ref{fig:PhaseSim}.
 
-For calibration purposes, the sources are clustered in 10 directions using Voronoi tessellation (Fig.~\ref{fig:tessel}). The solution time-interval is set to $4$ minutes, 
+For calibration purposes, the sources are clustered in 10 directions using Voronoi tesselation (Fig.~\ref{fig:tessel}). The solution time-interval is set to $4$ minutes, 
 and a separate gain solution is obtained per each direction. Fig. \ref{fig:resid} shows images generated from
 the residual visibilities, where the best-fitting model is subtracted in the visibility domain.  The rms residuals
 after \COH\ has been applied are a factor of $\sim4$ lower than without DD solutions.
@@ -1828,7 +1822,7 @@ number of directions). We also demonstrate an implementation of one particular a
 calibration, \COH.
 
 The use of complex Jacobians results in relatively compact and simple equations, and the resulting algorithms
-tend to be embarrassingly parallel, which makes them particularly amenable to implementation on new
+tend to be embarassingly parallel, which makes them particularly amenable to implementation on new
 massively-parallel computing architectures such as GPUs. 
 
 Complex optimization is applicable to a broader range of problems. Solving for a large number of independent DD gain
@@ -1922,7 +1916,7 @@ y_{31} \bar{r}_{31} + y_{32} \bar{r}_{32}   \\
 \label{sec:opcalculus}
 
 First, let us introduce the vectorization operator ``vec'' and its inverse in the usual (stacked columns) 
-way\footnote{Note that \citet{ME4} employs a similar formalism, but uses the (non-canonical) stacked rows definition instead.}. For a $2\times2$ matrix $\mat{X}$:
+way. For a $2\times2$ matrix $\mat{X}$:
 \begin{equation}
 \VEC{\mat{X}} = \Matrix{c}{x_{11}\\x_{21}\\x_{12}\\x_{22}},~~~
 \VECINV{\Matrix{c}{x_{11}\\x_{21}\\x_{12}\\x_{22}}} = \mat{X},
@@ -1949,14 +1943,14 @@ Conversely, any linear operator on 4-vectors $\mat{B}$ can be associated with a 
 \label{eq:BX}
 \mathcal{B}\mat{X} = \VECINV{\mat{B}\bmath{x}},~~~\bmath{x}=\VEC{\mat{X}}.
 \end{equation}
-Now, the set $\mathrm{Lin}(\COMPLEX^4,\COMPLEX^4)$ is simply the set of all $4\times4$ matrix multipliers. Equations~\ref{eq:BX} 
+Now, the set $\mathrm{Lin}(\COMPLEX^4,\COMPLEX^4)$ is simply the set of all $4\times4$ matrices. Equations~\ref{eq:BX} 
 and \ref{eq:BX} establish a one-to-one mapping between this set and the set of linear operators on $2\times2$ 
 matrices. In other words, the ``vec'' operator induces two isomorphisms: one between $\COMPLEX^4$ and $\COMPLEX^{2\times2}$,
 and the other between $\COMPLEX^{4\times4}$ and linear operators on $\COMPLEX^{2\times2}$. We will designate the second isomorphism 
 by the symbol $\WW$:
 \begin{equation}
 \begin{array}{ll}
-\WW\mathcal{B} = \mat{B}: & \mat{B}\bmath{x} = \VEC{\,(\mathcal{B}\,\VECINV{\bmath{x}}}) \\
+\WW\mathcal{B} = \mat{B}: & \mat{B}\bmath{x} = \VEC{\,\mathcal{B}\,\VECINV{\bmath{x}}} \\
 \WWi\mat{B} = \mathcal{B}: & \mathcal{B}\mat{X} = \VECINV{(\mat{B}\,\VEC{\mat{X}})} 
 \end{array}
 \end{equation}
